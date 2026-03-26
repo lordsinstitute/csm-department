@@ -1,0 +1,51 @@
+# HackUnion robots.txt configuration
+# This file controls search engine crawler access to the site
+
+# Default rules for all bots
+User-agent: *
+Allow: /
+Allow: /images/
+Allow: /styles.css
+Allow: /main.js
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /*.json$
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.woff$
+Allow: /*.woff2$
+Crawl-delay: 1
+
+# Google-specific rules
+User-agent: Googlebot
+Allow: /
+Allow: /images/
+Crawl-delay: 0.5
+
+# Bing-specific rules
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://hackunion.org/sitemap.xml
+
+# Allow favicon and other common resources
+Allow: /favicon.ico
+Allow: /robots.txt

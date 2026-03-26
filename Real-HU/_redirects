@@ -1,0 +1,16 @@
+# Canonical redirects from .html to clean URLs
+/index.html / 301
+/about.html /about 301
+/programs.html /programs 301
+/community.html /community 301
+/insights.html /insights 301
+/coc.html /code-of-conduct 301
+/contact.html /contact 301
+
+# Rewrite extensionless routes to existing HTML files
+/about /about.html 200
+/programs /programs.html 200
+/community /community.html 200
+/insights /insights.html 200
+/code-of-conduct /coc.html 200
+/contact /contact.html 200
