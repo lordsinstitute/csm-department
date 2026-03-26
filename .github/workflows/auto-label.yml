@@ -1,0 +1,32 @@
+name: Auto Label PR
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Auto Label PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const title = context.payload.pull_request.title.toLowerCase();
+            const prNumber = context.issue.number;
+
+            let labels = [];
+
+            if (title.includes("fix")) labels.push("bug");
+            if (title.includes("add") || title.includes("project")) labels.push("feature");
+            if (title.includes("update")) labels.push("enhancement");
+
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                issue_number: prNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labels
+              });
+            }

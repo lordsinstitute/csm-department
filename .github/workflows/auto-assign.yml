@@ -1,0 +1,23 @@
+name: Auto Assign Reviewers
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Assign Reviewers
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const reviewers = ["abdulvasay-234"];
+
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: reviewers
+            });
