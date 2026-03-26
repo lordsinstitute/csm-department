@@ -19,26 +19,26 @@ jobs:
             const regex = /^.+ \| [A-Za-z0-9]+$/;
 
             if (!regex.test(title)) {
-              core.setFailed(`
-❌ Invalid Pull Request Title Format
-
-📌 Required Format:
-<Project Name> | <Roll Number>
-
-⚠️ Important Rules:
-- Must include spaces on BOTH sides of "|"
-- Roll number should be alphanumeric (e.g., 22A51A0001)
-
-🚫 Incorrect Examples:
-- AI Chatbot|22A51A0001
-- AI Chatbot |
-- | 22A51A0001
-
-✅ Correct Example:
-- AI Chatbot | 22A51A0001
-
-👉 Please edit your PR title and try again.
-              `);
+              core.setFailed([
+                "❌ Invalid Pull Request Title Format",
+                "",
+                "📌 Required Format:",
+                "<Project Name> | <Roll Number>",
+                "",
+                "⚠️ Important Rules:",
+                '- Must include spaces on BOTH sides of "|"',
+                "- Roll number should be alphanumeric (e.g., 22A51A0001)",
+                "",
+                "🚫 Incorrect Examples:",
+                "- AI Chatbot|22A51A0001",
+                "- AI Chatbot |",
+                "- | 22A51A0001",
+                "",
+                "✅ Correct Example:",
+                "- AI Chatbot | 22A51A0001",
+                "",
+                "👉 Please edit your PR title and try again."
+              ].join("\n"));
             } else {
               core.info(`✅ PR title is valid: "${title}"`);
             }
