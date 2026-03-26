@@ -2,7 +2,10 @@ name: PR Title Check
 
 on:
   pull_request:
-    types: [opened, edited]
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  pull-requests: read
 
 jobs:
   check-title:
@@ -28,7 +31,7 @@ jobs:
 
 🚫 Incorrect Examples:
 - AI Chatbot|22A51A0001
-- AI Chatbot | 
+- AI Chatbot |
 - | 22A51A0001
 
 ✅ Correct Example:
@@ -36,4 +39,6 @@ jobs:
 
 👉 Please edit your PR title and try again.
               `);
+            } else {
+              core.info(`✅ PR title is valid: "${title}"`);
             }
