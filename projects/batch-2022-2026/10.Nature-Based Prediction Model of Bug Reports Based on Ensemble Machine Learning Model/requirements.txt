@@ -1,0 +1,7 @@
+pip install numpy==1.19.2
+pip install pandas==0.25.3
+pip install matplotlib==3.1.1
+pip install scikit-learn==1.0.2
+pip install seaborn==0.10.1
+pip install xgboost==1.6.2
+pip install nltk==3.4.5

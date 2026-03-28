@@ -1,0 +1,89 @@
+bug_id,creation_date,component_name,product_name,short_description,long_description,assignee_name,reporter_name,resolution_category,resolution_code,status_category,status_code,update_date,quantity_of_votes,quantity_of_comments,resolution_date,bug_fix_time,severity_category,severity_code
+ORION-356327,2011-08-31,Client,ORION,[sites] Error 500 not shown to user,"1. Set orion.site.virtualHosts=127.0.0.2 in your Orion conf file
+2. Launch one site
+3. Go to the edit page for a second site and click Start
+4. The server returns an error (no host names available) but the error is never displayed to the user. The page just says Starting... forever.",mamacdon,mamacdon,fixed,1,resolved,4,2011-08-31,0,2,2011-08-31,0,normal,2
+CDT-234915,2008-05-30,cdt-core,CDT,[formatter] Option after comma in declarator list has no effect,"Build ID: I20080524
+
+Steps To Reproduce:
+1. Go to Window -> Preferences.
+2. Select C/C++ -> Code Style.
+3. Click Edit.
+4. Select the White Space tab.
+5. Select Declarator list
+
+
+More information:
+
+Checking and unchecking after comma in declarator list yields to events occurring in the Preview pane.",aleherb+eclipse,trippinbilly25,fixed,1,resolved,4,2008-06-19,0,3,2008-06-19,20,normal,2
+PLATFORM-261743,2009-01-20,Releng,PLATFORM,Run a test build with p2 M5,When we discussed bug 261249 during the p2 call Tom got worried that we may hit the same pb when we move the builder to M5 and we would appreciate if you could find some time this week to run a test build using M5 as the builder.,kim.moir,pascal,fixed,1,resolved,4,2009-01-22,0,4,2009-01-22,2,normal,2
+PLATFORM-509525,2016-12-20,Releng,PLATFORM,Stop packaging Unix builds,"I checked https://hudson.eclipse.org/releng/job/I-build/141/console to see how the build is doing and then I spotted entries like these in the console:
+
+07:31:40  [INFO] Building tar: /opt/public/eclipse/builds/4I/gitCache/eclipse.platform.releng.aggregator/eclipse.platform.releng.tychoeclipsebuilder/sdk/target/products/org.eclipse.sdk.ide-linux.gtk.s390x.tar.gz
+
+07:32:32  [INFO] Building zip: /opt/public/eclipse/builds/4I/gitCache/eclipse.platform.releng.aggregator/eclipse.platform.releng.tychoeclipsebuilder/sdk/target/products/org.eclipse.sdk.ide-solaris.gtk.x86_64.zip
+
+07:32:59  [INFO] Building zip: /opt/public/eclipse/builds/4I/gitCache/eclipse.platform.releng.aggregator/eclipse.platform.releng.tychoeclipsebuilder/sdk/target/products/org.eclipse.sdk.ide-hpux.gtk.ia64.zip
+
+
+Bug 499209 only requested to remove Unix builds from the download page although the referenced message to eclipse-dev says the goal was to stop building them altogether.
+
+Currently I still see aix hpux s390 solaris bundles in http://download.eclipse.org/eclipse/updates/4.7-I-builds/I20161219-0145/  but they there are no packaged builds for those platforms on http://download.eclipse.org/eclipse/downloads/drops4/I20161219-0145/
+
+Does it really make sense to package builds that we don't offer for download?",sravankumarl,markus.kell.r,fixed,1,resolved,4,2017-03-30,0,26,2017-01-14,25,normal,2
+GMF-RUNTIME-156705,2006-09-08,General,GMF-RUNTIME,TreeEditPart might cause the semantic model to load in response to unload events,"TreeEditPart calls resolve semantic element on deactivation this will cause the resource to be loaded.
+Edit parts should not try to resolve the semantic element on deactivation",mmostafa,mmostafa,fixed,1,resolved,4,2006-09-08,0,3,2006-09-08,0,major,4
+PAPYRUS-RT-495430,2016-06-03,General,PAPYRUS-RT,[Tooling] Duplicated transitions in a model closed then reopened,"Created attachment 262233
+State machine diagram with duplicated transitions
+
+After moving the ComputerSystem sample model from Papyrus-RT 0.7.2 to the Neon stream I get duplicated transition shown in the newly created UML-RT State Machine Diagram (see attachment).
+
+I can remove them from the diagram (after making the diagram unsynchronized) in which case the diagram is fine but closing and opening Eclipse brings back the diagram with duplications.
+
+I took the following steps when upgrading the diagram to Neon:
+
+1) Imported (with copy) the model into a new workspace
+2) Opened the model updated the profile.
+3) Created a new UML-RT Capsule Diagram for each capsule cleaned up the diagram and removed the old composite structure diagram.
+4) Created a new UML-RT State Machine Diagram for each state machine and cleaned up the diagram. Note that at this point no duplicates are shown.
+5) Closed and re-opened Eclipse
+6) duplicated transitions are found.
+7) Note that removing the new ones (i.e. the ones that do not look correct e.g. not rectilinear) results in in the same scenario as see from step 5. Removing he old one (i.e. the one cleaned up in step 4) results in both the transition and its shadow being removed.",ansgar.radermacher,charles,fixed,1,closed,6,2017-03-21,0,31,2017-01-20,231,normal,2
+CDT-155878,2006-08-31,cdt-core,CDT,CDT needs to know the exact architecture it's running on not what the JVM thinks it is,"There are a number of places in the CDT where org.eclipse.core.runtime.Platform.getOSArch() is called to find out what the machine architecture is so that it can determine if for example gdb can debug a particular executable.
+
+On most platforms so far just calling getOSArch has worked fine because typically people run a 64-bit Eclipse + JVM when running on x86_64 and a 32-bit Eclipse when running on x86.
+
+However there is a different situation on PowerPC where many of the newer machines are 64-bit but there is only one 32-bit Eclipse built for PowerPC.  So when the CDT call getOSArch on PowerPC it always returns ppc regardless of whether or not the machine is actually ppc64.
+
+At first I proposed a change to org.eclipse.core.runtime.Platform.getOSArch() so that it would return a more accurate OS architecture value... in the PowerPC case ppc64 (when appropriate of course).
+
+However this idea was rejected by the Eclipse core team because they want that value to reflect what the osgi layer says the machine is.
+
+My new proposal is to introduce a new class in org.eclipse.cdt.utils called Platform.  It will mimic what the org.eclipse.core.runtime.Platform class does except that it will return a more accurate value for getOSArch().
+
+I will attach a proposed org.eclipse.cdt.utils.Platform implementation.",cdt-core-inbox,cjashfor,fixed,1,resolved,4,2007-06-22,0,3,2007-06-22,295,normal,2
+JSDT-490143,2016-03-21,General,JSDT,Make Nashorn optional for core packages.,"Fixing is divided in two :
+
+1. Make nashorn optional for core packages.
+  in org.eclipse.wst.jsdt.core\META-INF\MANIFEST.MF nashorn should be optional 
+
+2. Put needed @Since to fix the several PDE errors for missing attribute. 
+  see #1 for a description of the usage of @Since to indicate provisional API 
+
+#1 https://wiki.eclipse.org/Provisional_API_Guidelines#Javadoc",gorkem.ercan,psuzzi,fixed,1,resolved,4,2016-04-19,0,9,2016-03-29,8,normal,2
+CDT-173550,2007-02-08,cdt-core,CDT,Missing strings for ShowInCViewAction,"Build ID: I20061214-1445
+
+Steps To Reproduce:
+1. Right click in the C/C++ editor or on a CElement somewhere
+2. If you see something like !ShowInCView.label! then fail.
+
+
+More information:
+The ShowInCViewAction strings were removed from the CEditorMessages.properties file for some reason.  This action is still alive and kicking.
+
+I don't have a patch but just add these strings back into org.eclipse.cdt.ui/src/org/eclipse/cdt/internal/ui/editor/CEditorMessages.properties:
+
+ShowInCView.description=Show the current resource in the C/C++ Projects view 
+ShowInCView.label=Show in C/C++ Projects 
+ShowInCView.tooltip=Show current resource in C/C++ Projects view",aleherb+eclipse,warren.paul,fixed,1,resolved,4,2009-01-09,0,3,2007-02-09,1,normal,2
+ORION-338498,2011-02-28,Client,ORION,[client] blue dojo styling for More menu looks out of place,Would it be hard to style it differently (e.g. with some kind of gray)? Also (on Chrome/Mac) the drop down menu is missing the bottom and right border.,susan,bokowski,fixed,1,resolved,4,2011-09-01,0,5,2011-03-08,8,normal,2
