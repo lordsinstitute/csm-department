@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Cloud Security Anomaly Detection System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #0f172a, #1e293b);
+            color: #e2e8f0;
+        }
+
+        header {
+            background: linear-gradient(to right, #dc2626, #991b1b);
+            padding: 1.2rem 2rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #0f172a;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #fca5a5;
+            color: #7f1d1d;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar ul {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .navbar ul li {
+                width: 100%;
+            }
+
+            .navbar ul li a {
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <h1>🛡️ Cloud Security AI</h1>
+            <ul>
+                <li><a href="{% url 'UserHome' %}">🏠 Home</a></li>
+                <li><a href="{% url 'PredictAnomaly' %}">🔍 Detect Threats</a></li>
+                <li><a href="{% url 'base' %}">🚪 Logout</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="container">
+        {% block content %}
+        <!-- Energy forecasting content goes here -->
+        {% endblock %}
+    </div>
+</body>
+</html>

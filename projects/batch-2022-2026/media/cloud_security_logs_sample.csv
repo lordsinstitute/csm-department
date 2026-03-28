@@ -1,0 +1,17 @@
+timestamp,api_calls_per_min,error_rate,cpu_usage,packet_size,flow_duration,login_frequency,notes
+2025-08-01 09:00:00,120,0.5,35,500,1.2,5,Normal user activity
+2025-08-01 09:05:00,115,0.4,37,520,1.0,6,Normal usage
+2025-08-01 09:10:00,800,5.2,78,1500,0.8,12,"Spike in API calls, possible DDoS"
+2025-08-01 09:15:00,130,0.3,32,490,1.3,5,Normal usage
+2025-08-01 09:20:00,125,0.4,36,510,1.1,5,Normal usage
+2025-08-01 09:25:00,400,3.0,65,1200,0.9,9,Unusual packet size increase
+2025-08-01 09:30:00,118,0.6,38,505,1.2,5,Normal usage
+2025-08-01 09:35:00,900,6.0,80,2000,0.5,15,Suspicious API spike from single IP
+2025-08-01 09:40:00,122,0.5,35,500,1.2,5,Normal usage
+2025-08-01 09:45:00,110,0.3,33,495,1.3,4,Normal usage
+2025-08-01 09:50:00,300,2.5,60,1100,0.8,8,Possible data exfiltration attempt
+2025-08-01 09:55:00,128,0.4,37,520,1.0,5,Normal usage
+2025-08-01 10:00:00,125,0.5,36,515,1.1,5,Normal usage
+2025-08-01 10:05:00,850,5.8,79,1800,0.6,14,Unusual admin console access
+2025-08-01 10:10:00,119,0.4,35,500,1.2,5,Normal usage
+2025-08-01 10:15:00,130,0.3,34,495,1.3,5,Normal usage
