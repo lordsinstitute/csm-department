@@ -1,0 +1,284 @@
+{% extends 'users/Userbase.html' %}
+{% block content %}
+<style>
+  .security-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .security-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .security-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(239, 68, 68, 0.3);
+  }
+
+  .security-card h5 {
+    color: #ef4444;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-label {
+    color: #cbd5e1;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .form-control, .form-select {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    color: #e2e8f0;
+  }
+
+  .form-control::placeholder {
+    color: #64748b;
+  }
+
+  .btn-analyze {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    padding: 0.9rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    width: 100%;
+  }
+
+  .btn-analyze:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.5);
+  }
+
+  .result-item {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 4px solid #ef4444;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .result-label {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .result-value {
+    color: #ef4444;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .result-value.normal {
+    color: #10b981;
+  }
+
+  .result-value.threat {
+    color: #ef4444;
+  }
+
+  .severity-critical {
+    color: #dc2626;
+    font-weight: 800;
+  }
+
+  .severity-high {
+    color: #f97316;
+    font-weight: 700;
+  }
+
+  .severity-medium {
+    color: #eab308;
+    font-weight: 600;
+  }
+
+  .severity-low {
+    color: #10b981;
+    font-weight: 600;
+  }
+
+  .analysis-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    color: #cbd5e1;
+    line-height: 1.7;
+  }
+
+  .analysis-box h6 {
+    color: #ef4444;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .raw-response {
+    margin-top: 1rem;
+  }
+
+  .raw-response summary {
+    color: #64748b;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+  }
+
+  .raw-response summary:hover {
+    color: #ef4444;
+  }
+
+  .raw-response pre {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+  }
+
+  .empty-state svg {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 992px) {
+    .security-container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="security-container">
+  <!-- Input Form -->
+  <div class="security-card">
+    <h5>🛡️ Cloud Security Analysis</h5>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">📊 API Calls per Minute *</label>
+          <input name="api_calls" type="number" step="1" class="form-control" placeholder="e.g., 120" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">⚠️ Error Rate (%) *</label>
+          <input name="error_rate" type="number" step="0.01" class="form-control" placeholder="e.g., 0.5" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">💻 CPU Usage (%) *</label>
+          <input name="cpu_usage" type="number" step="0.1" class="form-control" placeholder="e.g., 35" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">📦 Packet Size (bytes) *</label>
+          <input name="packet_size" type="number" step="1" class="form-control" placeholder="e.g., 500" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">⏱️ Flow Duration (sec) *</label>
+          <input name="flow_duration" type="number" step="0.01" class="form-control" placeholder="e.g., 1.2" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">🔐 Login Frequency (per day) *</label>
+          <input name="login_frequency" type="number" step="1" class="form-control" placeholder="e.g., 5" required>
+        </div>
+        <div class="col-12">
+          <label class="form-label">📝 Access Pattern Notes (optional)</label>
+          <textarea name="access_pattern" rows="3" class="form-control" placeholder="e.g., unusual admin console access at odd hours"></textarea>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button class="btn-analyze" type="submit">🔍 Analyze Security Threat</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Results Display -->
+  <div class="security-card">
+    <h5>📋 Security Assessment</h5>
+    {% if anomaly_status or threat_category or severity_level or confidence_score or explanation %}
+      <div class="result-item">
+        <span class="result-label">🚨 Status</span>
+        <span class="result-value {% if 'Normal' in anomaly_status %}normal{% else %}threat{% endif %}">{{ anomaly_status }}</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">⚔️ Threat Type</span>
+        <span class="result-value">{{ threat_category }}</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">🎯 Severity</span>
+        <span class="result-value
+          {% if 'Critical' in severity_level %}severity-critical
+          {% elif 'High' in severity_level %}severity-high
+          {% elif 'Medium' in severity_level %}severity-medium
+          {% else %}severity-low{% endif %}">{{ severity_level }}</span>
+      </div>
+      <div class="result-item">
+        <span class="result-label">📊 Confidence</span>
+        <span class="result-value">{{ confidence_score }}</span>
+      </div>
+
+      <div class="analysis-box">
+        <h6>🧠 AI Security Analysis</h6>
+        <p>{{ explanation }}</p>
+      </div>
+
+      <details class="raw-response">
+        <summary>🔍 View Raw AI Response</summary>
+        <pre>{{ raw_response }}</pre>
+      </details>
+    {% else %}
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        <p>Enter cloud security metrics and click "Analyze Security Threat" to detect potential anomalies and threats.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

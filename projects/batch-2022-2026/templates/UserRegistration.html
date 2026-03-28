@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #0f172a, #1e293b);
+    }
+
+    .registration-wrapper {
+        max-width: 650px;
+        margin: 4rem auto;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(14px);
+        padding: 2.5rem 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        color: #e2e8f0;
+        animation: zoomFade 0.8s ease-in-out;
+    }
+
+    .registration-form h1 {
+        text-align: center;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        color: #ffffff;
+        font-weight: 800;
+    }
+
+    .registration-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #e2e8f0;
+    }
+
+    .registration-form input,
+    .registration-form select,
+    .registration-form textarea {
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1.25rem;
+        border: none;
+        border-radius: 12px;
+        background-color: #f8fafc;
+        font-size: 1rem;
+        color: #1e293b;
+    }
+
+    .registration-form button {
+        width: 100%;
+        padding: 0.85rem;
+        background: linear-gradient(to right, #10b981, #059669);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .registration-form button:hover {
+        background: linear-gradient(to right, #059669, #047857);
+        transform: translateY(-1px);
+    }
+
+    .text-danger {
+        color: #f87171;
+        text-align: center;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    @keyframes zoomFade {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @media screen and (max-width: 600px) {
+        .registration-wrapper {
+            margin: 2rem 1rem;
+            padding: 2rem;
+        }
+
+        .registration-form h1 {
+            font-size: 1.7rem;
+        }
+    }
+</style>
+
+<div class="registration-wrapper">
+  <form action="{% url 'register' %}" method="POST" class="registration-form">
+    <h1>📝 User Registration</h1>
+    {% csrf_token %}
+
+    <label for="name">👤 User Name</label>
+    {{ form.name }}
+
+    <label for="loginid">📧 Login ID</label>
+    {{ form.loginid }}
+
+    <label for="password">🔑 Password</label>
+    {{ form.password }}
+
+    <label for="mobile">📱 Mobile</label>
+    {{ form.mobile }}
+
+    <label for="email">✉️ Email</label>
+    {{ form.email }}
+
+    <label for="locality">🏘 Locality</label>
+    {{ form.locality }}
+
+    <label for="address">🏠 Address</label>
+    {{ form.address }}
+
+    <label for="city">🌆 City</label>
+    {{ form.city }}
+
+    <label for="state">🗺 State</label>
+    {{ form.state }}
+
+    {{ form.status }}
+
+    <button type="submit">🚀 Register</button>
+
+    {% if messages %}
+    <div class="text-danger">
+      {% for message in messages %}
+        {{ message }}<br>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

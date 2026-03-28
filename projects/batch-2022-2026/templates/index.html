@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="index-header" style="text-align: center; margin-top: 40px;">
+  <h2 style="font-size: 2.5rem; color: #f1f5f9; font-weight: 800;">🛡️ Cloud Security Anomaly Detection System</h2>
+  <p style="max-width: 750px; margin: 15px auto; color: #cbd5e1; font-size: 1.15rem; line-height: 1.6;">
+    Harness the power of Generative AI and Grok to detect real-time security threats, anomalies, and attacks in your cloud infrastructure.
+  </p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem; margin: 50px 0; padding: 0 1rem;">
+  <!-- Card 1 -->
+  <div class="feature-card" style="flex: 1 1 320px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%); border-radius: 16px; padding: 2rem; backdrop-filter: blur(10px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); border: 1px solid rgba(239, 68, 68, 0.3); transition: all 0.3s ease;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+    <h3 style="color: #ef4444; font-size: 1.4rem; margin-bottom: 1rem; font-weight: 700;">Real-Time Monitoring</h3>
+    <p style="color: #e2e8f0; line-height: 1.6;">Monitor cloud metrics including API calls, error rates, CPU usage, packet sizes, and login patterns for instant threat detection.</p>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="feature-card" style="flex: 1 1 320px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%); border-radius: 16px; padding: 2rem; backdrop-filter: blur(10px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); border: 1px solid rgba(239, 68, 68, 0.3); transition: all 0.3s ease;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
+    <h3 style="color: #ef4444; font-size: 1.4rem; margin-bottom: 1rem; font-weight: 700;">Powered by Grok AI</h3>
+    <p style="color: #e2e8f0; line-height: 1.6;">Advanced Generative AI analyzes security patterns and detects DDoS attacks, data exfiltration, brute force, and zero-day exploits.</p>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="feature-card" style="flex: 1 1 320px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%); border-radius: 16px; padding: 2rem; backdrop-filter: blur(10px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); border: 1px solid rgba(239, 68, 68, 0.3); transition: all 0.3s ease;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+    <h3 style="color: #ef4444; font-size: 1.4rem; margin-bottom: 1rem; font-weight: 700;">Threat Intelligence</h3>
+    <p style="color: #e2e8f0; line-height: 1.6;">Get detailed threat classification, severity levels, confidence scores, and actionable security recommendations instantly.</p>
+  </div>
+</div>
+
+<style>
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    .index-header h2 {
+      font-size: 1.8rem;
+    }
+    .index-header p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+{% endblock %}

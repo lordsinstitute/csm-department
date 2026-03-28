@@ -1,0 +1,201 @@
+{% extends 'admins/Adminbase.html' %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #0f172a, #1e293b);
+        color: #f1f5f9;
+    }
+
+    .title-section {
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .title-section h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ffffff;
+        border-bottom: 2px solid #22c55e;
+        display: inline-block;
+        padding-bottom: 8px;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        margin: 2rem auto;
+        max-width: 1200px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+        color: #f1f5f9;
+    }
+
+    th, td {
+        padding: 14px;
+        text-align: center;
+        border-bottom: 1px solid #334155;
+    }
+
+    th {
+        background-color: #1e3a8a;
+        color: #facc15;
+        font-weight: bold;
+    }
+
+    tr:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 0.85rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+        margin: 2px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #22c55e, #16a34a);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(to right, #16a34a, #15803d);
+    }
+
+    .btn-secondary {
+        background: linear-gradient(to right, #facc15, #eab308);
+        color: #1e293b;
+    }
+
+    .btn-secondary:hover {
+        background: linear-gradient(to right, #eab308, #ca8a04);
+    }
+
+    .btn-danger {
+        background: linear-gradient(to right, #ef4444, #dc2626);
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background: linear-gradient(to right, #dc2626, #b91c1c);
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+
+    .badge-warning {
+        background: #facc15;
+        color: #1e293b;
+    }
+
+    .badge-success {
+        background: #22c55e;
+        color: #fff;
+    }
+
+    .badge-secondary {
+        background: #64748b;
+        color: #fff;
+    }
+
+    @media screen and (max-width: 768px) {
+        th, td {
+            font-size: 0.85rem;
+            padding: 10px;
+        }
+
+        .btn {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+        }
+
+        .title-section h2 {
+            font-size: 1.6rem;
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="title-section">
+    <h2>👥 Registered User Details</h2>
+</div>
+
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Login ID</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>Locality</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in data %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.loginid }}</td>
+                <td>{{ user.mobile }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.locality }}</td>
+                <td>
+                    {% if user.status == 'waiting' %}
+                        <span class="badge badge-warning">Waiting</span>
+                    {% elif user.status == 'activated' %}
+                        <span class="badge badge-success">Activated</span>
+                    {% elif user.status == 'deactivated' %}
+                        <span class="badge badge-secondary">Deactivated</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.status == 'waiting' or user.status == 'deactivated' %}
+                        <a class="btn btn-primary" href="{% url 'ActivaUsers' %}?uid={{ user.id }}">Activate</a>
+                    {% endif %}
+                    {% if user.status == 'activated' %}
+                        <a class="btn btn-secondary" href="{% url 'deactivate_user' %}?uid={{ user.id }}">Deactivate</a>
+                    {% endif %}
+                    <a class="btn btn-danger" href="{% url 'delete_user' %}?uid={{ user.id }}" onclick="return confirm('Are you sure you want to delete this user?');">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8">No registered users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
