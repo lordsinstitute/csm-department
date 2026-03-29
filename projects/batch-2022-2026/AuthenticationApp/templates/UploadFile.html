@@ -1,0 +1,70 @@
+{% load static %}
+<html>
+<head>
+<title>Remote Data Access </title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+ <script LANGUAGE="Javascript" >
+function validate(){
+	var x=document.forms["f1"]["t1"].value;
+	if(x == null || x==""){
+		window.alert("file must be upload");
+		document.f1.t1.focus();
+		return false;
+	}
+	return true;
+}
+		
+	
+	</script>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header">
+		<div id="logo">
+			<center><font size="4" color="yellow">An Improved Authentication Scheme for Remote Data Access and Sharing Over Cloud Storage in Cyber-Physical-Social-Systems</font></center>
+		</div>
+		<div id="slogan">
+			
+		</div>
+	</div>
+	<div id="menu">
+		<ul><center>
+	  <li><a href="{% url 'UploadFile' %}">Upload File</a></li>
+	  <li><a href="{% url 'DownloadFile' %}">Download Own/Share File</a></li>
+	  <li><a href="{% url 'ChangePassword' %}">Change Password</a></li>
+	  <li><a href="{% url 'Graph' %}">Computational Graph</a></li>
+	  <li><a href="{% url 'index' %}">Logout</a></li>		
+		</center></ul>
+<br class="clearfix" />
+				</div>
+			
+	<div id="splash">
+		<img class="pic" src="{% static 'images/investor.jpg' %}" width="870" height="130" alt="" />
+	</div>	
+			<center>
+<form name="f1" method="post" action={% url 'UploadFileAction' %} enctype="multipart/form-data" OnSubmit="return validate()">
+	{% csrf_token %}<br/>
+   <h3><b>Upload File Screen</b></h3>
+   
+	<font size="" color="black"><center>{{ data|safe }}</center></font>
+						
+						<table align="center" width="80" >
+			 
+		<tr><td><font size="3" color="black">Upload&nbsp;File</b></td><td><input type="file" name="t1" style="font-family: Comic Sans MS" size="60"/></td></tr>
+
+		<tr><td><font size="3" color="black">File&nbsp;Access</b></td><td><select name="t2">
+		<option value="Public">Public</option>
+		<option value="Private">Private</option>
+		</td></tr>
+		 
+			<tr><td></td><td><input type="submit" value="Upload">
+			</td>
+			</table>
+			<br/><br/><br/><br/>
+				</div>	
+					
+				</div>
+				
+	</body>
+</html>

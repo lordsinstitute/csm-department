@@ -1,0 +1,7 @@
+pip install Django==2.1.7
+pip install numpy==1.19.2
+pip install PyMySQL==0.9.3
+pip install ecdsa==0.18.0
+pip install eciespy==0.3.10
+pip install matplotlib==3.5.3
+pip install pycryptodome==3.18.0
