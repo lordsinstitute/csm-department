@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* Security Section */
+
+.security-section{
+text-align:center;
+padding:80px 20px;
+}
+
+.security-section i{
+font-size:70px;
+color:#00d9ff;
+margin-bottom:20px;
+}
+
+.security-section h1{
+font-size:40px;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.security-section p{
+font-size:18px;
+max-width:700px;
+margin:auto;
+margin-bottom:30px;
+color:#d1d1d1;
+}
+
+/* Scanner button */
+
+.scan-btn{
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+border:none;
+padding:12px 30px;
+font-weight:600;
+border-radius:30px;
+}
+
+.scan-btn:hover{
+transform:scale(1.05);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Cards */
+
+.info-card{
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:15px;
+text-align:center;
+border:1px solid rgba(255,255,255,0.1);
+transition:0.4s;
+}
+
+.info-card:hover{
+transform:translateY(-10px);
+box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
+
+.info-card i{
+font-size:45px;
+color:#00d9ff;
+margin-bottom:15px;
+}
+
+</style>
+
+
+<!-- Security Section -->
+
+<section class="security-section">
+
+<div class="container">
+
+<i class="bi bi-qr-code"></i>
+
+<h1>Why Secure QR Codes?</h1>
+
+<p>
+QR codes can hide malicious URLs that lead to phishing attacks,
+malware downloads, or data theft. Our AI powered platform
+decodes QR codes and analyzes their URLs to detect
+security threats instantly.
+</p>
+
+<a href="{% url 'prediction' %}" class="btn scan-btn text-white">
+Scan QR Code
+</a>
+
+</div>
+
+</section>
+
+
+<!-- Features -->
+
+<section class="container mt-5">
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="info-card">
+
+<i class="bi bi-shield-check"></i>
+
+<h4>Threat Detection</h4>
+
+<p>
+Our AI system detects malicious URLs hidden inside QR codes
+and protects users from phishing attacks.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="info-card">
+
+<i class="bi bi-cpu"></i>
+
+<h4>AI Powered Analysis</h4>
+
+<p>
+Machine learning algorithms analyze links and identify
+potential security risks instantly.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="info-card">
+
+<i class="bi bi-lightning-charge"></i>
+
+<h4>Realtime Protection</h4>
+
+<p>
+Instant QR code scanning and real-time detection of
+dangerous links.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

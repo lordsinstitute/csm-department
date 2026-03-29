@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{% block title %}Admin Dashboard{% endblock %}</title>
+
+<link rel="icon" href="{% static 'images/qr_favicon.png' %}">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+body{
+font-family:'Poppins',sans-serif;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+min-height:100vh;
+color:white;
+}
+
+/* Navbar */
+
+.navbar{
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(10px);
+}
+
+/* Brand */
+
+.navbar-brand{
+font-weight:700;
+font-size:22px;
+}
+
+/* Links */
+
+.nav-link{
+color:white !important;
+font-weight:500;
+}
+
+.nav-link:hover{
+color:#00d9ff !important;
+}
+
+/* Dashboard container */
+
+.dashboard-container{
+background:rgba(255,255,255,0.05);
+border-radius:15px;
+padding:30px;
+margin-top:40px;
+}
+
+/* Footer */
+
+.footer{
+margin-top:60px;
+padding:15px;
+text-align:center;
+background:black;
+}
+
+/* Card */
+
+.admin-card{
+background:rgba(255,255,255,0.05);
+border-radius:15px;
+padding:25px;
+text-align:center;
+transition:0.3s;
+}
+
+.admin-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.admin-card i{
+font-size:40px;
+color:#00d9ff;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+
+<div class="container">
+
+<a class="navbar-brand" href="{% url 'AdminHome' %}">
+<i class="bi bi-shield-lock"></i> QR Admin
+</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+
+<div class="collapse navbar-collapse justify-content-end" id="nav">
+
+<ul class="navbar-nav gap-3">
+
+<li class="nav-item">
+<a class="nav-link {% block admin_home %}{% endblock %}" href="{% url 'AdminHome' %}">
+<i class="bi bi-house"></i> Home
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link {% block user_list %}{% endblock %}" href="{% url 'ViewRegisteredUsers' %}">
+<i class="bi bi-people"></i> Users
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link text-danger" href="{% url 'index' %}">
+<i class="bi bi-box-arrow-right"></i> Logout
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+
+
+<!-- Main Content -->
+
+<div class="container dashboard-container">
+
+{% block content %}
+
+{% endblock %}
+
+</div>
+
+
+
+<!-- Footer -->
+
+<footer class="footer">
+
+<p>© 2026 QR Security Admin Panel</p>
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

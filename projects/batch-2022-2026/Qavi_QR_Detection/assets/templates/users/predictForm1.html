@@ -1,0 +1,123 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}QR Prediction{% endblock %}
+
+{% block content %}
+
+<style>
+
+.prediction-container{
+max-width:700px;
+margin:auto;
+text-align:center;
+}
+
+.prediction-container h2{
+font-weight:700;
+margin-bottom:10px;
+color:white;
+}
+
+.prediction-container p{
+color:#d1d5db;
+margin-bottom:30px;
+}
+
+/* Upload card */
+
+.upload-card{
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:12px;
+}
+
+/* File input */
+
+.file-input{
+background:rgba(255,255,255,0.08);
+border:1px solid #00d9ff;
+border-radius:8px;
+padding:10px;
+color:white;
+}
+
+/* Button */
+
+.scan-btn{
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+border:none;
+color:white;
+padding:10px 30px;
+border-radius:30px;
+margin-top:15px;
+}
+
+.scan-btn:hover{
+background:linear-gradient(45deg,#0072ff,#00c6ff);
+}
+
+/* Result card */
+
+.result-card{
+background:rgba(255,255,255,0.08);
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+.result-card h5{
+color:#00d9ff;
+margin-bottom:10px;
+}
+
+</style>
+
+
+
+<div class="prediction-container">
+
+<h2>QR Code Security Detection</h2>
+
+<p>Upload a QR code image to check whether the URL is safe or malicious.</p>
+
+
+{% if output %}
+
+<div class="result-card">
+
+<h5>Prediction Result</h5>
+
+<p>{{ output|safe }}</p>
+
+</div>
+
+{% endif %}
+
+
+
+<div class="upload-card">
+
+<form action="{% url 'prediction' %}" method="post" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<div class="mb-3">
+
+<input type="file" name="qr_image" class="form-control file-input" accept="image/*" required>
+
+</div>
+
+<button type="submit" class="btn scan-btn">
+
+<i class="bi bi-search"></i> Analyze QR Code
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

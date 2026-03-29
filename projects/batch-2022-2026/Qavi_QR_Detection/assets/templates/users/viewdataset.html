@@ -1,0 +1,107 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Dataset{% endblock %}
+
+{% block content %}
+
+<style>
+
+.dataset-header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.dataset-header h2{
+font-weight:700;
+color:white;
+}
+
+.dataset-header p{
+color:#d1d5db;
+max-width:800px;
+margin:auto;
+}
+
+/* Dataset container */
+
+.dataset-box{
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:12px;
+}
+
+/* Table styling */
+
+table{
+color:white !important;
+}
+
+table thead{
+background:rgba(255,255,255,0.1);
+}
+
+table tbody tr:hover{
+background:rgba(255,255,255,0.08);
+}
+
+</style>
+
+
+<div class="dataset-header">
+
+<h2>Malicious URL Dataset</h2>
+
+<p>
+This dataset contains sample URLs labeled as benign, defacement,
+phishing, or malware. These are used to train machine learning
+models that analyze QR code links for malicious activity.
+</p>
+
+</div>
+
+
+<div class="dataset-box">
+
+{% if data %}
+
+<div class="table-responsive">
+
+{{ data|safe }}
+
+</div>
+
+{% else %}
+
+<div class="alert alert-danger text-center">
+Unable to load dataset. Please try again later.
+</div>
+
+{% endif %}
+
+</div>
+
+
+<!-- DataTables -->
+
+<link rel="stylesheet"
+href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+$('table').DataTable({
+pageLength:25,
+ordering:true,
+searching:true,
+responsive:true
+});
+
+});
+
+</script>
+
+{% endblock %}

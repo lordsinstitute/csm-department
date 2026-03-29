@@ -1,0 +1,142 @@
+{% extends 'admins/adminbase.html' %}
+
+{% block title %}User List{% endblock %}
+{% block user_list %}active{% endblock %}
+
+{% block content %}
+
+<style>
+
+.user-card{
+background:rgba(255,255,255,0.05);
+border-radius:12px;
+padding:20px;
+}
+
+.table{
+color:white;
+}
+
+.table th{
+background:rgba(255,255,255,0.1);
+text-align:center;
+}
+
+.table td{
+text-align:center;
+vertical-align:middle;
+}
+
+.table tbody tr:hover{
+background:rgba(255,255,255,0.08);
+}
+
+/* Status badges */
+
+.badge-waiting{
+background:#f59e0b;
+padding:6px 12px;
+border-radius:20px;
+}
+
+.badge-active{
+background:#22c55e;
+padding:6px 12px;
+border-radius:20px;
+}
+
+/* Activate button */
+
+.activate-btn{
+background:#0ea5e9;
+color:white;
+padding:6px 14px;
+border-radius:20px;
+text-decoration:none;
+font-size:14px;
+}
+
+.activate-btn:hover{
+background:#0284c7;
+}
+
+</style>
+
+
+<div class="user-card">
+
+<h3 class="text-center mb-4">
+<i class="bi bi-people"></i> Registered Users
+</h3>
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover">
+
+<thead>
+
+<tr>
+<th>S.No</th>
+<th>Name</th>
+<th>Login ID</th>
+<th>Mobile</th>
+<th>Email</th>
+<th>Locality</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for user in data %}
+
+<tr>
+
+<td>{{ forloop.counter }}</td>
+<td>{{ user.name }}</td>
+<td>{{ user.loginid }}</td>
+<td>{{ user.mobile }}</td>
+<td>{{ user.email }}</td>
+<td>{{ user.locality }}</td>
+
+<td>
+
+{% if user.status == 'waiting' %}
+<span class="badge-waiting">Waiting</span>
+{% else %}
+<span class="badge-active">Active</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if user.status == 'waiting' %}
+
+<a href="/AdminActivaUsers/?uid={{ user.id }}" class="activate-btn">
+Activate
+</a>
+
+{% else %}
+
+<span class="text-success fw-bold">Activated</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}
