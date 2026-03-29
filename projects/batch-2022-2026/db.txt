@@ -1,0 +1,12 @@
+create database Authentication;
+use Authentication;
+
+create table newuser(username varchar(250) primary key,
+password varchar(50),
+contact_no varchar(15),
+address varchar(100),
+email  varchar(100),
+finger_img varchar(350));
+
+
+create table share(owner varchar(350), filename varchar(350), access_type varchar(30));
