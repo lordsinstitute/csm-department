@@ -1,0 +1,235 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Ranked Resumes{% endblock %}
+
+{% block content %}
+
+<style>
+  .ranked-resumes-wrapper {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 90px);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #a78bfa, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.8rem;
+  }
+
+  .results-card {
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .table {
+    margin-bottom: 0;
+    color: #e2e8f0;
+  }
+
+  .table thead th {
+    background: linear-gradient(90deg, #7c3aed, #c084fc);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    padding: 1.1rem 1rem;
+    font-size: 1.05rem;
+  }
+
+  .table tbody tr {
+    background: rgba(15, 23, 42, 0.35);
+    transition: all 0.25s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(167, 139, 250, 0.12);
+    transform: scale(1.005);
+  }
+
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 1rem 0.9rem;
+    border-top: 1px solid rgba(167,139,250,0.08);
+  }
+
+  .score-high    { background: linear-gradient(135deg, #10b981, #34d399); color: white; }
+  .score-medium  { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; }
+  .score-low     { background: linear-gradient(135deg, #ef4444, #f87171); color: white; }
+
+  .score-badge {
+    display: inline-block;
+    padding: 0.55rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-width: 80px;
+  }
+
+  .btn-send-offer {
+    padding: 0.6rem 1.3rem;
+    font-size: 0.95rem;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+  }
+
+  .btn-send-offer:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(16,185,129,0.5);
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 5rem 1rem;
+    color: #94a3b8;
+    font-size: 1.3rem;
+  }
+
+  .no-data i {
+    font-size: 4rem;
+    opacity: 0.5;
+    margin-bottom: 1.5rem;
+  }
+
+  .messages-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .messages-list li {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
+    text-align: center;
+  }
+
+  .message-success { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+  .message-error   { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+  @media (max-width: 768px) {
+    .page-title { font-size: 2rem; }
+    .table thead { display: none; }
+    .table tbody tr {
+      display: block;
+      margin-bottom: 1.3rem;
+      border: 1px solid rgba(167,139,250,0.2);
+      border-radius: 12px;
+    }
+    .table td {
+      display: flex;
+      justify-content: space-between;
+      text-align: right;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid rgba(167,139,250,0.1);
+    }
+    .table td:before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #c084fc;
+      text-align: left;
+      flex: 1;
+    }
+  }
+</style>
+
+<div class="results-wrapper">
+  <div class="page-header">
+    <h2 class="page-title">Ranked Resumes</h2>
+  </div>
+
+  {% if messages %}
+  <ul class="messages-list">
+    {% for message in messages %}
+      <li class="message-{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <div class="results-card">
+    {% if results %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Similarity Score (%)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+            {% if result %}
+            <tr>
+              <td data-label="Name">{{ result.name }}</td>
+              <td data-label="Email">{{ result.email }}</td>
+              <td data-label="Similarity Score">
+                <span class="score-badge 
+                  {% if result.similarity_score >= 80 %}score-high
+                  {% elif result.similarity_score >= 75 %}score-medium
+                  {% else %}score-low{% endif %}">
+                  {{ result.similarity_score|floatformat:2 }}%
+                </span>
+              </td>
+              <td data-label="Actions">
+                <form method="post" action="{% url 'send_email' %}" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="name" value="{{ result.name }}">
+                  <input type="hidden" name="email" value="{{ result.email }}">
+                  <input type="hidden" name="phone" value="{{ result.phone_number|default:'' }}">
+                  <button type="submit" class="btn-send-offer btn-sm">
+                    <i class="bi bi-envelope-fill me-1"></i> Send Offer Letter
+                  </button>
+                </form>
+              </td>
+            </tr>
+            {% endif %}
+          {% empty %}
+            <tr>
+              <td colspan="4" class="no-data">
+                <i class="bi bi-file-earmark-x"></i><br><br>
+                No resumes ranked yet.<br>
+                Upload resumes to see results.
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="no-data">
+      <i class="bi bi-file-earmark-x"></i><br><br>
+      No resumes processed yet.<br>
+      Upload resumes to get ranked results and send offer letters.
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

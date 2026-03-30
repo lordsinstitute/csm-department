@@ -1,0 +1,467 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Resume Prediction Results{% endblock %}
+
+{% block content %}
+
+<style>
+  .results-wrapper {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 90px);
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .results-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #a78bfa, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .results-card {
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+  }
+
+  .table {
+    margin-bottom: 0;
+    color: #e2e8f0;
+  }
+
+  .table thead th {
+    background: linear-gradient(90deg, #7c3aed, #c084fc);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    padding: 1rem;
+  }
+
+  .table tbody tr {
+    background: rgba(15, 23, 42, 0.35);
+    transition: all 0.25s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(167, 139, 250, 0.12);
+    transform: scale(1.005);
+  }
+
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid rgba(167,139,250,0.08);
+  }
+
+  .rank-badge {
+    display: inline-block;
+    width: 2.4rem;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .similarity-high { color: #10b981; font-weight: 600; }
+  .similarity-medium { color: #f59e0b; font-weight: 600; }
+  .similarity-low { color: #ef4444; font-weight: 600; }
+
+  .btn-view {
+    padding: 0.45rem 1rem;
+    font-size: 0.9rem;
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+  }
+
+  .btn-view:hover {
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #94a3b8;
+    font-size: 1.2rem;
+  }
+
+  .action-buttons {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .action-buttons a {
+    padding: 0.7rem 1.6rem;
+    margin: 0.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    text-decoration: none;
+    color: white;
+  }
+
+  .btn-upload {
+    background: linear-gradient(90deg, #6b7280, #9ca3af);
+  }
+
+  .btn-app {
+    background: linear-gradient(90deg, #10b981, #34d399);
+  }
+</style>
+
+<div class="results-wrapper">
+
+  <div class="results-header">
+    <h2 class="results-title">Resume Ranking Results</h2>
+  </div>
+
+  <div class="results-card">
+    {% if results %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Similarity (%)</th>
+            <th>Resume</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for result in results %}
+          <tr>
+
+            <!-- Rank -->
+            <td>
+              <span class="rank-badge">
+                {% if forloop.counter == 1 %}
+                  🥇
+                {% elif forloop.counter == 2 %}
+                  🥈
+                {% elif forloop.counter == 3 %}
+                  🥉
+                {% else %}
+                  {{ forloop.counter }}
+                {% endif %}
+              </span>
+            </td>
+
+            <!-- Name -->
+            <td>{{ result.0 }}</td>
+
+            <!-- Email -->
+            <td>{{ result.1 }}</td>
+
+            <!-- Phone -->
+            <td>{{ result.2 }}</td>
+
+            <!-- Similarity -->
+            <td>
+              {% if result.3 >= 80 %}
+                <span class="similarity-high">{{ result.3|floatformat:2 }}%</span>
+              {% elif result.3 >= 60 %}
+                <span class="similarity-medium">{{ result.3|floatformat:2 }}%</span>
+              {% else %}
+                <span class="similarity-low">{{ result.3|floatformat:2 }}%</span>
+              {% endif %}
+            </td>
+
+            <!-- Resume Link -->
+            <td>
+              <a href="{{ result.4 }}" target="_blank" class="btn-view">
+                View
+              </a>
+            </td>
+
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <div class="no-data">
+        No resumes processed yet.<br>
+        Upload resumes to see ranking results.
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="action-buttons">
+    <a href="{% url 'upload_resumes' %}" class="btn-upload">
+      Upload More Resumes
+    </a>
+    <a href="{% url 'application' %}" class="btn-app">
+      Go to Applications
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+{% comment %} {% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Resume Prediction Results{% endblock %}
+
+{% block content %}
+
+<style>
+  .results-wrapper {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 90px);
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .results-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #a78bfa, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.8rem;
+  }
+
+  .info-alert {
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: #c084fc;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .results-card {
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .table {
+    margin-bottom: 0;
+    color: #e2e8f0;
+  }
+
+  .table thead th {
+    background: linear-gradient(90deg, #7c3aed, #c084fc);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    padding: 1.1rem 1rem;
+    font-size: 1.05rem;
+  }
+
+  .table tbody tr {
+    background: rgba(15, 23, 42, 0.35);
+    transition: all 0.25s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(167, 139, 250, 0.12);
+    transform: scale(1.005);
+  }
+
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 1rem 0.9rem;
+    border-top: 1px solid rgba(167,139,250,0.08);
+  }
+
+  .rank-badge {
+    display: inline-block;
+    width: 2.2rem;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+  }
+
+  .btn-view {
+    padding: 0.5rem 1.1rem;
+    font-size: 0.9rem;
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    color: white;
+    border-radius: 50px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(99,102,241,0.3);
+  }
+
+  .btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99,102,241,0.45);
+    color: white;
+  }
+
+  .action-buttons {
+    text-align: center;
+    margin-top: 2.5rem;
+  }
+
+  .btn-secondary-custom,
+  .btn-success-custom {
+    padding: 0.75rem 1.8rem;
+    font-size: 1.05rem;
+    border-radius: 50px;
+    margin: 0 0.8rem 1rem;
+    transition: all 0.3s;
+  }
+
+  .btn-secondary-custom {
+    background: linear-gradient(90deg, #6b7280, #9ca3af);
+    color: white;
+    box-shadow: 0 6px 20px rgba(107,114,128,0.3);
+  }
+
+  .btn-success-custom {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    color: white;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+  }
+
+  .btn-secondary-custom:hover,
+  .btn-success-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 5rem 1rem;
+    color: #94a3b8;
+    font-size: 1.3rem;
+  }
+
+  .no-data i {
+    font-size: 4rem;
+    opacity: 0.5;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .page-title { font-size: 1.9rem; }
+    .table thead { display: none; }
+    .table tbody tr {
+      display: block;
+      margin-bottom: 1.3rem;
+      border: 1px solid rgba(167,139,250,0.2);
+      border-radius: 12px;
+    }
+    .table td {
+      display: flex;
+      justify-content: space-between;
+      text-align: right;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid rgba(167,139,250,0.1);
+    }
+    .table td:before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #c084fc;
+      text-align: left;
+      flex: 1;
+    }
+    .action-buttons { flex-direction: column; }
+    .btn-secondary-custom, .btn-success-custom {
+      width: 100%;
+      margin: 0.6rem 0;
+    }
+  }
+</style>
+
+<div class="results-wrapper">
+  <div class="results-header">
+    <h2 class="results-title">Resume Prediction Results</h2>
+  </div>
+
+  <div class="alert info-alert">
+    <i class="bi bi-info-circle me-2"></i>
+    Resumes sorted by best match to job description. Click "View Resume" to open in new tab.
+  </div>
+
+  <div class="results-card">
+    {% if results %}
+    <div class="table-responsive">
+      <table>
+  <tr>
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Email</th>
+    <th>Phone</th>
+    <th>Similarity (%)</th>
+    <th>Resume</th>
+  </tr>
+
+  {% for rank, name, email, phone, similarity, resume_url in results %}
+  <tr>
+    <td>{{ rank }}</td>
+    <td>{{ name }}</td>
+    <td>{{ email }}</td>
+    <td>{{ phone }}</td>
+    <td>{{ similarity }}</td>
+    <td><a href="{{ resume_url }}" target="_blank">View</a></td>
+  </tr>
+  {% endfor %}
+</table>
+    </div>
+    {% else %}
+    <div class="no-data">
+      <i class="bi bi-file-earmark-x"></i><br><br>
+      No resumes processed yet.<br>
+      Upload resumes to see ranking results.
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="action-buttons d-flex justify-content-center flex-wrap">
+    <a href="{% url 'upload_resumes' %}" class="btn btn-secondary-custom">
+      <i class="bi bi-upload me-2"></i> Upload More Resumes
+    </a>
+    <a href="{% url 'application' %}" class="btn btn-success-custom">
+      <i class="bi bi-list-check me-2"></i> Go to Applications
+    </a>
+  </div>
+</div>
+
+{% endblock %} {% endcomment %}
