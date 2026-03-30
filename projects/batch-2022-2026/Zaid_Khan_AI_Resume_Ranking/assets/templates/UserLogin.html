@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Login{% endblock %}
+{% block user_login %}active{% endblock %}
+
+{% block content %}
+
+<style>
+    .login-page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .login-page-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.08) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .login-card {
+        background: rgba(30, 41, 59, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(99, 102, 241, 0.18);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 460px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        animation: cardEnter 0.8s ease-out;
+    }
+
+    @keyframes cardEnter {
+        from { opacity: 0; transform: translateY(40px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-title {
+        font-size: 2.1rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2.2rem;
+        background: linear-gradient(90deg, #a78bfa, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .form-floating {
+        position: relative;
+        margin-bottom: 1.6rem;
+    }
+
+    .form-floating input {
+        width: 100%;
+        padding: 1.25rem 1rem 0.5rem 2.8rem;
+        font-size: 1.05rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(165,180,252,0.25);
+        border-radius: 10px;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .form-floating input:focus {
+        border-color: #a78bfa;
+        box-shadow: 0 0 0 0.25rem rgba(167,139,250,0.25);
+        outline: none;
+    }
+
+    .form-floating label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1rem 0.75rem 0 2.8rem;
+        pointer-events: none;
+        color: #94a3b8;
+        transition: all 0.3s ease;
+    }
+
+    .form-floating input:focus ~ label,
+    .form-floating input:not(:placeholder-shown) ~ label {
+        transform: translateY(-1.8rem) scale(0.85);
+        color: #a78bfa;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.3rem;
+        transition: color 0.3s;
+        pointer-events: none;
+    }
+
+    .form-floating input:focus ~ .input-icon {
+        color: #a78bfa;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 0.9rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(90deg, #6366f1, #a78bfa);
+        color: white;
+        transition: all 0.4s;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(99,102,241,0.35);
+    }
+
+    .btn-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(99,102,241,0.55);
+    }
+
+    .btn-login::after {
+        content: "";
+        position: absolute;
+        top: -50%; left: -100%;
+        width: 50%; height: 200%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.7s;
+    }
+
+    .btn-login:hover::after {
+        left: 200%;
+    }
+
+    .message {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 1.05rem;
+    }
+
+    .message.success { color: #6ee7b7; }
+    .message.error   { color: #fca5a5; }
+
+    @media (max-width: 576px) {
+        .login-card { padding: 2rem 1.5rem; }
+        .login-title { font-size: 1.9rem; }
+    }
+</style>
+
+<div class="login-page-wrapper">
+    <div class="login-card">
+        <h2 class="login-title">User Login</h2>
+
+        <form action="{% url 'UserLoginCheck' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-floating">
+                <input type="text" name="loginid" id="loginid" placeholder=" " required>
+                <label for="loginid">Login ID / Email</label>
+                <i class="bi bi-person-fill input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" name="pswd" id="pswd" placeholder=" " required>
+                <label for="pswd">Password</label>
+                <i class="bi bi-lock-fill input-icon"></i>
+            </div>
+
+            <button type="submit" class="btn-login mt-3">
+                Sign In
+            </button>
+
+            {% if messages %}
+                <div class="message {% if messages.0.tags == 'success' %}success{% else %}error{% endif %}">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

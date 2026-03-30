@@ -1,0 +1,173 @@
+a{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}User Dashboard{% endblock %}
+{% block user_home %}active{% endblock %}
+
+{% block content %}
+
+<style>
+  .user-home-wrapper {
+    min-height: calc(100vh - 90px);
+    padding: 2rem 1rem;
+    position: relative;
+    color: #f1f5f9;
+  }
+
+  /* Background with overlay for readability */
+  .user-home-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(15, 23, 42, 0.72), rgba(15, 23, 42, 0.78));
+    z-index: -1;
+  }
+
+  body {
+    background: url("{% static 'img/image3.png' %}") center/cover no-repeat fixed;
+  }
+
+  .welcome-section {
+    text-align: center;
+    padding: 4rem 1rem 5rem;
+  }
+
+  .welcome-title {
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #c084fc, #ec4899, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    animation: fadeInUp 1.2s ease-out;
+  }
+
+  .welcome-subtitle {
+    font-size: 1.3rem;
+    max-width: 720px;
+    margin: 0 auto 2.5rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+  }
+
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.6rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .action-card {
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.35s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  .action-card:nth-child(1) { animation-delay: 0.1s; }
+  .action-card:nth-child(2) { animation-delay: 0.2s; }
+  .action-card:nth-child(3) { animation-delay: 0.3s; }
+  .action-card:nth-child(4) { animation-delay: 0.4s; }
+  .action-card:nth-child(5) { animation-delay: 0.5s; }
+
+  .action-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(167,139,250,0.35);
+    border-color: rgba(167,139,250,0.4);
+  }
+
+  .card-icon {
+    font-size: 3.2rem;
+    margin-bottom: 1.2rem;
+    color: #c084fc;
+  }
+
+  .card-title {
+    font-size: 1.45rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: white;
+  }
+
+  .card-desc {
+    color: #cbd5e1;
+    font-size: 1rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .card-link {
+    display: inline-block;
+    padding: 0.75rem 1.8rem;
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(99,102,241,0.3);
+  }
+
+  .card-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(99,102,241,0.45);
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(35px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .welcome-title { font-size: 2.8rem; }
+    .welcome-subtitle { font-size: 1.15rem; }
+  }
+</style>
+
+<div class="user-home-wrapper">
+  <div class="welcome-section">
+    <h1 class="welcome-title">Welcome Back!</h1>
+    <p class="welcome-subtitle">
+      Explore your applications, training progress, past submissions, and sort your resumes faster with AI.
+    </p>
+  </div>
+
+  <div class="action-grid">
+    <div class="action-card">
+      <div class="card-icon"><i class="bi bi-file-earmark-text"></i></div>
+      <h3 class="card-title">Present Applications</h3>
+      <p class="card-desc">Track and manage your current job applications</p>
+      <a href="{% url 'application' %}" class="card-link">View Applications</a>
+    </div>
+
+    <div class="action-card">
+      <div class="card-icon"><i class="bi bi-clock-history"></i></div>
+      <h3 class="card-title">Past Applications</h3>
+      <p class="card-desc">Review your previous submissions and outcomes</p>
+      <a href="{% url 'past_applications' %}" class="card-link">See History</a>
+    </div>
+
+    <div class="action-card">
+      <div class="card-icon"><i class="bi bi-mortarboard-fill"></i></div>
+      <h3 class="card-title">Training</h3>
+      <p class="card-desc">Access learning resources and skill development modules</p>
+      <a href="{% url 'training' %}" class="card-link">Start Training</a>
+    </div>
+
+    <div class="action-card">
+      <div class="card-icon"><i class="bi bi-filetype-pdf"></i></div>
+      <h3 class="card-title">Resume SortOut</h3>
+      <p class="card-desc">Upload resumes and let AI rank them for job matches</p>
+      <a href="{% url 'upload_resumes' %}" class="card-link">Sort Resumes Now</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
