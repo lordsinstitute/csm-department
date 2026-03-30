@@ -1,0 +1,95 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+{% block content %}
+    <title>YOLOv8 Training Metrics</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9f0f7;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 30px 40px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .metric {
+            font-size: 18px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background-color: #f6faff;
+            border-left: 5px solid #3498db;
+            border-radius: 6px;
+            color: #333;
+        }
+
+        .metric strong {
+            display: inline-block;
+            width: 100px;
+            color: #2c3e50;
+        }
+
+        .error {
+            color: #c0392b;
+            background-color: #fdecea;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .image-gallery img {
+            max-width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+<body>
+    <div class="container">
+        <h1>YOLOv8 Training Metrics</h1>
+
+        {% if metrics.error %}
+            <div class="error">{{ metrics.error }}</div>
+        {% else %}
+            <div class="metric"><strong>Precision:</strong> {{ metrics.precision }}</div>
+            <div class="metric"><strong>Recall:</strong> {{ metrics.recall }}</div>
+            <div class="metric"><strong>mAP:</strong> {{ metrics.map }}</div>
+        {% endif %}
+{% comment %}
+        {% if images %}
+            <h2>Prediction Results</h2>
+            <div class="image-gallery">
+                {% for image in images %}
+                    <img src="{% static image %}" alt="YOLO Result Image">
+                {% endfor %}
+            </div>
+        {% endif %}
+{% endcomment %}
+    </div>
+</body>
+{% endblock content %}
