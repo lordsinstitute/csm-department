@@ -1,0 +1,89 @@
+[
+  { "url": "https://docs.python.org/3/tutorial/index.html", "title": "The Python Tutorial", "lastVisitTime": 1708300000000 },
+  { "url": "https://docs.python.org/3/library/functions.html", "title": "Built-in Functions — Python Documentation", "lastVisitTime": 1708301000000 },
+  { "url": "https://realpython.com/python-data-structures/", "title": "Common Python Data Structures Guide", "lastVisitTime": 1708302000000 },
+  { "url": "https://docs.python.org/3/howto/regex.html", "title": "Regular Expression HOWTO — Python Documentation", "lastVisitTime": 1708303000000 },
+  { "url": "https://docs.python.org/3/tutorial/classes.html", "title": "Classes — Python Tutorial", "lastVisitTime": 1708306000000 },
+  { "url": "https://docs.python.org/3/tutorial/errors.html", "title": "Errors and Exceptions — Python Tutorial", "lastVisitTime": 1708307000000 },
+  { "url": "https://docs.python.org/3/tutorial/modules.html", "title": "Modules — Python Tutorial", "lastVisitTime": 1708308000000 },
+  { "url": "https://docs.python.org/3/tutorial/controlflow.html", "title": "Control Flow Tools — Python Tutorial", "lastVisitTime": 1708309000000 },
+  { "url": "https://docs.python.org/3/howto/functional.html", "title": "Functional Programming HOWTO — Python Documentation", "lastVisitTime": 1708314000000 },
+  { "url": "https://realpython.com/python-decorators/", "title": "Primer on Python Decorators — Real Python", "lastVisitTime": 1708315000000 },
+  { "url": "https://peps.python.org/pep-0008/", "title": "PEP 8 — Style Guide for Python Code", "lastVisitTime": 1708316000000 },
+  { "url": "https://docs.python.org/3/library/collections.html", "title": "collections — Container Datatypes — Python Documentation", "lastVisitTime": 1708317000000 },
+
+  { "url": "https://numpy.org/doc/stable/user/quickstart.html", "title": "NumPy Quickstart Tutorial", "lastVisitTime": 1708304000000 },
+  { "url": "https://pandas.pydata.org/docs/user_guide/10min.html", "title": "10 Minutes to pandas", "lastVisitTime": 1708305000000 },
+  { "url": "https://scikit-learn.org/stable/modules/clustering.html", "title": "Clustering — scikit-learn Documentation", "lastVisitTime": 1708310000000 },
+  { "url": "https://scikit-learn.org/stable/modules/tree.html", "title": "Decision Trees — scikit-learn Documentation", "lastVisitTime": 1708311000000 },
+  { "url": "https://matplotlib.org/stable/users/getting_started/", "title": "Getting Started with Matplotlib", "lastVisitTime": 1708318000000 },
+  { "url": "https://seaborn.pydata.org/tutorial/introduction.html", "title": "An Introduction to Seaborn", "lastVisitTime": 1708319000000 },
+
+  { "url": "https://www.tensorflow.org/tutorials/quickstart/beginner", "title": "TensorFlow 2 Quickstart for Beginners", "lastVisitTime": 1708312000000 },
+  { "url": "https://pytorch.org/tutorials/beginner/basics/intro.html", "title": "Learn the Basics — PyTorch Tutorials", "lastVisitTime": 1708313000000 },
+  { "url": "https://huggingface.co/docs/transformers/quicktour", "title": "Quick Tour — Hugging Face Transformers", "lastVisitTime": 1708313500000 },
+
+  { "url": "https://react.dev/learn", "title": "Quick Start — React Documentation", "lastVisitTime": 1708320000000 },
+  { "url": "https://vuejs.org/guide/introduction.html", "title": "Introduction — Vue.js Documentation", "lastVisitTime": 1708321000000 },
+  { "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide", "title": "JavaScript Guide — MDN Web Docs", "lastVisitTime": 1708322000000 },
+  { "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout", "title": "CSS Grid Layout — MDN Web Docs", "lastVisitTime": 1708323000000 },
+  { "url": "https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/Getting_started", "title": "Getting Started with HTML — MDN Web Docs", "lastVisitTime": 1708324000000 },
+  { "url": "https://javascript.info/intro", "title": "An Introduction to JavaScript — javascript.info", "lastVisitTime": 1708326000000 },
+  { "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules", "title": "JavaScript Modules — MDN Web Docs", "lastVisitTime": 1708327000000 },
+  { "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise", "title": "Promise — JavaScript Reference — MDN", "lastVisitTime": 1708328000000 },
+  { "url": "https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox", "title": "Flexbox — CSS Layout — MDN Web Docs", "lastVisitTime": 1708329000000 },
+
+  { "url": "https://www.typescriptlang.org/docs/handbook/intro.html", "title": "TypeScript Handbook Introduction", "lastVisitTime": 1708325000000 },
+
+  { "url": "https://fastapi.tiangolo.com/tutorial/", "title": "FastAPI Tutorial — User Guide", "lastVisitTime": 1708350000000 },
+  { "url": "https://graphql.org/learn/", "title": "Introduction to GraphQL", "lastVisitTime": 1708351000000 },
+  { "url": "https://expressjs.com/en/starter/hello-world.html", "title": "Hello World — Express.js Node.js Framework", "lastVisitTime": 1708352000000 },
+
+  { "url": "https://www.postgresql.org/docs/current/tutorial.html", "title": "PostgreSQL Tutorial", "lastVisitTime": 1708360000000 },
+  { "url": "https://www.w3schools.com/sql/sql_intro.asp", "title": "SQL Introduction — W3Schools", "lastVisitTime": 1708361000000 },
+  { "url": "https://www.mongodb.com/docs/manual/introduction/", "title": "Introduction to MongoDB", "lastVisitTime": 1708362000000 },
+  { "url": "https://redis.io/docs/latest/develop/get-started/", "title": "Getting Started — Redis Documentation", "lastVisitTime": 1708363000000 },
+
+  { "url": "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control", "title": "Pro Git: About Version Control", "lastVisitTime": 1708370000000 },
+  { "url": "https://docs.github.com/en/get-started/start-your-journey", "title": "Get Started with GitHub", "lastVisitTime": 1708371000000 },
+
+  { "url": "https://docs.docker.com/get-started/", "title": "Docker Get Started Guide", "lastVisitTime": 1708340000000 },
+  { "url": "https://docs.docker.com/compose/gettingstarted/", "title": "Docker Compose Getting Started", "lastVisitTime": 1708341000000 },
+  { "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/", "title": "Learn Kubernetes Basics", "lastVisitTime": 1708342000000 },
+
+  { "url": "https://aws.amazon.com/what-is/cloud-computing/", "title": "What Is Cloud Computing — AWS", "lastVisitTime": 1708450000000 },
+  { "url": "https://cloud.google.com/learn/what-is-cloud-computing", "title": "What Is Cloud Computing — Google Cloud", "lastVisitTime": 1708451000000 },
+
+  { "url": "https://refactoring.guru/design-patterns", "title": "Design Patterns — Refactoring Guru", "lastVisitTime": 1708380000000 },
+  { "url": "https://martinfowler.com/articles/microservices.html", "title": "Microservices — Martin Fowler", "lastVisitTime": 1708381000000 },
+
+  { "url": "https://www.coursera.org/articles/what-is-cybersecurity", "title": "What Is Cybersecurity — Coursera", "lastVisitTime": 1708440000000 },
+  { "url": "https://owasp.org/www-project-top-ten/", "title": "OWASP Top Ten Web Application Security Risks", "lastVisitTime": 1708441000000 },
+  { "url": "https://www.cloudflare.com/learning/security/what-is-a-firewall/", "title": "What Is a Firewall — Cloudflare Learning", "lastVisitTime": 1708442000000 },
+
+  { "url": "https://learning.sap.com/learning-journeys/acquire-core-abap-skills", "title": "Acquire Core ABAP Skills — SAP Learning", "lastVisitTime": 1708400000000 },
+  { "url": "https://help.sap.com/docs/sap-s-4hana-cloud", "title": "SAP S/4HANA Cloud Documentation", "lastVisitTime": 1708401000000 },
+  { "url": "https://help.sap.com/docs/SAP_NETWEAVER", "title": "SAP NetWeaver — SAP Help Portal", "lastVisitTime": 1708402000000 },
+  { "url": "https://community.sap.com/topics/fiori", "title": "SAP Fiori — SAP Community", "lastVisitTime": 1708403000000 },
+
+  { "url": "https://www.who.int/news-room/fact-sheets/detail/cardiovascular-diseases-(cvds)", "title": "Cardiovascular Diseases — WHO Fact Sheet", "lastVisitTime": 1708410000000 },
+  { "url": "https://www.mayoclinic.org/diseases-conditions/diabetes/symptoms-causes/syc-20371444", "title": "Diabetes — Symptoms and Causes — Mayo Clinic", "lastVisitTime": 1708411000000 },
+  { "url": "https://medlineplus.gov/immunesystemanddisorders.html", "title": "Immune System and Disorders — MedlinePlus", "lastVisitTime": 1708412000000 },
+  { "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7150208/", "title": "John Snow and Waterborne Disease — PMC Research", "lastVisitTime": 1708413000000 },
+
+  { "url": "https://www.khanacademy.org/science/biology/human-biology/neurology/v/anatomy-of-a-neuron", "title": "Anatomy of a Neuron — Khan Academy", "lastVisitTime": 1708420000000 },
+  { "url": "https://www.nature.com/scitable/topicpage/cell-division-mitosis-and-meiosis-231/", "title": "Cell Division: Mitosis and Meiosis — Nature Scitable", "lastVisitTime": 1708421000000 },
+  { "url": "https://www.khanacademy.org/science/biology/gene-expression-central-dogma", "title": "Gene Expression and the Central Dogma — Khan Academy", "lastVisitTime": 1708422000000 },
+
+  { "url": "https://www.investopedia.com/terms/s/stockmarket.asp", "title": "What Is the Stock Market and How Does It Work — Investopedia", "lastVisitTime": 1708430000000 },
+  { "url": "https://www.investopedia.com/terms/m/mutualfund.asp", "title": "What Is a Mutual Fund — Investopedia", "lastVisitTime": 1708431000000 },
+  { "url": "https://www.investopedia.com/terms/c/cryptocurrency.asp", "title": "What Is Cryptocurrency — Investopedia", "lastVisitTime": 1708432000000 },
+  { "url": "https://www.investopedia.com/terms/b/blockchain.asp", "title": "What Is Blockchain Technology — Investopedia", "lastVisitTime": 1708433000000 },
+
+  { "url": "https://ubuntu.com/tutorials/command-line-for-beginners", "title": "Command Line for Beginners — Ubuntu", "lastVisitTime": 1708390000000 },
+
+  { "url": "https://www.britannica.com/science/quantum-mechanics-physics", "title": "Quantum Mechanics — Britannica", "lastVisitTime": 1708460000000 },
+  { "url": "https://science.nasa.gov/climate-change/effects/", "title": "The Effects of Climate Change — NASA", "lastVisitTime": 1708461000000 },
+  { "url": "https://www.britannica.com/science/solar-system", "title": "Solar System — Britannica", "lastVisitTime": 1708462000000 },
+  { "url": "https://www.britannica.com/science/black-hole", "title": "Black Hole — Britannica", "lastVisitTime": 1708463000000 }
+]
