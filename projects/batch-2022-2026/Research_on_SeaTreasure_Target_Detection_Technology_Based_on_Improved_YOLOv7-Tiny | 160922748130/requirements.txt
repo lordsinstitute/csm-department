@@ -1,0 +1,15 @@
+django
+mysqlclient
+opencv-python
+torch
+torchvision
+pillow
+django-crispy-forms
+crispy-bootstrap5
+matplotlib
+pandas
+numpy
+tqdm
+pyyaml
+ultralytics
+psutil

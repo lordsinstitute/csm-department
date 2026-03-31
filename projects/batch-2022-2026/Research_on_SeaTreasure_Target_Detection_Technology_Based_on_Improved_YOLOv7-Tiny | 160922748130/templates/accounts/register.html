@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register - Sea Treasure Detection{% endblock %}
+{% block page_title %}Register{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width:520px;">
+    <div class="auth-logo">
+      <div class="logo-icon">🐚</div>
+      <h2 class="fw-bold mb-1" style="font-family:'Space Grotesk',sans-serif;">Create Account</h2>
+      <p class="text-ocean" style="font-size:.9rem;">Join the SeaTreasure Detection Platform</p>
+    </div>
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">First Name</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}<div class="text-danger mt-1" style="font-size:.8rem;">{{ form.first_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Last Name</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}<div class="text-danger mt-1" style="font-size:.8rem;">{{ form.last_name.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label">Username</label>
+          {{ form.username }}
+          {% if form.username.errors %}<div class="text-danger mt-1" style="font-size:.8rem;">{{ form.username.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-12">
+          <label class="form-label">Email Address</label>
+          {{ form.email }}
+          {% if form.email.errors %}<div class="text-danger mt-1" style="font-size:.8rem;">{{ form.email.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Organization</label>
+          {{ form.organization }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Phone</label>
+          {{ form.phone }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Password</label>
+          {{ form.password1 }}
+          {% if form.password1.errors %}<div class="text-danger mt-1" style="font-size:.8rem;">{{ form.password1.errors.0 }}</div>{% endif %}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Confirm Password</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}<div class="text-danger mt-1" style="font-size:.8rem;">{{ form.password2.errors.0 }}</div>{% endif %}
+        </div>
+        {% if form.non_field_errors %}
+        <div class="col-12">
+          <div class="alert alert-danger">{{ form.non_field_errors.0 }}</div>
+        </div>
+        {% endif %}
+        <div class="col-12">
+          <button type="submit" class="btn-accent btn w-100" id="registerBtn">
+            <i class="bi bi-person-check-fill me-2"></i>Create Account
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="divider"></div>
+    <p class="text-center text-ocean mb-0" style="font-size:.88rem;">
+      Already have an account?
+      <a href="{% url 'accounts:login' %}" class="text-accent fw-semibold">Sign in here</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

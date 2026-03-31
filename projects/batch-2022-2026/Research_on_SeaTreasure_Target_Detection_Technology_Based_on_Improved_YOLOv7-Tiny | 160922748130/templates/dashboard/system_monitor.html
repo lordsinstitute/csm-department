@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}System Monitor - Admin{% endblock %}
+{% block page_title %}System Resource Monitor{% endblock %}
+
+{% block content %}
+<div class="section-heading">
+  <h2><i class="bi bi-cpu-fill me-2 text-accent"></i>System Resources</h2>
+  <button class="btn-glass btn btn-sm" onclick="location.reload()">
+    <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+  </button>
+</div>
+
+<div class="row g-4 mb-4">
+  <!-- CPU -->
+  <div class="col-sm-6 col-lg-4">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="bi bi-cpu me-2 text-accent"></i>CPU Usage</h6>
+        <span class="badge-status {% if cpu_percent > 80 %}badge-failed{% elif cpu_percent > 60 %}badge-pending{% else %}badge-completed{% endif %}">
+          {{ cpu_percent }}%
+        </span>
+      </div>
+      <div class="ocean-progress mb-2">
+        <div class="ocean-progress-bar" style="width:{{ cpu_percent }}%;{% if cpu_percent > 80 %}background:#ef4444;{% elif cpu_percent > 60 %}background:#ffc107;{% endif %}"></div>
+      </div>
+      <small class="text-ocean">Current processor utilization</small>
+    </div>
+  </div>
+  <!-- Memory -->
+  <div class="col-sm-6 col-lg-4">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="bi bi-memory me-2 text-accent"></i>Memory (RAM)</h6>
+        <span class="badge-status {% if mem_percent > 80 %}badge-failed{% elif mem_percent > 60 %}badge-pending{% else %}badge-completed{% endif %}">
+          {{ mem_percent }}%
+        </span>
+      </div>
+      <div class="ocean-progress mb-2">
+        <div class="ocean-progress-bar" style="width:{{ mem_percent }}%;{% if mem_percent > 80 %}background:#ef4444;{% endif %}"></div>
+      </div>
+      <small class="text-ocean">{{ mem_used_gb }} GB / {{ mem_total_gb }} GB used</small>
+    </div>
+  </div>
+  <!-- Disk -->
+  <div class="col-sm-6 col-lg-4">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0"><i class="bi bi-hdd-fill me-2 text-accent"></i>Disk Storage</h6>
+        <span class="badge-status {% if disk_percent > 85 %}badge-failed{% elif disk_percent > 70 %}badge-pending{% else %}badge-completed{% endif %}">
+          {{ disk_percent }}%
+        </span>
+      </div>
+      <div class="ocean-progress mb-2">
+        <div class="ocean-progress-bar" style="width:{{ disk_percent }}%;{% if disk_percent > 85 %}background:#ef4444;{% endif %}"></div>
+      </div>
+      <small class="text-ocean">{{ disk_used_gb }} GB / {{ disk_total_gb }} GB used</small>
+    </div>
+  </div>
+</div>
+
+<div class="glass-card p-4">
+  <h5 class="fw-bold mb-3"><i class="bi bi-info-circle me-2 text-accent"></i>System Information</h5>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="d-flex gap-3">
+        <span class="text-ocean" style="min-width:120px;">Platform:</span>
+        <span>{{ platform }}</span>
+      </div>
+      <div class="divider" style="margin:.75rem 0;"></div>
+      <div class="d-flex gap-3">
+        <span class="text-ocean" style="min-width:120px;">Python:</span>
+        <span>{{ python_version }}</span>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex gap-3">
+        <span class="text-ocean" style="min-width:150px;">Django Version:</span>
+        <span>{% load static %}5.x</span>
+      </div>
+      <div class="divider" style="margin:.75rem 0;"></div>
+      <div class="d-flex gap-3">
+        <span class="text-ocean" style="min-width:150px;">Inference Engine:</span>
+        <span class="text-accent">UPA-YOLOv7-Tiny</span>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Sea Treasure Detection{% endblock %}
+{% block page_title %}Login{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-icon">🐚</div>
+      <h2 class="fw-bold mb-1" style="font-family:'Space Grotesk',sans-serif;">Welcome Back</h2>
+      <p class="text-ocean" style="font-size:.9rem;">Sign in to the SeaTreasure Detection Platform</p>
+    </div>
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      <div class="mb-4">
+        <label class="form-label" for="id_username">
+          <i class="bi bi-person me-1"></i>Username
+        </label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <div class="text-danger mt-1" style="font-size:.8rem;">{{ form.username.errors.0 }}</div>
+        {% endif %}
+      </div>
+      <div class="mb-4">
+        <label class="form-label" for="id_password">
+          <i class="bi bi-lock me-1"></i>Password
+        </label>
+        {{ form.password }}
+        {% if form.password.errors %}
+          <div class="text-danger mt-1" style="font-size:.8rem;">{{ form.password.errors.0 }}</div>
+        {% endif %}
+      </div>
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-3">{{ form.non_field_errors.0 }}</div>
+      {% endif %}
+      <button type="submit" class="btn-ocean btn w-100 mb-3" id="loginBtn">
+        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+      </button>
+    </form>
+
+    <div class="divider"></div>
+    <p class="text-center text-ocean mb-0" style="font-size:.88rem;">
+      Don't have an account?
+      <a href="{% url 'accounts:register' %}" class="text-accent fw-semibold">Create one here</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

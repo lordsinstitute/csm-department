@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - Sea Treasure{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<!-- Admin Stats Row -->
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up" style="--before-color:var(--primary);">
+      <div class="d-flex justify-content-between align-items-start">
+        <div><div class="stat-value">{{ total_users }}</div><div class="stat-label">Total Users</div></div>
+        <div class="stat-icon" style="background:rgba(13,110,253,0.15);">👥</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div><div class="stat-value">{{ total_jobs }}</div><div class="stat-label">Total Jobs</div></div>
+        <div class="stat-icon" style="background:rgba(0,212,170,0.15);">🔍</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div><div class="stat-value" style="color:var(--accent2);">{{ total_detections }}</div><div class="stat-label">Objects Detected</div></div>
+        <div class="stat-icon" style="background:rgba(255,107,53,0.15);">🐚</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div><div class="stat-value" style="color:var(--warning);">{{ total_datasets }}</div><div class="stat-label">Datasets</div></div>
+        <div class="stat-icon" style="background:rgba(255,193,7,0.15);">🗂️</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+  <!-- Daily Trend -->
+  <div class="col-lg-7">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-4"><i class="bi bi-graph-up me-2 text-accent"></i>Detection Jobs (Last 7 Days)</h5>
+      <div class="chart-container"><canvas id="trendChart"></canvas></div>
+    </div>
+  </div>
+  <!-- Species Distribution -->
+  <div class="col-lg-5">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-4"><i class="bi bi-pie-chart me-2 text-accent"></i>Species Distribution</h5>
+      {% if species_dist %}
+      <div class="chart-container"><canvas id="speciesAdminChart"></canvas></div>
+      {% else %}
+      <div class="text-center py-5 text-ocean"><p>No data yet</p></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Model Metrics Card -->
+{% if metrics %}
+<div class="row g-4 mb-4">
+  <div class="col-12">
+    <div class="glass-card p-4" style="background:linear-gradient(135deg,rgba(13,110,253,0.08),rgba(0,212,170,0.05));">
+      <h5 class="fw-bold mb-4"><i class="bi bi-cpu me-2 text-accent"></i>Model Performance — {{ metrics.model_name }} v{{ metrics.model_version }}</h5>
+      <div class="row g-3">
+        <div class="col-sm-4 col-md-2">
+          <div class="text-center">
+            <div class="fw-bold" style="font-size:1.6rem;color:var(--accent);">{{ metrics.map50|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">mAP@0.5</div>
+          </div>
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <div class="text-center">
+            <div class="fw-bold" style="font-size:1.6rem;color:var(--primary);">{{ metrics.precision|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Precision</div>
+          </div>
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <div class="text-center">
+            <div class="fw-bold" style="font-size:1.6rem;color:var(--warning);">{{ metrics.recall|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Recall</div>
+          </div>
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <div class="text-center">
+            <div class="fw-bold" style="font-size:1.6rem;color:var(--accent2);">{{ metrics.avg_inference_time_ms|default:"—" }}ms</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Avg Inference</div>
+          </div>
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <div class="text-center">
+            <div class="fw-bold" style="font-size:1.6rem;color:#a855f7;">{{ metrics.gflops|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">GFLOPs</div>
+          </div>
+        </div>
+        <div class="col-sm-4 col-md-2">
+          <div class="text-center">
+            <div class="fw-bold" style="font-size:1.6rem;color:#06b6d4;">{{ metrics.parameters_m|default:"—" }}M</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Parameters</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Recent Jobs + New Users -->
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold mb-0"><i class="bi bi-activity me-2 text-accent"></i>Recent Detection Jobs</h5>
+        <a href="{% url 'detection:history' %}" class="btn-glass btn btn-sm">View All</a>
+      </div>
+      <div class="table-responsive">
+        <table class="ocean-table">
+          <thead>
+            <tr><th>User</th><th>Job</th><th>Type</th><th>Status</th><th>Objects</th><th>Time</th><th>Date</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            {% for job in recent_jobs %}
+            <tr>
+              <td>{{ job.user.username }}</td>
+              <td>{{ job.name|default:"Unnamed"|truncatechars:18 }}</td>
+              <td><span class="badge-status badge-processing">{{ job.job_type|upper }}</span></td>
+              <td><span class="badge-status badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
+              <td style="color:var(--accent);font-weight:600;">{{ job.total_detections }}</td>
+              <td>{{ job.inference_time_ms|floatformat:0|default:"—" }}ms</td>
+              <td>{{ job.created_at|date:"M d, H:i" }}</td>
+              <td>
+                <a href="{% url 'detection:result' job.id %}" class="btn-glass btn btn-sm" title="View">
+                  <i class="bi bi-eye"></i>
+                </a>
+              </td>
+
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-ocean py-3">No jobs yet</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="glass-card p-4">
+      <h5 class="fw-bold mb-4"><i class="bi bi-person-plus-fill me-2 text-accent"></i>New Users</h5>
+      {% for u in recent_users %}
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="user-avatar-sm">{{ u.username|first|upper }}</div>
+        <div>
+          <div style="font-size:.88rem;font-weight:600;">{{ u.get_full_name|default:u.username }}</div>
+          <div style="font-size:.75rem;color:var(--text-secondary);">{{ u.date_joined|date:"M d, Y" }}</div>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="divider"></div>
+      <a href="{% url 'dashboard:user_management' %}" class="btn-glass btn btn-sm w-100">
+        <i class="bi bi-people me-2"></i>Manage All Users
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ trend|json_script:"trend-data" }}
+{{ species_dist|json_script:"species-data" }}
+
+<script>
+// Trend Chart
+const trendData = JSON.parse(document.getElementById('trend-data').textContent);
+new Chart(document.getElementById('trendChart'), {
+  type: 'bar',
+  data: {
+    labels: trendData.map(d => d.date),
+    datasets: [{
+      label: 'Detection Jobs',
+      data: trendData.map(d => d.count),
+      backgroundColor: 'rgba(0,212,170,0.25)',
+      borderColor: '#00d4aa',
+      borderWidth: 2,
+      borderRadius: 6,
+      hoverBackgroundColor: 'rgba(0,212,170,0.5)',
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color:'#94a3b8' } },
+      y: { beginAtZero: true, grid: { color:'rgba(255,255,255,0.05)' }, ticks: { color:'#94a3b8', stepSize: 1 } }
+    }
+  }
+});
+
+// Species Chart
+const speciesData = JSON.parse(document.getElementById('species-data').textContent);
+if (speciesData.length > 0) {
+  new Chart(document.getElementById('speciesAdminChart'), {
+    type: 'doughnut',
+    data: {
+      labels: speciesData.map(d => d.species.replace(/_/g,' ').toUpperCase()),
+      datasets: [{
+        data: speciesData.map(d => d.count),
+        backgroundColor: ['#00c864','#1e90ff','#ff8c42','#a855f7','#f59e0b'],
+        borderColor: 'rgba(7,34,64,0.9)',
+        borderWidth: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position:'bottom', labels:{ color:'#94a3b8', padding:12 } } },
+      cutout: '65%'
+    }
+  });
+}
+</script>
+
+{% endblock %}
