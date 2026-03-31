@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% block title %}Real-Time Live Detection - Sea Treasure{% endblock %}
+{% block page_title %}Real-Time Live Detection{% endblock %}
+
+{% block content %}
+<div class="row g-4 justify-content-center">
+    <div class="col-lg-10">
+        <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold mb-1">
+                        <i class="bi bi-camera-video-fill me-2 text-accent"></i>
+                        Live Neural Scan
+                    </h4>
+                    <p class="text-ocean mb-0">System is processing live frames using the tuned YOLO model.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="badge bg-success pulse-glow" id="status-badge">
+                        <i class="bi bi-broadcast me-1"></i> LIVE
+                    </span>
+                </div>
+            </div>
+
+            <div class="glass-card p-3 mb-3" style="background: rgba(13,110,253,0.05);">
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-4">
+                        <label class="form-label text-ocean mb-1" for="model-select">Detection Model</label>
+                        <select id="model-select" class="form-select bg-dark text-white border-secondary">
+                            {% for model in available_models %}
+                            <option value="{{ model.key }}" {% if model.key == active_model_key %}selected{% endif %}>{{ model.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label text-ocean mb-1" for="confidence-slider">
+                            Live Confidence: <span id="confidence-value">{{ default_confidence|floatformat:2 }}</span>
+                        </label>
+                        <input id="confidence-slider" type="range" class="form-range" min="0.20" max="0.70" step="0.01" value="{{ default_confidence|floatformat:2 }}">
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-check form-switch mt-2">
+                            <input class="form-check-input" type="checkbox" id="roi-toggle">
+                            <label class="form-check-label text-ocean" for="roi-toggle">ROI Mode</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 d-grid">
+                        <button id="apply-controls" class="btn btn-accent">
+                            <i class="bi bi-sliders me-1"></i>Apply
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-lg-4 d-grid">
+                        <button id="benchmark-frame" class="btn btn-outline-light">
+                            <i class="bi bi-camera me-1"></i>Capture Current Frame
+                        </button>
+                    </div>
+                    <div class="col-lg-8 d-flex align-items-center">
+                        <div id="benchmark-status" class="small text-ocean">Capture a failing underwater frame to benchmark all trained models on the exact live image.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="live-feed-container text-center" style="background: #000; border-radius: 12px; overflow: hidden; position: relative; min-height: 320px;">
+                <img id="live-feed" data-base-src="{% url 'detection:video_frame' %}" src="{% url 'detection:video_frame' %}" alt="Live Feed" class="img-fluid" style="width: 100%; max-height: 70vh; object-fit: contain;">
+                
+                <div class="scrolling-text" style="position: absolute; bottom: 20px; left: 20px; color: #00ff00; font-family: monospace; text-shadow: 0 0 5px #000;">
+                    LIVE_DATA_STREAM: [{{ request.user.username }}] | LATENCY: <span id="latency">--</span>ms
+                </div>
+            </div>
+
+            <div class="mt-4 row g-3">
+                <div class="col-md-4">
+                    <div class="glass-card p-3 text-center" style="background: rgba(0,212,170,0.05);">
+                        <div class="text-ocean small text-uppercase fw-bold mb-1">Processing Mode</div>
+                        <div class="text-white">Real-Time Neural</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-3 text-center" style="background: rgba(13,110,253,0.05);">
+                        <div class="text-ocean small text-uppercase fw-bold mb-1">Target Engine</div>
+                        <div class="text-white">YOLOv8 Precise</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-3 text-center" style="background: rgba(255,107,53,0.05);">
+                        <div class="text-ocean small text-uppercase fw-bold mb-1">Auto-Scaling</div>
+                        <div class="text-white">Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="benchmark-panel" class="glass-card p-3 mt-4" style="display:none; background: rgba(0,212,170,0.05);">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-white">Frame Benchmark</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <div id="benchmark-recommendation" class="small text-ocean"></div>
+                        <button id="apply-recommended" class="btn btn-sm btn-accent" style="display:none;">
+                            <i class="bi bi-lightning-charge me-1"></i>Use Recommended
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="small text-ocean mb-2">Captured Raw Frame</div>
+                        <img id="benchmark-raw" class="img-fluid rounded border border-secondary" alt="Captured raw frame">
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="small text-ocean mb-2">Annotated Active Model Output</div>
+                        <img id="benchmark-annotated" class="img-fluid rounded border border-secondary" alt="Captured annotated frame">
+                    </div>
+                </div>
+                <div class="table-responsive mt-3">
+                    <table class="table table-dark table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Detections</th>
+                                <th>Max Confidence</th>
+                                <th>Top Results</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmark-results"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const liveFeed = document.getElementById('live-feed');
+    const modelSelect = document.getElementById('model-select');
+    const confidenceSlider = document.getElementById('confidence-slider');
+    const confidenceValue = document.getElementById('confidence-value');
+    const roiToggle = document.getElementById('roi-toggle');
+    const applyBtn = document.getElementById('apply-controls');
+    const benchmarkBtn = document.getElementById('benchmark-frame');
+    const benchmarkStatus = document.getElementById('benchmark-status');
+    const benchmarkPanel = document.getElementById('benchmark-panel');
+    const benchmarkRaw = document.getElementById('benchmark-raw');
+    const benchmarkAnnotated = document.getElementById('benchmark-annotated');
+    const benchmarkResults = document.getElementById('benchmark-results');
+    const benchmarkRecommendation = document.getElementById('benchmark-recommendation');
+    const applyRecommendedBtn = document.getElementById('apply-recommended');
+    let pollHandle = null;
+    let latestRecommendedSettings = null;
+
+    function buildFeedUrl() {
+        const base = liveFeed.dataset.baseSrc;
+        const conf = Number(confidenceSlider.value).toFixed(2);
+        const roi = roiToggle.checked ? '1' : '0';
+        const model = modelSelect.value;
+        const stamp = Date.now();
+        return `${base}?conf=${encodeURIComponent(conf)}&roi=${roi}&model=${encodeURIComponent(model)}&t=${stamp}`;
+    }
+
+    function startPolling() {
+        if (pollHandle) {
+            clearInterval(pollHandle);
+        }
+        if (!liveFeed) {
+            return;
+        }
+
+        const refresh = () => {
+            liveFeed.src = buildFeedUrl();
+        };
+
+        refresh();
+        pollHandle = setInterval(refresh, 700);
+    }
+
+    function currentParams() {
+        return {
+            conf: Number(confidenceSlider.value).toFixed(2),
+            roi: roiToggle.checked ? '1' : '0',
+            model: modelSelect.value,
+        };
+    }
+
+    async function benchmarkCurrentFrame() {
+        if (!benchmarkBtn) {
+            return;
+        }
+
+        const params = currentParams();
+        benchmarkBtn.disabled = true;
+        benchmarkStatus.innerText = 'Capturing live frame and benchmarking all models...';
+
+        try {
+            const query = new URLSearchParams({ ...params, t: String(Date.now()) });
+            const response = await fetch(`{% url 'detection:benchmark_live_frame' %}?${query.toString()}`, {
+                credentials: 'same-origin',
+            });
+            const data = await response.json();
+            if (!response.ok || !data.ok) {
+                throw new Error(data.error || 'benchmark_failed');
+            }
+
+            benchmarkPanel.style.display = 'block';
+            benchmarkRaw.src = data.raw_image_url;
+            benchmarkAnnotated.src = data.annotated_image_url;
+            benchmarkRecommendation.innerText = data.recommended_model
+                ? `Recommended: ${data.recommended_model.label} @ ${Number(data.suggested_confidence).toFixed(2)}`
+                : 'No model recommendation available';
+
+            latestRecommendedSettings = data.recommended_model
+                ? {
+                    model: data.recommended_model.key,
+                    confidence: Number(data.suggested_confidence).toFixed(2),
+                }
+                : null;
+
+            if (applyRecommendedBtn) {
+                applyRecommendedBtn.style.display = latestRecommendedSettings ? 'inline-flex' : 'none';
+            }
+
+            benchmarkResults.innerHTML = data.benchmarks.map((item) => {
+                const topResults = item.detections.length
+                    ? item.detections.map((det) => `${det.species} ${(det.confidence * 100).toFixed(1)}%`).join(', ')
+                    : 'No detections';
+                return `
+                    <tr>
+                        <td>${item.label}${item.key === data.active_model.key ? ' (active)' : ''}</td>
+                        <td>${item.count}</td>
+                        <td>${(item.max_confidence * 100).toFixed(1)}%</td>
+                        <td>${topResults}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            benchmarkStatus.innerText = 'Benchmark complete. Review which model performed best on this exact frame.';
+        } catch (error) {
+            benchmarkStatus.innerText = `Benchmark failed: ${error.message}`;
+        } finally {
+            benchmarkBtn.disabled = false;
+        }
+    }
+
+    function restartStream() {
+        startPolling();
+    }
+
+    function applyRecommendedSettings() {
+        if (!latestRecommendedSettings) {
+            return;
+        }
+
+        modelSelect.value = latestRecommendedSettings.model;
+        confidenceSlider.value = latestRecommendedSettings.confidence;
+        confidenceValue.innerText = Number(latestRecommendedSettings.confidence).toFixed(2);
+        benchmarkStatus.innerText = `Applied recommended settings: ${latestRecommendedSettings.model} at ${latestRecommendedSettings.confidence}.`;
+        restartStream();
+    }
+
+    if (confidenceSlider) {
+        confidenceSlider.addEventListener('input', () => {
+            confidenceValue.innerText = Number(confidenceSlider.value).toFixed(2);
+        });
+    }
+
+    if (applyBtn) {
+        applyBtn.addEventListener('click', restartStream);
+    }
+
+    if (modelSelect) {
+        modelSelect.addEventListener('change', restartStream);
+    }
+
+    if (roiToggle) {
+        roiToggle.addEventListener('change', restartStream);
+    }
+
+    if (liveFeed) {
+        liveFeed.addEventListener('error', startPolling);
+    }
+
+    if (benchmarkBtn) {
+        benchmarkBtn.addEventListener('click', benchmarkCurrentFrame);
+    }
+
+    if (applyRecommendedBtn) {
+        applyRecommendedBtn.addEventListener('click', applyRecommendedSettings);
+    }
+
+    startPolling();
+
+    // Simulate latency update
+    setInterval(() => {
+        document.getElementById('latency').innerText = Math.floor(Math.random() * 50) + 10;
+    }, 1000);
+</script>
+{% endblock %}

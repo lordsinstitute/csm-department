@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}User Dashboard - Sea Treasure{% endblock %}
+{% block page_title %}My Dashboard{% endblock %}
+
+{% block content %}
+<!-- Stats Row -->
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-value">{{ total_jobs }}</div>
+          <div class="stat-label">Total Detections</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(13,110,253,0.15);">🔍</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-value" style="color:var(--accent);">{{ completed }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(0,212,170,0.15);">✅</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-value" style="color:var(--accent2);">{{ total_detections }}</div>
+          <div class="stat-label">Objects Found</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(255,107,53,0.15);">🐚</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-xl-3">
+    <div class="stat-card fade-in-up">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <div class="stat-value" style="color:var(--warning);">
+            {% if metrics %}{{ metrics.map50|floatformat:1 }}%{% else %}—{% endif %}
+          </div>
+          <div class="stat-label">Model mAP@0.5</div>
+        </div>
+        <div class="stat-icon" style="background:rgba(255,193,7,0.15);">📊</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Species Distribution Chart -->
+  <div class="col-lg-5">
+    <div class="glass-card p-4 h-100">
+      <h5 class="fw-bold mb-4"><i class="bi bi-pie-chart-fill me-2 text-accent"></i>Species Breakdown</h5>
+      {% if species_dist %}
+      <div class="chart-container">
+        <canvas id="speciesChart"></canvas>
+      </div>
+      {% else %}
+      <div class="text-center py-5 text-ocean">
+        <i class="bi bi-bar-chart" style="font-size:3rem;opacity:.3;"></i>
+        <p class="mt-3">No detections yet. <a href="{% url 'detection:upload' %}" class="text-accent">Upload an image</a></p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Recent Jobs -->
+  <div class="col-lg-7">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="fw-bold mb-0"><i class="bi bi-clock-history me-2 text-accent"></i>Recent Detections</h5>
+        <a href="{% url 'detection:history' %}" class="btn-glass btn btn-sm">View All</a>
+      </div>
+      {% if recent_jobs %}
+      <div class="table-responsive">
+        <table class="ocean-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Objects</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in recent_jobs %}
+            <tr>
+              <td class="text-primary-custom">{{ job.name|default:"Unnamed"|truncatechars:20 }}</td>
+              <td><span class="badge-status badge-pending">{{ job.job_type|upper }}</span></td>
+              <td><span class="badge-status badge-{{ job.status }}">{{ job.get_status_display }}</span></td>
+              <td style="color:var(--accent);font-weight:600;">{{ job.total_detections }}</td>
+              <td>{{ job.created_at|date:"M d, H:i" }}</td>
+              <td>
+                {% if job.status == 'completed' %}
+                <a href="{% url 'detection:result' job.id %}" class="btn-glass btn btn-sm">
+                  <i class="bi bi-eye"></i>
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-4">
+        <p class="text-ocean">No detections yet.</p>
+        <a href="{% url 'detection:upload' %}" class="btn-accent btn btn-sm">
+          <i class="bi bi-cloud-upload me-2"></i>Start First Detection
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-4 mt-2">
+  <div class="col-12">
+    <div class="glass-card p-4">
+      <h5 class="fw-bold mb-4"><i class="bi bi-lightning-fill me-2 text-accent"></i>Quick Actions</h5>
+      <div class="d-flex gap-3 flex-wrap">
+        <a href="{% url 'detection:upload' %}" class="btn-accent btn">
+          <i class="bi bi-cloud-upload-fill me-2"></i>Upload Image
+        </a>
+        <a href="{% url 'detection:history' %}" class="btn-glass btn">
+          <i class="bi bi-clock-history me-2"></i>View History
+        </a>
+        <a href="{% url 'detection:metrics' %}" class="btn-glass btn">
+          <i class="bi bi-graph-up-arrow me-2"></i>Model Metrics
+        </a>
+        <a href="{% url 'datasets:list' %}" class="btn-glass btn">
+          <i class="bi bi-database-fill me-2"></i>Datasets
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if species_dist %}
+<script>
+const speciesData = {{ species_dist|safe }};
+const labels = speciesData.map(d => d.species.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase()));
+const values = speciesData.map(d => d.count);
+const colors = ['#00c864','#1e90ff','#ff8c42','#a855f7','#f59e0b'];
+
+new Chart(document.getElementById('speciesChart'), {
+  type: 'doughnut',
+  data: {
+    labels,
+    datasets: [{
+      data: values,
+      backgroundColor: colors.slice(0, values.length),
+      borderColor: 'rgba(7,34,64,0.8)',
+      borderWidth: 3,
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color:'#94a3b8', padding:16, font:{size:12} }
+      }
+    },
+    cutout: '65%',
+  }
+});
+</script>
+{% endif %}
+{% endblock %}

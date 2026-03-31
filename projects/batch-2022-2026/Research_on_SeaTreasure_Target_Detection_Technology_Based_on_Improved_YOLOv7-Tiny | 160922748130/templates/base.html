@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %}Sea Treasure Detection | UPA-YOLO{% endblock %}</title>
+  <meta name="description" content="Underwater sea treasure detection platform powered by UPA-YOLO deep learning model."/>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if user.is_authenticated %}
+<!-- ═══════════════ AUTHENTICATED LAYOUT ═══════════════ -->
+<div class="app-wrapper">
+
+  <!-- Ocean background bubbles -->
+  <div class="ocean-bg" aria-hidden="true">
+    {% for i in "12345" %}
+    <div class="bubble" style="
+      left: {{ forloop.counter|add:10 }}%;
+      width: {{ forloop.counter|add:8 }}px;
+      height: {{ forloop.counter|add:8 }}px;
+      animation-duration: {{ forloop.counter|add:12 }}s;
+      animation-delay: {{ forloop.counter }}s;
+    "></div>
+    {% endfor %}
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-brand">
+      <div class="brand-icon">🐚</div>
+      <div class="brand-text">
+        SeaTreasure
+        <span>Detection Platform</span>
+      </div>
+    </div>
+
+    <div class="sidebar-nav">
+      <p class="nav-section-title">Main</p>
+      <a href="{% url 'dashboard:index' %}" class="sidebar-link {% if request.resolver_match.app_name == 'dashboard' and request.resolver_match.url_name == 'index' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-grid-fill"></i></span> Dashboard
+      </a>
+      <a href="{% url 'detection:upload' %}" class="sidebar-link {% if request.resolver_match.app_name == 'detection' and request.resolver_match.url_name == 'upload' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-cloud-upload-fill"></i></span> Upload & Detect
+      </a>
+      <a href="{% url 'detection:live' %}" class="sidebar-link {% if request.resolver_match.app_name == 'detection' and request.resolver_match.url_name == 'live' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-camera-video-fill"></i></span> Live Detection
+      </a>
+      <a href="{% url 'detection:history' %}" class="sidebar-link {% if request.resolver_match.app_name == 'detection' and request.resolver_match.url_name == 'history' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-clock-history"></i></span> Detection History
+      </a>
+      <a href="{% url 'detection:metrics' %}" class="sidebar-link {% if request.resolver_match.app_name == 'detection' and request.resolver_match.url_name == 'metrics' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-bar-chart-fill"></i></span> Model Metrics
+      </a>
+      <a href="{% url 'datasets:list' %}" class="sidebar-link {% if request.resolver_match.app_name == 'datasets' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-database-fill"></i></span> Datasets
+      </a>
+
+      {% if request.user.profile.role == 'admin' or request.user.is_superuser %}
+      <p class="nav-section-title">Admin</p>
+      <a href="{% url 'dashboard:admin_dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-speedometer2"></i></span> Admin Dashboard
+      </a>
+      <a href="{% url 'dashboard:user_management' %}" class="sidebar-link {% if request.resolver_match.url_name == 'user_management' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-people-fill"></i></span> User Management
+      </a>
+      <a href="{% url 'dashboard:system_monitor' %}" class="sidebar-link {% if request.resolver_match.url_name == 'system_monitor' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-cpu-fill"></i></span> System Monitor
+      </a>
+      <a href="{% url 'dashboard:model_performance' %}" class="sidebar-link {% if request.resolver_match.url_name == 'model_performance' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-graph-up-arrow"></i></span> Model Performance
+      </a>
+      <a href="{% url 'datasets:upload' %}" class="sidebar-link {% if request.resolver_match.url_name == 'upload' and request.resolver_match.app_name == 'datasets' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-folder-plus"></i></span> Upload Dataset
+      </a>
+      {% endif %}
+
+      <p class="nav-section-title">Account</p>
+      <a href="{% url 'accounts:profile' %}" class="sidebar-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <span class="nav-icon"><i class="bi bi-person-circle"></i></span> My Profile
+      </a>
+      <a href="{% url 'accounts:logout' %}" class="sidebar-link">
+        <span class="nav-icon"><i class="bi bi-box-arrow-left"></i></span> Logout
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-info-mini">
+        <div class="user-avatar-sm">{{ request.user.username|first|upper }}</div>
+        <div>
+          <div class="user-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+          <div class="user-role">{% if request.user.profile.role %}{{ request.user.profile.role }}{% else %}user{% endif %}</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <div class="main-content">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="d-flex align-items-center gap-3">
+        <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
+        </button>
+        <span class="topbar-title">{% block page_title %}Dashboard{% endblock %}</span>
+      </div>
+      <div class="topbar-actions">
+        <!-- Notifications placeholder -->
+        <button class="btn-glass btn btn-sm" style="border-radius:10px;">
+          <i class="bi bi-bell"></i>
+        </button>
+        <a href="{% url 'detection:upload' %}" class="btn-accent btn btn-sm d-none d-md-inline-flex">
+          <i class="bi bi-plus-lg"></i> New Detection
+        </a>
+      </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="px-3 pt-3" style="position:relative;z-index:1;">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+        <i class="bi bi-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Page Content -->
+    <main class="page-content" style="position:relative;z-index:1;">
+{% else %}
+<!-- ═══════════════ PUBLIC LAYOUT ═══════════════ -->
+{% if messages %}
+<div class="container mt-3">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+{% block content %}{% endblock %}
+
+{% if user.is_authenticated %}
+    </main>
+  </div>
+</div>
+{% endif %}
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Sidebar toggle for mobile
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebar = document.getElementById('sidebar');
+if (sidebarToggle && sidebar) {
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+  // Close sidebar when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+      sidebar.classList.remove('open');
+    }
+  });
+}
+
+// Auto-dismiss alerts after 5 seconds
+document.querySelectorAll('.alert').forEach(alert => {
+  setTimeout(() => {
+    const bsAlert = bootstrap.Alert.getInstance(alert);
+    if (bsAlert) bsAlert.close();
+    else alert.remove();
+  }, 5000);
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

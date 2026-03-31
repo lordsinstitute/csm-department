@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Model Metrics - Sea Treasure{% endblock %}
+{% block page_title %}Model Evaluation Metrics{% endblock %}
+
+{% block content %}
+<div class="section-heading mb-4">
+  <h2><i class="bi bi-robot me-2 text-accent"></i>Current Model: {{ metrics.model_name|default:"UPA-YOLOv7-Tiny" }}</h2>
+  <span class="badge-status badge-completed">v{{ metrics.model_version|default:"1.0" }}</span>
+</div>
+
+{% if metrics %}
+<div class="glass-card p-4">
+  <!-- Top Metrics -->
+  <div class="row text-center mb-5 g-4">
+    <div class="col-md-3">
+      <div class="p-4" style="background:rgba(0,212,170,0.08);border-radius:16px;">
+        <i class="bi bi-graph-up-arrow mb-3" style="font-size:2rem;color:var(--accent);"></i>
+        <h3 class="fw-bold mb-1" style="color:var(--accent);">{{ metrics.map50|floatformat:1 }}%</h3>
+        <span class="text-ocean" style="font-size:.8rem;text-transform:uppercase;letter-spacing:1px;">mAP@0.5</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="p-4" style="background:rgba(13,110,253,0.08);border-radius:16px;">
+        <i class="bi bi-lightning-charge mb-3" style="font-size:2rem;color:var(--primary);"></i>
+        <h3 class="fw-bold mb-1" style="color:var(--primary);">{{ metrics.avg_inference_time_ms|floatformat:1 }} ms</h3>
+        <span class="text-ocean" style="font-size:.8rem;text-transform:uppercase;letter-spacing:1px;">Avg Inference Time</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="p-4" style="background:rgba(255,107,53,0.08);border-radius:16px;">
+        <i class="bi bi-bullseye mb-3" style="font-size:2rem;color:var(--accent2);"></i>
+        <h3 class="fw-bold mb-1" style="color:var(--accent2);">{{ metrics.precision|floatformat:1 }}%</h3>
+        <span class="text-ocean" style="font-size:.8rem;text-transform:uppercase;letter-spacing:1px;">Precision</span>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="p-4" style="background:rgba(255,193,7,0.08);border-radius:16px;">
+        <i class="bi bi-arrow-repeat mb-3" style="font-size:2rem;color:var(--warning);"></i>
+        <h3 class="fw-bold mb-1" style="color:var(--warning);">{{ metrics.recall|floatformat:1 }}%</h3>
+        <span class="text-ocean" style="font-size:.8rem;text-transform:uppercase;letter-spacing:1px;">Recall</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-5">
+    <!-- About Model -->
+    <div class="col-lg-6">
+      <h5 class="fw-bold mb-3"><i class="bi bi-info-circle-fill me-2 text-accent"></i>About the Model</h5>
+      <p class="text-ocean" style="line-height:1.7;">
+        The Sea Treasure Detection system utilizes an improved <strong>YOLOv7-Tiny</strong> architecture augmented with an <strong>Underwater Perception Attention (UPA)</strong> module. This allows it to adapt to complex underwater environments, dealing with poor lighting, color distortion, and suspended particles.
+      </p>
+      <ul class="list-unstyled text-ocean mt-4">
+        <li class="mb-3 d-flex align-items-center"><i class="bi bi-check2-circle text-accent me-3" style="font-size:1.2rem;"></i> Optimized for Edge Devices (Jetson Nano)</li>
+        <li class="mb-3 d-flex align-items-center"><i class="bi bi-check2-circle text-accent me-3" style="font-size:1.2rem;"></i> High precision on small objects (shells)</li>
+        <li class="mb-3 d-flex align-items-center"><i class="bi bi-check2-circle text-accent me-3" style="font-size:1.2rem;"></i> Low latency and GFLOPs overhead</li>
+      </ul>
+      
+      <div class="p-3 mt-4" style="background:rgba(255,255,255,0.03);border-radius:12px;border:1px solid rgba(255,255,255,0.08);">
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-ocean">Parameters:</span> <strong style="color:#00d4aa">{{ metrics.parameters_m }}M</strong>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-ocean">GFLOPs:</span> <strong style="color:#0bd4aa">{{ metrics.gflops }}</strong>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="text-ocean">Training Dataset:</span> <strong>{{ metrics.dataset_name|default:"Open Source (SeaD)" }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Progress -->
+    <div class="col-lg-6">
+      <h5 class="fw-bold mb-4"><i class="bi bi-sliders me-2 text-primary"></i>Model Capabilities</h5>
+      
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="fw-semibold">Sea Cucumber Detection</span>
+          <span class="text-accent">~98.2%</span>
+        </div>
+        <div class="ocean-progress" style="height:10px;"><div class="ocean-progress-bar" style="width:98.2%;background:var(--success);"></div></div>
+      </div>
+
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="fw-semibold">Sea Urchin Detection</span>
+          <span class="text-primary">~97.5%</span>
+        </div>
+        <div class="ocean-progress" style="height:10px;"><div class="ocean-progress-bar" style="width:97.5%;background:var(--primary);"></div></div>
+      </div>
+
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="fw-semibold">Shell Detection</span>
+          <span class="text-warning">~96.4%</span>
+        </div>
+        <div class="ocean-progress" style="height:10px;"><div class="ocean-progress-bar" style="width:96.4%;background:var(--warning);"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="glass-card p-5 text-center">
+  <p class="text-ocean mb-0">Metrics have not been recorded by the administrator yet.</p>
+</div>
+{% endif %}
+{% endblock %}
