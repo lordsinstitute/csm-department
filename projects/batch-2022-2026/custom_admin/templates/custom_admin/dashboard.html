@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - RetinaDetect{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Admin Dashboard</h2>
+        <p class="text-muted">System overview and administration</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-number text-primary">{{ total_users }}</div>
+                <div class="stat-label">Total Users</div>
+                <i class="fas fa-users fa-2x text-muted mt-3"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-number text-success">{{ total_patients }}</div>
+                <div class="stat-label">Total Patients</div>
+                <i class="fas fa-user-injured fa-2x text-muted mt-3"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-number text-info">{{ total_images }}</div>
+                <div class="stat-label">Total Images</div>
+                <i class="fas fa-image fa-2x text-muted mt-3"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="stat-number text-warning">{{ total_detections }}</div>
+                <div class="stat-label">Total Detections</div>
+                <i class="fas fa-search fa-2x text-muted mt-3"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Users</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_users %}
+                <div class="list-group list-group-flush">
+                    {% for user in recent_users %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ user.get_full_name|default:user.username }}</h6>
+                            <small class="text-muted">{{ user.date_joined|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1">Role: {{ user.get_role_display }}</p>
+                        <small class="text-muted">Department: {{ user.department|default:"Not specified" }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No users found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Images</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_images %}
+                <div class="list-group list-group-flush">
+                    {% for image in recent_images %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ image.patient }}</h6>
+                            <small class="text-muted">{{ image.upload_date|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1">Uploaded by: {{ image.uploaded_by.get_full_name|default:image.uploaded_by.username }}</p>
+                        <small class="text-muted">Format: {{ image.image_format }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No recent images found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'custom_admin:user_management' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-users-cog me-2"></i>User Management
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'custom_admin:system_monitoring' %}" class="btn btn-outline-info w-100">
+                            <i class="fas fa-chart-bar me-2"></i>System Monitoring
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'images:patient_list' %}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-user-injured me-2"></i>View Patients
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="{% url 'detection:list' %}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-search me-2"></i>View Detections
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
