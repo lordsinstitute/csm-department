@@ -1,0 +1,256 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .page-header h2 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-control {
+        width: 100%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,212,255,0.25);
+        border-radius: 8px;
+        color: var(--text-pri);
+        padding: 1rem;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 10px rgba(0,212,255,0.3);
+        background: rgba(255,255,255,0.1);
+    }
+
+    select.form-control option {
+        background: var(--bg-deep);
+        color: var(--text-pri);
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.8rem;
+        color: var(--text-mut);
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* Result Card Styles */
+    .result-card {
+        margin-top: 3rem;
+        padding: 2.5rem;
+        border-radius: 16px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .result-fraud {
+        background: rgba(231, 76, 60, 0.05);
+        border: 2px solid var(--danger);
+        box-shadow: 0 10px 30px rgba(231, 76, 60, 0.2);
+    }
+
+    .result-safe {
+        background: rgba(46, 204, 113, 0.05);
+        border: 2px solid var(--success);
+        box-shadow: 0 10px 30px rgba(46, 204, 113, 0.2);
+    }
+
+    .result-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .result-label {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .result-fraud .result-label { color: var(--danger); }
+    .result-safe .result-label { color: var(--success); }
+
+    .result-confidence {
+        font-size: 1.1rem;
+        color: var(--text-mut);
+        margin-bottom: 1.5rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 1s ease-in-out;
+    }
+
+    .result-fraud .progress-fill { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+    .result-safe .progress-fill { background: var(--success); box-shadow: 0 0 10px var(--success); }
+
+    .tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        justify-content: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 1.5rem;
+    }
+
+    .tag {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: var(--text-mut);
+    }
+
+    .tag-model {
+        background: rgba(0,212,255,0.1);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+    .error-note {
+        margin-top: 1rem;
+        color: var(--danger);
+        font-size: 0.9rem;
+    }
+</style>
+
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-magnifying-glass"></i> Predict Transaction Fraud</h2>
+        <p>Enter live transaction details to test real-time Hybrid GAN-VAE prediction</p>
+    </div>
+
+    <div class="dark-card">
+        <h3 style="margin-top: 0; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;"><i class="fa-solid fa-money-check-dollar"></i> Transaction Details</h3>
+        
+        <form action="{% url 'predict_fraud' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-grid">
+                <!-- Left Column -->
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="amount">Transaction Amount (₹)</label>
+                        <input type="number" step="0.01" name="amount" id="amount" class="form-control" required placeholder="e.g. 1500.00" value="{{ input_data.amount|default:'' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <select name="location" id="location" class="form-control" required>
+                            <option value="" disabled {% if not input_data.location %}selected{% endif %}>Select City Code...</option>
+                            <option value="MUM" {% if input_data.location == 'MUM' %}selected{% endif %}>MUM (Mumbai)</option>
+                            <option value="DEL" {% if input_data.location == 'DEL' %}selected{% endif %}>DEL (Delhi)</option>
+                            <option value="BLR" {% if input_data.location == 'BLR' %}selected{% endif %}>BLR (Bangalore)</option>
+                            <option value="HYD" {% if input_data.location == 'HYD' %}selected{% endif %}>HYD (Hyderabad)</option>
+                            <option value="CHE" {% if input_data.location == 'CHE' %}selected{% endif %}>CHE (Chennai)</option>
+                            <option value="PUN" {% if input_data.location == 'PUN' %}selected{% endif %}>PUN (Pune)</option>
+                            <option value="KOL" {% if input_data.location == 'KOL' %}selected{% endif %}>KOL (Kolkata)</option>
+                            <option value="AHD" {% if input_data.location == 'AHD' %}selected{% endif %}>AHD (Ahmedabad)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="method">Payment Method</label>
+                        <select name="method" id="method" class="form-control" required>
+                            <option value="" disabled {% if not input_data.method %}selected{% endif %}>Select Method...</option>
+                            <option value="Credit Card" {% if input_data.method == 'Credit Card' %}selected{% endif %}>Credit Card</option>
+                            <option value="Debit Card" {% if input_data.method == 'Debit Card' %}selected{% endif %}>Debit Card</option>
+                            <option value="Net Banking" {% if input_data.method == 'Net Banking' %}selected{% endif %}>Net Banking</option>
+                            <option value="Wallet" {% if input_data.method == 'Wallet' %}selected{% endif %}>Wallet</option>
+                            <option value="UPI" {% if input_data.method == 'UPI' %}selected{% endif %}>UPI</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ip">IP Address</label>
+                        <input type="text" name="ip" id="ip" class="form-control" required placeholder="e.g. 192.168.1.1" value="{{ input_data.ip|default:'' }}">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;"><i class="fa-solid fa-magnifying-glass-chart"></i> Predict Fraud</button>
+        </form>
+    </div>
+
+    {% if prediction %}
+        {% if prediction.is_fraud %}
+        <div class="result-card result-fraud">
+            <div class="result-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h2 class="result-label">{{ prediction.label }}</h2>
+            <div class="result-confidence">Confidence: {{ prediction.confidence }}%</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ prediction.confidence }}%;"></div>
+            </div>
+
+            <div class="tag-container">
+                <div class="tag"><i class="fa-solid fa-indian-rupee-sign"></i> {{ input_data.amount }}</div>
+                <div class="tag"><i class="fa-solid fa-credit-card"></i> {{ input_data.method }}</div>
+                <div class="tag"><i class="fa-solid fa-earth-americas"></i> {{ input_data.location }}</div>
+                <div class="tag"><i class="fa-solid fa-network-wired"></i> {{ input_data.ip }}</div>
+                <div class="tag tag-model"><i class="fa-solid fa-microchip"></i> Model: Hybrid GAN-VAE</div>
+            </div>
+
+            {% if prediction.error %}
+            <div class="error-note"><i class="fa-solid fa-triangle-exclamation"></i> Note: {{ prediction.error }}</div>
+            {% endif %}
+        </div>
+        
+        {% else %}
+        <div class="result-card result-safe">
+            <div class="result-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <h2 class="result-label">{{ prediction.label }}</h2>
+            <div class="result-confidence">Confidence: {{ prediction.confidence }}%</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ prediction.confidence }}%;"></div>
+            </div>
+
+            <div class="tag-container">
+                <div class="tag"><i class="fa-solid fa-indian-rupee-sign"></i> {{ input_data.amount }}</div>
+                <div class="tag"><i class="fa-solid fa-credit-card"></i> {{ input_data.method }}</div>
+                <div class="tag"><i class="fa-solid fa-earth-americas"></i> {{ input_data.location }}</div>
+                <div class="tag"><i class="fa-solid fa-network-wired"></i> {{ input_data.ip }}</div>
+                <div class="tag tag-model"><i class="fa-solid fa-microchip"></i> Model: Hybrid GAN-VAE</div>
+            </div>
+
+            {% if prediction.error %}
+            <div class="error-note"><i class="fa-solid fa-triangle-exclamation"></i> Note: {{ prediction.error }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}

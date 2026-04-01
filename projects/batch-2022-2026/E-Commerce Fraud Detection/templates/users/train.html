@@ -1,0 +1,208 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .page-header h2 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .info-box {
+        background: rgba(0, 212, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 1.5rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+    
+    .info-box ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+
+    .info-box li {
+        margin-bottom: 0.5rem;
+    }
+
+    .train-action {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    #loadingSpinner {
+        display: none;
+        text-align: center;
+        margin-top: 1rem;
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    /* Metrics Table */
+    .metrics-container {
+        margin-bottom: 3rem;
+        background: rgba(255,255,255,0.02);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .table th {
+        background: rgba(0, 212, 255, 0.15);
+        color: var(--accent);
+        padding: 1rem;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    
+    .table td:first-child {
+        text-align: left;
+    }
+
+    .row-hybrid {
+        border-left: 3px solid var(--success);
+        background: rgba(46, 204, 113, 0.05);
+    }
+    
+    .row-hybrid td {
+        color: var(--success);
+    }
+    
+    .best-badge {
+        background: var(--success);
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        margin-left: 0.5rem;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    /* Chart Area */
+    .chart-box {
+        background: rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .chart-box img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+</style>
+
+<div class="dark-card" style="max-width: 1000px; margin: 0 auto;">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-robot"></i> Train Generative AI Models</h2>
+        <p>Compile and compare GAN, VAE, and Hybrid models on your transaction dataset</p>
+    </div>
+
+    <div class="info-box">
+        <ul>
+            <li><strong>GAN Model:</strong> Excellent at generating hard-to-detect fake transactions to fortify the dataset against adversarial attacks.</li>
+            <li><strong>VAE Model:</strong> A powerful anomaly detector that spots subtle outliers and strange transactional behaviors.</li>
+            <li><strong>Hybrid GAN-VAE:</strong> Combines the robust classification boundaries taught by the GAN with the deep reconstructive anomaly scores of the VAE.</li>
+        </ul>
+    </div>
+
+    <div class="train-action">
+        <form action="{% url 'train_models' %}" method="POST" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary" style="display: block; width: 100%; box-sizing: border-box; padding: 1rem; font-size: 1.2rem; border:none; cursor:pointer;" onclick="document.getElementById('loadingSpinner').style.display='block'; this.style.opacity='0.5'; this.style.pointerEvents='none';">
+                <i class="fa-solid fa-rocket"></i> Start Training All Models
+            </button>
+        </form>
+        <div id="loadingSpinner">
+            <i class="fa-solid fa-spinner fa-spin"></i> ⏳ Training in progress… Please wait.
+        </div>
+    </div>
+
+    {% if trained %}
+    <div class="metrics-container">
+        <h3 style="margin-top: 0; color: var(--text-pri); margin-bottom: 1.5rem;">Performance Metrics Comparison</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                        <th>AUC</th>
+                        <th>Latency</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ results.gan.name }}</td>
+                        <td>{{ results.gan.accuracy }}%</td>
+                        <td>{{ results.gan.precision }}%</td>
+                        <td>{{ results.gan.recall }}%</td>
+                        <td>{{ results.gan.f1 }}%</td>
+                        <td>{{ results.gan.auc }}%</td>
+                        <td>{{ results.gan.latency }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ results.vae.name }}</td>
+                        <td>{{ results.vae.accuracy }}%</td>
+                        <td>{{ results.vae.precision }}%</td>
+                        <td>{{ results.vae.recall }}%</td>
+                        <td>{{ results.vae.f1 }}%</td>
+                        <td>{{ results.vae.auc }}%</td>
+                        <td>{{ results.vae.latency }}</td>
+                    </tr>
+                    <tr class="row-hybrid">
+                        <td>{{ results.hybrid.name }} <span class="best-badge">★ Best</span></td>
+                        <td>{{ results.hybrid.accuracy }}%</td>
+                        <td>{{ results.hybrid.precision }}%</td>
+                        <td>{{ results.hybrid.recall }}%</td>
+                        <td>{{ results.hybrid.f1 }}%</td>
+                        <td>{{ results.hybrid.auc }}%</td>
+                        <td>{{ results.hybrid.latency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="chart-box">
+        <img src="data:image/png;base64,{{ comparison_chart }}" alt="Model Comparison Chart">
+    </div>
+
+    <div class="info-box" style="border-left-color: var(--success); text-align: center;">
+        <p style="margin: 0;">The <strong>Hybrid GAN-VAE</strong> model consistently outperforms individual architectures by capturing both structural boundaries and probabilistic anomalies.<br><br>
+        <a href="{% url 'predict_fraud' %}" style="color: var(--success); font-weight: 600; text-decoration: none; font-size: 1.1rem;">Ready to test real transactions? Go to Predict Fraud →</a></p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

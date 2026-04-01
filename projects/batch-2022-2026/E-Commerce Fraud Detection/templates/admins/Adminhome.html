@@ -1,0 +1,124 @@
+{% extends 'admins/Adminbase.html' %}
+
+{% block content %}
+<style>
+    .welcome-card {
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, var(--surface-light), rgba(0, 229, 255, 0.05));
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-card::after {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 60%);
+        animation: spin 15s linear infinite;
+        pointer-events: none;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .welcome-card h2 {
+        color: var(--text-pri);
+        margin-top: 0;
+        font-size: 2.2rem;
+        font-weight: 800;
+        text-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+    
+    .welcome-card h2 span {
+        color: var(--accent);
+        text-shadow: 0 0 15px var(--accent-glow);
+    }
+    
+    .welcome-card p {
+        font-size: 1.1rem;
+        color: var(--text-mut);
+        margin-bottom: 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 3.5rem;
+    }
+
+    .stat-card {
+        background: var(--surface-light);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        text-align: center;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        backdrop-filter: blur(12px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 15px 30px rgba(0,0,0,0.4), 0 0 20px rgba(0,229,255,0.15);
+        border-color: rgba(0, 229, 255, 0.3);
+    }
+
+    .stat-value {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: var(--text-mut);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+    }
+
+    .action-row {
+        display: flex;
+        gap: 2rem;
+    }
+    
+    .action-row a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="dark-card welcome-card fade-in">
+    <h2>Welcome, <span>{{ request.session.loggedadmin|default:"Admin" }}</span></h2>
+    <p>This is the system control center for GenAI E-Commerce Fraud Detection.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card slide-up delay-1">
+        <div class="stat-value">{{ users_count|default:"System Users" }}</div>
+        <div class="stat-label">Total Registered Users</div>
+    </div>
+    <div class="stat-card slide-up delay-2">
+        <div class="stat-value" style="color: var(--success); text-shadow: 0 0 15px rgba(0,230,118,0.4);">{{ active_users|default:"0" }}</div>
+        <div class="stat-label">Active Users</div>
+    </div>
+</div>
+
+<div class="action-row slide-up delay-3">
+    <a href="{% url 'RegisterUsersView' %}" class="btn-primary" style="flex: 1;">
+        Manage Users <i class="fa-solid fa-users-gear"></i>
+    </a>
+    <a href="{% url 'index' %}" class="btn-secondary" style="flex: 1; color: var(--danger); border-color: rgba(255,23,68,0.3);">
+        Logout <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+</div>
+{% endblock %}
