@@ -1,0 +1,124 @@
+/* Essential performance optimizations only */
+
+/* Hardware acceleration for animated elements */
+.will-change-transform {
+  will-change: transform;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Essential transitions and effects only */
+.transition-fast {
+  transition: all 0.15s ease;
+}
+
+.hover-lift {
+  transform: translateZ(0);
+  transition: transform 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translate3d(0, -2px, 0);
+}
+
+.glow-purple-medium {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+/* Optimized glass effect for pure black background */
+.glass-purple {
+  background: rgba(0, 0, 0, 0.4);  /* Black background with transparency */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(139, 92, 246, 0.1);
+  transform: translateZ(0);
+}
+
+.glass-purple-strong {
+  background: rgba(0, 0, 0, 0.7);  /* Darker black with transparency */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(139, 92, 246, 0.15);
+}
+
+/* Essential animations only */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate3d(0, 0px, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+  .glass-purple {
+    background: rgba(139, 92, 246, 0.12);
+  }
+  
+  .glass-purple-strong {
+    background: rgba(139, 92, 246, 0.20);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .glass-purple,
+  .glass-purple-strong {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  
+  .hover-lift:hover {
+    transform: none;
+  }
+  
+  .animate-float {
+    animation: none;
+  }
+}
