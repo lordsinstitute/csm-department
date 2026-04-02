@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<section class="theme-form-wrap">
+  <div class="theme-card wide">
+    <h2 class="theme-card-title">// USER REGISTRATION</h2>
+    <p class="theme-card-sub">Fill in the details to register</p>
+    <form action="{% url 'UserRegisterActions' %}" method="POST">
+      {% csrf_token %}
+      <div class="row" style="margin:0 -0.5rem;">
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>User Name</label>
+          {{ form.name }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>Login ID</label>
+          {{ form.loginid }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>Password</label>
+          {{ form.password }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>Mobile</label>
+          {{ form.mobile }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>Email</label>
+          {{ form.email }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>Locality</label>
+          {{ form.locality }}
+        </div>
+        <div class="col-12" style="padding:0 0.5rem;">
+          <label>Address</label>
+          {{ form.address }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>City</label>
+          {{ form.city }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>State</label>
+          {{ form.state }}
+        </div>
+        <div class="col-md-6" style="padding:0 0.5rem;">
+          <label>Status</label>
+          {{ form.status }}
+        </div>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <button type="submit" class="theme-btn-form">REGISTER</button>
+      </div>
+      {% if messages %}
+        <div class="theme-msg error" style="margin-top:1rem;">
+          {% for message in messages %}<p style="margin:0;">{{ message }}</p>{% endfor %}
+        </div>
+      {% endif %}
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,639 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enhancing_Building_Safety_through_ML&amp;DL_Based_smoke_Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --orange:   #ff7722;
+      --orange2:  #ff9944;
+      --smoke:    #a0b0c4;
+      --smoke2:   #607890;
+      --red:      #ff3344;
+      --neon-red: #ff3344;
+      --bg-void:  #141210;
+      --bg:       #141210;
+      --bg-card:  #181411;
+      --bg-card2: #1e1a16;
+      --bdr-o:    rgba(255,119,34,0.22);
+      --bdr-s:    rgba(160,176,196,0.16);
+      --text:     #dce4ec;
+      --dim:      #576878;
+      --text-dim: #576878;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: #141210;
+      color: #e0e8f0;
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+    main { position:relative; z-index:10; }
+
+    /* NAV */
+    nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1.2rem 4rem;
+      border-bottom:1px solid rgba(255,119,34,0.1);
+      position:sticky; top:0;
+      background:rgba(20,18,16,0.88);
+      backdrop-filter:blur(20px);
+      z-index:100;
+    }
+    .logo {
+      font-family:'Orbitron',monospace; font-size:1.25rem; font-weight:900;
+      color:#ff7722;
+      text-shadow:0 0 20px rgba(255,119,34,0.55);
+      letter-spacing:2px;
+      text-decoration:none;
+    }
+    .logo span { color:#a0b0c4; }
+    .nav-links { display:flex; gap:2.5rem; align-items:center; }
+    .nav-links a {
+      font-family:'Share Tech Mono',monospace; font-size:0.78rem;
+      color:var(--text-dim); text-decoration:none;
+      letter-spacing:2px; text-transform:uppercase;
+      transition:color 0.2s, text-shadow 0.2s;
+    }
+    .nav-links a:hover { color:#ff7722; text-shadow:0 0 12px rgba(255,119,34,0.8); }
+    .nav-btns { display:flex; gap:0.8rem; }
+    .nav-btn {
+      font-family:'Orbitron',monospace; font-size:0.68rem; font-weight:700;
+      padding:0.6rem 1.5rem;
+      border:1px solid #ff7722; color:#ff7722;
+      background:transparent; letter-spacing:2px;
+      cursor:pointer; text-decoration:none;
+      transition:all 0.2s;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    }
+    .nav-btn:hover { background:rgba(255,119,34,0.1); box-shadow:0 0 20px rgba(255,119,34,0.3); }
+    .nav-btn.filled { background:#ff7722; color:#141210; }
+    .nav-btn.filled:hover { box-shadow:0 0 30px rgba(255,119,34,0.6); }
+
+    /* HERO */
+    .hero {
+      min-height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:2rem;
+      position:relative;
+    }
+    .hero-badge {
+      font-family:'Share Tech Mono',monospace; font-size:0.72rem;
+      color:#a0b0c4;
+      border:1px solid rgba(160,176,196,0.35);
+      padding:0.4rem 1.3rem; letter-spacing:3px;
+      margin-bottom:2.5rem; display:inline-block;
+      animation:pulseBorder 2.5s ease-in-out infinite;
+    }
+    @keyframes pulseBorder {
+      0%,100% { box-shadow:none; border-color:rgba(160,176,196,0.35); }
+      50% { box-shadow:0 0 20px rgba(160,176,196,0.25); border-color:rgba(160,176,196,0.8); }
+    }
+    .hero h1 {
+      font-family:'Orbitron',monospace;
+      font-size:clamp(2.8rem,7.5vw,6.5rem);
+      font-weight:900; line-height:1.05; letter-spacing:-1px;
+    }
+    .h1-white { color:#fff; }
+    .h1-green {
+      display:block; color:#ff7722;
+      text-shadow:0 0 40px rgba(255,119,34,0.45), 0 0 80px rgba(255,119,34,0.15);
+    }
+    .h1-sub {
+      display:block; color:var(--neon-red);
+      text-shadow:0 0 30px rgba(255,51,85,0.45);
+      font-size:0.52em; letter-spacing:5px; margin-top:0.5rem;
+    }
+    .hero-sub {
+      font-size:1.15rem; color:var(--text-dim);
+      max-width:580px; margin:2rem auto 3rem;
+      line-height:1.75; font-weight:300;
+    }
+    .hero-sub strong { color:#a0b0c4; font-weight:600; }
+    .hero-cta { display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; }
+    .btn-primary {
+      font-family:'Orbitron',monospace; font-size:0.78rem; font-weight:700;
+      padding:1rem 2.5rem; background:#ff7722;
+      color:#141210; border:none; cursor:pointer;
+      text-decoration:none; letter-spacing:2px; display:inline-block;
+      clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+      transition:all 0.2s;
+    }
+    .btn-primary:hover { box-shadow:0 0 50px rgba(255,119,34,0.6),0 0 100px rgba(255,119,34,0.2); transform:translateY(-2px); }
+    .btn-secondary {
+      font-family:'Orbitron',monospace; font-size:0.78rem; font-weight:700;
+      padding:1rem 2.5rem; border:1px solid rgba(160,176,196,0.5);
+      color:#a0b0c4; background:transparent;
+      cursor:pointer; text-decoration:none; letter-spacing:2px; display:inline-block;
+      clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+      transition:all 0.2s;
+    }
+    .btn-secondary:hover { background:rgba(160,176,196,0.08); box-shadow:0 0 30px rgba(160,176,196,0.25); }
+    .scroll-hint {
+      position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+      font-family:'Share Tech Mono',monospace; font-size:0.65rem;
+      color:var(--text-dim); letter-spacing:3px;
+      animation:floatUp 2.5s ease-in-out infinite;
+    }
+    .scroll-hint::after {
+      content:''; width:1px; height:42px;
+      background:linear-gradient(to bottom, #ff7722, transparent);
+    }
+    @keyframes floatUp {
+      0%,100% { transform:translateX(-50%) translateY(0); }
+      50% { transform:translateX(-50%) translateY(-8px); }
+    }
+
+    /* TICKER */
+    .stats-ticker {
+      border-top:1px solid rgba(255,119,34,0.1);
+      border-bottom:1px solid rgba(255,119,34,0.1);
+      background:rgba(255,119,34,0.025); padding:1.1rem 0; overflow:hidden;
+    }
+    .ticker-track { display:flex; gap:4rem; animation:ticker 22s linear infinite; width:max-content; }
+    @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .ticker-item {
+      display:flex; align-items:center; gap:0.8rem;
+      font-family:'Share Tech Mono',monospace; font-size:0.78rem; white-space:nowrap;
+    }
+    .t-val { color:#ff7722; font-size:1.15rem; text-shadow:0 0 15px rgba(255,119,34,0.5); }
+    .t-lbl { color:var(--text-dim); }
+    .t-sep { color:#a0b0c4; opacity:0.3; }
+
+    /* SECTIONS */
+    .section-pad { padding:7rem 4rem; }
+    .section-header { text-align:center; margin-bottom:4rem; }
+    .section-tag {
+      font-family:'Share Tech Mono',monospace; font-size:0.7rem;
+      color:#a0b0c4; letter-spacing:4px;
+      text-transform:uppercase; margin-bottom:1rem; display:block;
+    }
+    .section-title { font-family:'Orbitron',monospace; font-size:clamp(1.8rem,4vw,3rem); font-weight:900; color:#fff; }
+    .section-title span { color:#ff7722; }
+    .section-line { width:80px; height:2px; background:linear-gradient(to right,transparent,#ff7722,transparent); margin:1.2rem auto 0; }
+
+    /* STEPS */
+    .steps-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+      gap:2px; max-width:1100px; margin:0 auto;
+    }
+    .step-card {
+      background:#181411; padding:2.5rem 1.8rem;
+      position:relative; transition:background 0.3s, box-shadow 0.3s;
+      border:1px solid transparent;
+    }
+    .step-card:hover { background:#1e1a16; border-color:rgba(255,119,34,0.18); box-shadow:inset 0 0 30px rgba(255,119,34,0.03); }
+    .step-num {
+      font-family:'Orbitron',monospace; font-size:3.5rem; font-weight:900;
+      color:rgba(255,119,34,0.055); position:absolute; top:0.8rem; right:1.2rem; line-height:1;
+    }
+    .step-icon {
+      width:52px; height:52px; border:1px solid rgba(255,119,34,0.35);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.4rem; margin-bottom:1.4rem;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+      transition:box-shadow 0.3s;
+    }
+    .step-card:hover .step-icon { box-shadow:0 0 25px rgba(255,119,34,0.35); }
+    .step-card h3 {
+      font-family:'Orbitron',monospace; font-size:0.82rem; font-weight:700;
+      color:#fff; margin-bottom:0.75rem; letter-spacing:1.5px;
+    }
+    .step-card p { font-size:0.95rem; color:var(--text-dim); line-height:1.7; font-weight:300; }
+    .step-card p strong { color:#a0b0c4; }
+
+    /* MODELS */
+    .models-section {
+      background:#181411;
+      border-top:1px solid rgba(255,119,34,0.07);
+      border-bottom:1px solid rgba(255,119,34,0.07);
+    }
+    .models-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+      gap:1rem; max-width:1100px; margin:0 auto;
+    }
+    .model-chip {
+      border:1px solid rgba(160,176,196,0.18);
+      padding:1.5rem 1rem; text-align:center;
+      transition:all 0.3s; position:relative; overflow:hidden; cursor:default;
+    }
+    .model-chip::before {
+      content:''; position:absolute; top:0; left:-100%;
+      width:100%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(160,176,196,0.05),transparent);
+      transition:left 0.5s;
+    }
+    .model-chip:hover::before { left:100%; }
+    .model-chip:hover { border-color:rgba(160,176,196,0.55); box-shadow:0 0 20px rgba(160,176,196,0.12); }
+    .model-name {
+      font-family:'Orbitron',monospace; font-size:0.65rem; font-weight:700;
+      color:#a0b0c4; letter-spacing:1px; margin-bottom:0.5rem;
+    }
+    .model-acc { font-size:1.85rem; font-weight:600; color:#fff; }
+    .model-acc span { font-size:0.8rem; color:var(--text-dim); }
+    .model-bar-bg { height:3px; background:rgba(255,255,255,0.05); margin-top:0.8rem; border-radius:2px; }
+    .model-bar { height:100%; background:linear-gradient(to right,#a0b0c4,#ff7722); border-radius:2px; width:0%; transition:width 1.6s ease; }
+
+    /* ALERT DEMO */
+    .alert-wrap { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+    .alert-visual {
+      border:1px solid rgba(255,51,85,0.28); padding:3.5rem 2rem;
+      text-align:center; background:rgba(255,51,85,0.025); position:relative;
+    }
+    .alert-ring {
+      width:170px; height:170px; border:2px solid var(--neon-red);
+      border-radius:50%; margin:0 auto 1.5rem;
+      display:flex; align-items:center; justify-content:center;
+      position:relative; animation:ringPulse 2s ease-in-out infinite;
+    }
+    .alert-ring::before,.alert-ring::after {
+      content:''; position:absolute;
+      border:1px solid rgba(255,51,85,0.35); border-radius:50%;
+      animation:ripple 2s ease-out infinite;
+    }
+    .alert-ring::before { width:200px; height:200px; animation-delay:0.35s; }
+    .alert-ring::after { width:230px; height:230px; animation-delay:0.7s; }
+    @keyframes ringPulse {
+      0%,100% { box-shadow:0 0 20px rgba(255,51,85,0.35); }
+      50% { box-shadow:0 0 55px rgba(255,51,85,0.75),0 0 110px rgba(255,51,85,0.18); }
+    }
+    @keyframes ripple { 0%{opacity:0.6;transform:scale(1)} 100%{opacity:0;transform:scale(1.3)} }
+    .alert-icon-big { font-size:3.5rem; }
+    .alert-txt {
+      font-family:'Orbitron',monospace; font-size:1.2rem; font-weight:900;
+      color:var(--neon-red); text-shadow:0 0 20px rgba(255,51,85,0.6);
+      letter-spacing:3px; animation:blink 1.5s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .alert-meta {
+      margin-top:0.8rem; font-family:'Share Tech Mono',monospace;
+      font-size:0.68rem; color:var(--text-dim);
+    }
+    .alert-meta span { color:var(--neon-red); }
+    .alert-info h3 {
+      font-family:'Orbitron',monospace; font-size:1.45rem; font-weight:900;
+      color:#fff; margin-bottom:1rem; line-height:1.35;
+    }
+    .alert-info h3 span { color:var(--neon-red); }
+    .alert-info p { color:var(--text-dim); line-height:1.75; margin-bottom:2rem; font-size:0.95rem; }
+    .feat-list { display:flex; flex-direction:column; gap:0.8rem; }
+    .feat-item {
+      display:flex; align-items:center; gap:1rem;
+      font-family:'Share Tech Mono',monospace; font-size:0.78rem; color:#c0c8d4;
+    }
+    .feat-dot { width:7px; height:7px; background:#ff7722; box-shadow:0 0 8px rgba(255,119,34,0.6); flex-shrink:0; }
+
+    /* CTA */
+    .cta-section {
+      text-align:center; padding:7rem 4rem; position:relative; overflow:hidden;
+    }
+    .cta-section::before {
+      content:''; position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      width:550px; height:550px;
+      background:radial-gradient(circle,rgba(255,119,34,0.055) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .cta-section h2 { font-family:'Orbitron',monospace; font-size:clamp(1.8rem,4vw,3.2rem); font-weight:900; color:#fff; margin-bottom:1rem; }
+    .cta-section p { color:var(--text-dim); font-size:1.1rem; margin-bottom:3rem; }
+
+    /* FOOTER */
+    footer {
+      border-top:1px solid rgba(255,119,34,0.09);
+      padding:2rem 4rem; display:flex;
+      align-items:center; justify-content:space-between;
+      background:rgba(20,18,16,0.9); flex-wrap:wrap; gap:1rem;
+    }
+    .foot-logo { font-family:'Orbitron',monospace; font-size:0.9rem; font-weight:700; color:#ff7722; opacity:0.65; }
+    footer p { font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--text-dim); letter-spacing:1px; }
+
+    /* REVEAL */
+    .fade-up { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+
+    @media(max-width:768px) {
+      nav { padding:1rem 1.5rem; }
+      .nav-links { display:none; }
+      .section-pad { padding:4rem 1.5rem; }
+      .alert-wrap { grid-template-columns:1fr; }
+      footer { flex-direction:column; text-align:center; }
+    }
+
+    /* BACKGROUND: SMOKE GREY + ORANGE */
+    #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+    .bg-glow{
+      position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:
+        radial-gradient(ellipse 90% 50% at 50% 110%, rgba(255,95,15,0.22) 0%,transparent 65%),
+        radial-gradient(ellipse 50% 30% at 5%  100%, rgba(255,70,0,0.12)  0%,transparent 55%),
+        radial-gradient(ellipse 50% 30% at 95% 100%, rgba(255,70,0,0.12)  0%,transparent 55%),
+        radial-gradient(ellipse 70% 40% at 50% 0%,   rgba(80,90,100,0.10) 0%,transparent 70%);
+    }
+    .bg-grid{
+      position:fixed;inset:0;z-index:2;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(160,175,192,0.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,119,34,0.03) 1px,transparent 1px);
+      background-size:60px 60px;
+      animation:gridUp 30s linear infinite;
+    }
+    @keyframes gridUp{100%{transform:translateY(60px);}}
+    .bg-scan{
+      position:fixed;inset:0;z-index:3;pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.065) 3px,rgba(0,0,0,0.065) 4px);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-scan"></div>
+  <main>
+
+    <!-- NAV -->
+    <nav>
+      <a href="{% url 'index' %}" class="logo">SMOKE<span>GUARD</span> AI</a>
+      <div class="nav-links">
+        <a href="{% url 'index' %}">OVERVIEW</a>
+        <a href="{% url 'Training' %}">MODELS</a>
+        <a href="{% url 'DatasetView' %}">DATASET</a>
+      </div>
+      <div class="nav-btns">
+        <a href="{% url 'AdminLogin' %}" class="nav-btn">ADMIN</a>
+        <a href="{% url 'UserLogin' %}" class="nav-btn filled">SIGN IN →</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-badge">// ML &amp; DL-POWERED SAFETY INTELLIGENCE SYSTEM v2.0</div>
+      <h1>
+        <span class="h1-white">BUILDING</span>
+        <span class="h1-green">SMOKE DETECTION</span>
+        <span class="h1-sub">POWERED BY MACHINE LEARNING &amp; DEEP LEARNING</span>
+      </h1>
+      <p class="hero-sub">
+        Real-time IoT sensor analysis using <strong>7 ML models</strong> plus a <strong>MobileNetV2 CNN</strong> for image-based fire/smoke detection.
+        <strong>Sub-200ms prediction</strong> from temperature, humidity, CO₂, TVOC &amp; particulate sensor data.
+      </p>
+      <div class="hero-cta">
+        <a href="{% url 'UserLogin' %}" class="btn-primary">SIGN IN →</a>
+        <a href="{% url 'AdminLogin' %}" class="btn-secondary">ADMIN PORTAL</a>
+      </div>
+      <div class="scroll-hint">SCROLL</div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="stats-ticker">
+      <div class="ticker-track">
+        <span class="ticker-item"><span class="t-val">8</span><span class="t-lbl">MODELS (7 ML + 1 CNN)</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">62,630+</span><span class="t-lbl">SENSOR RECORDS</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">98.9%</span><span class="t-lbl">PEAK ACCURACY</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">&lt;200ms</span><span class="t-lbl">PREDICTION LATENCY</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">IoT</span><span class="t-lbl">SENSOR FUSION</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">LIVE</span><span class="t-lbl">ALERT SYSTEM</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">7</span><span class="t-lbl">ML MODELS TRAINED</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">62,630+</span><span class="t-lbl">SENSOR RECORDS</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">98.9%</span><span class="t-lbl">PEAK ACCURACY</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">&lt;200ms</span><span class="t-lbl">PREDICTION LATENCY</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">IoT</span><span class="t-lbl">SENSOR FUSION</span></span>
+        <span class="t-sep">◆</span>
+        <span class="ticker-item"><span class="t-val">LIVE</span><span class="t-lbl">ALERT SYSTEM</span></span>
+        <span class="t-sep">◆</span>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="section-pad fade-up">
+      <div class="section-header">
+        <span class="section-tag">// SYSTEM PIPELINE</span>
+        <h2 class="section-title">How <span>SmokeGuard</span> Works</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">📡</div>
+          <h3>SENSOR INGESTION</h3>
+          <p>IoT sensors capture <strong>temperature</strong>, humidity, CO₂ (eCO₂), TVOC, raw H₂ &amp; ethanol, pressure, and PM1.0/PM2.5 particulate readings in real time.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">⚙️</div>
+          <h3>PREPROCESSING</h3>
+          <p>Data is normalized via a <strong>fitted scaler</strong> ensuring consistent model input regardless of sensor drift or environmental variation across devices.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">🧠</div>
+          <h3>ML CLASSIFICATION</h3>
+          <p>7 trained classifiers including <strong>Random Forest</strong>, SVM, Gradient Boosting analyze features to output a binary smoke/no-smoke decision.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-icon">🚨</div>
+          <h3>INSTANT ALERT</h3>
+          <p>Results are returned with <strong>confidence scores</strong>. Positive detections trigger immediate visual alerts and logging for building management.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODELS -->
+    <section class="section-pad models-section fade-up">
+      <div class="section-header">
+        <span class="section-tag">// DEPLOYED CLASSIFIERS</span>
+        <h2 class="section-title">7 <span>Trained</span> ML Models + 1 CNN</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="models-grid" id="modelsGrid">
+        <div class="model-chip"><div class="model-name">RANDOM FOREST</div><div class="model-acc">98.9<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="98.9"></div></div></div>
+        <div class="model-chip"><div class="model-name">GRADIENT BOOST</div><div class="model-acc">98.4<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="98.4"></div></div></div>
+        <div class="model-chip"><div class="model-name">ADABOOST</div><div class="model-acc">97.6<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="97.6"></div></div></div>
+        <div class="model-chip"><div class="model-name">DECISION TREE</div><div class="model-acc">97.1<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="97.1"></div></div></div>
+        <div class="model-chip"><div class="model-name">SVM</div><div class="model-acc">96.2<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="96.2"></div></div></div>
+        <div class="model-chip"><div class="model-name">K-NEAREST</div><div class="model-acc">95.8<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="95.8"></div></div></div>
+        <div class="model-chip"><div class="model-name">LOGISTIC REG</div><div class="model-acc">89.3<span>%</span></div><div class="model-bar-bg"><div class="model-bar" data-w="89.3"></div></div></div>
+        <!-- CNN card -->
+        <div class="model-chip">
+          <div class="model-name">CNN (IMAGE)</div>
+          <div class="model-acc">96.9<span>%</span></div>
+          <div class="model-bar-bg"><div class="model-bar" data-w="96.9"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ALERT DEMO -->
+    <section class="section-pad fade-up">
+      <div class="alert-wrap">
+        <div class="alert-visual">
+          <div class="alert-ring"><div class="alert-icon-big">🔥</div></div>
+          <div class="alert-txt">⚠ SMOKE DETECTED</div>
+          <div class="alert-meta">CONFIDENCE: <span>97.3%</span> &nbsp;|&nbsp; MODEL: RANDOM FOREST</div>
+        </div>
+        <div class="alert-info">
+          <h3>Zero-Latency <span>Threat</span> Classification</h3>
+          <p>When sensors detect anomalous readings, SmokeGuard cross-references data patterns across all 12 input features to deliver a definitive threat assessment in under 200ms.</p>
+          <div class="feat-list">
+            <div class="feat-item"><div class="feat-dot"></div>12-feature sensor fusion — temp, humidity, CO₂, TVOC, PM1.0, PM2.5...</div>
+            <div class="feat-item"><div class="feat-dot"></div>Real-time confidence score returned with every prediction</div>
+            <div class="feat-item"><div class="feat-dot"></div>Choose from 7 trained ML models per prediction run</div>
+            <div class="feat-item"><div class="feat-dot"></div>Standard scaler preprocessing for consistent cross-sensor accuracy</div>
+            <div class="feat-item"><div class="feat-dot"></div>Django-backed secure admin + user role management portal</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section fade-up">
+      <h2>Ready to Protect Your Building?</h2>
+      <p>Deploy SmokeGuard AI for instant ML-powered smoke detection.</p>
+      <div class="hero-cta">
+        <a href="{% url 'UserRegister' %}" class="btn-primary">CREATE ACCOUNT →</a>
+        <a href="{% url 'UserLogin' %}" class="btn-secondary">SIGN IN</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="foot-logo">SMOKEGUARD AI</div>
+      <p>ML-BASED SMOKE DETECTION // BUILDING SAFETY SYSTEM</p>
+      <p style="color:rgba(107,122,141,0.4); letter-spacing:1px;">SYSTEM ONLINE ● ALL MODELS LOADED</p>
+    </footer>
+  </main>
+
+  <script>
+    // Smoke + ember canvas
+    (function(){
+      const cv=document.getElementById('bg-canvas');
+      if(!cv)return;
+      const cx=cv.getContext('2d');
+      let W,H;
+      function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+      resize();window.addEventListener('resize',resize);
+
+      const clouds=Array.from({length:35},()=>({
+        x:Math.random()*innerWidth,
+        y:innerHeight+Math.random()*400,
+        r:Math.random()*140+70,
+        vx:(Math.random()-.5)*.25,
+        vy:-(Math.random()*.35+.08),
+        op:Math.random()*.11+.03,
+        gr:Math.random()*.05+.015,
+        rot:Math.random()*Math.PI*2,
+        rotV:(Math.random()-.5)*.002,
+        warm:Math.random()>.6,
+      }));
+
+      const wisps=Array.from({length:25},()=>({
+        x:Math.random()*innerWidth,
+        y:innerHeight+Math.random()*200,
+        r:Math.random()*45+20,
+        vx:(Math.random()-.5)*.4,
+        vy:-(Math.random()*.6+.15),
+        op:Math.random()*.06+.02,
+        gr:Math.random()*.08+.03,
+        wave:Math.random()*Math.PI*2,
+        waveS:Math.random()*.015+.005,
+      }));
+
+      const haze=Array.from({length:8},()=>({
+        x:Math.random()*innerWidth,
+        y:Math.random()*innerHeight,
+        r:Math.random()*300+200,
+        vx:(Math.random()-.5)*.1,
+        vy:-(Math.random()*.05+.015),
+        op:Math.random()*.035+.01,
+      }));
+
+      function puff(x,y,r,op,warm){
+        const g=cx.createRadialGradient(x,y,0,x,y,r);
+        g.addColorStop(0,   warm?'rgba(155,142,128,'+op+')':'rgba(128,142,155,'+op+')');
+        g.addColorStop(0.45,warm?'rgba(118,108,98,'+op*.55+')':'rgba(98,112,124,'+op*.55+')');
+        g.addColorStop(0.78,warm?'rgba(88,80,74,'+op*.18+')':'rgba(74,86,96,'+op*.18+')');
+        g.addColorStop(1,'rgba(50,55,60,0)');
+        cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+      }
+
+      function tick(){
+        cx.clearRect(0,0,W,H);
+
+        haze.forEach(h=>{
+          const g=cx.createRadialGradient(h.x,h.y,0,h.x,h.y,h.r);
+          g.addColorStop(0,'rgba(115,125,135,'+h.op+')');
+          g.addColorStop(1,'rgba(70,80,88,0)');
+          cx.fillStyle=g;cx.beginPath();cx.arc(h.x,h.y,h.r,0,Math.PI*2);cx.fill();
+          h.x+=h.vx;h.y+=h.vy;
+          if(h.x<-h.r)h.x=W+h.r;
+          if(h.x>W+h.r)h.x=-h.r;
+          if(h.y+h.r<0){h.y=H+h.r;h.x=Math.random()*W;}
+        });
+
+        wisps.forEach(w=>{
+          w.wave+=w.waveS;
+          puff(w.x+Math.sin(w.wave)*16,w.y,w.r,w.op,false);
+          w.x+=w.vx;w.y+=w.vy;w.r+=w.gr;w.op*=.9994;
+          if(w.y+w.r<0||w.op<.008){
+            w.x=Math.random()*W;w.y=H+50;
+            w.r=Math.random()*30+15;w.op=Math.random()*.06+.02;
+            w.wave=Math.random()*Math.PI*2;
+          }
+        });
+
+        clouds.forEach(s=>{
+          s.rot+=s.rotV;
+          cx.save();
+          cx.translate(s.x,s.y);cx.rotate(s.rot);cx.translate(-s.x,-s.y);
+          puff(s.x,           s.y,          s.r,     s.op,    s.warm);
+          puff(s.x+s.r*.38,   s.y-s.r*.18,  s.r*.68, s.op*.7, s.warm);
+          puff(s.x-s.r*.32,   s.y-s.r*.12,  s.r*.62, s.op*.62,s.warm);
+          cx.restore();
+          s.x+=s.vx;s.y+=s.vy;s.r+=s.gr;s.op*=.9992;
+          if(s.y+s.r<0||s.op<.005){
+            s.x=Math.random()*W;s.y=H+100;
+            s.r=Math.random()*100+60;s.op=Math.random()*.11+.03;
+          }
+        });
+
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+
+    // Scroll reveal
+    const obs = new IntersectionObserver(es => {
+      es.forEach((e,i) => { if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'),i*80); });
+    }, {threshold:0.1});
+    document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+    // Model bar animation
+    const mg = document.getElementById('modelsGrid');
+    if(mg) {
+      const barObs = new IntersectionObserver(es => {
+        es.forEach(e => {
+          if(e.isIntersecting) {
+            document.querySelectorAll('.model-bar').forEach(b=>{
+              setTimeout(()=>{ b.style.width=(b.dataset.w||0)+'%'; },250);
+            });
+          }
+        });
+      }, {threshold:0.3});
+      barObs.observe(mg);
+    }
+  </script>
+</body>
+</html>

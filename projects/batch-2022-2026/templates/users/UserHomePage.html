@@ -1,0 +1,39 @@
+{% extends 'users/userbase.html' %}
+{% block contents %}
+<div class="theme-page-wrap">
+  <h1 class="theme-page-title">User <span>Home</span></h1>
+  <p class="theme-page-sub">Enhancing building safety through Machine Learning &amp; Deep Learning for smoke detection and fire prevention.</p>
+  <div class="theme-cards-grid">
+    <div class="theme-content-card">
+      <h5>⬡ SMOKE DETECTION</h5>
+      <p>Real-time data-driven insights to detect smoke, hazardous gases, and ensure early fire prevention.</p>
+    </div>
+    <div class="theme-content-card">
+      <h5>⬡ FIRE HAZARD DETECTION</h5>
+      <p>ML algorithms monitor building environments and forecast potential fire risks for safety.</p>
+    </div>
+    <div class="theme-content-card">
+      <h5>⬡ CNN IMAGE DETECTION</h5>
+      <p>Deep learning MobileNetV2 model detects fire and smoke visually from uploaded images with 96.98% accuracy.</p>
+    </div>
+    <div class="theme-content-card">
+      <h5>⬡ PREDICTIVE SAFETY</h5>
+      <p>Early prediction of fire and smoke-related risks in buildings using trained ML models.</p>
+    </div>
+    <div class="theme-content-card">
+      <h5>⬡ ENVIRONMENTAL SAFETY</h5>
+      <p>Optimize air quality and minimize fire risks using smart algorithms for safer buildings.</p>
+    </div>
+    <div class="theme-content-card">
+      <h5>⬡ MODEL TRAINING</h5>
+      <p>Train and evaluate 7 classifiers on IoT sensor data with full accuracy, precision, recall and F1 metrics.</p>
+    </div>
+  </div>
+  <div style="margin-top:2.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+    <a href="{% url 'DatasetView' %}" class="theme-btn-form secondary" style="display:inline-block; text-decoration:none;">VIEW DATASET</a>
+    <a href="{% url 'Training' %}" class="theme-btn-form secondary" style="display:inline-block; text-decoration:none;">TRAIN MODELS</a>
+    <a href="{% url 'prediction' %}" class="theme-btn-form" style="display:inline-block; text-decoration:none;">SENSOR PREDICT →</a>
+    <a href="{% url 'CNNPrediction' %}" class="theme-btn-form" style="display:inline-block; text-decoration:none;">CNN DETECT 🔥</a>
+  </div>
+</div>
+{% endblock %}

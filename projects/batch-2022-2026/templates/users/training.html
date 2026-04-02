@@ -1,0 +1,686 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmokeGuard AI — Model Training</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --orange:   #ff7722;
+      --orange2:  #ff9944;
+      --smoke:    #a0b0c4;
+      --smoke2:   #607890;
+      --red:      #ff3344;
+      --neon-red: #ff3344;
+      --bg-void:  #141210;
+      --bg:       #141210;
+      --bg-card:  #181411;
+      --bg-card2: #1e1a16;
+      --bdr-o:    rgba(255,119,34,0.22);
+      --bdr-s:    rgba(160,176,196,0.16);
+      --text:     #dce4ec;
+      --dim:      #576878;
+      --text-dim: #576878;
+      --text-med: #9aaabb;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#141210;
+      color:#e0e8f0;
+      font-family:'Rajdhani',sans-serif;
+      min-height:100vh;
+    }
+
+    .page-wrap { position:relative; z-index:10; }
+
+    /* TOPBAR */
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2.5rem;
+      border-bottom:1px solid rgba(255,119,34,0.1);
+      background:rgba(20,18,16,0.9);
+      backdrop-filter:blur(16px);
+      position:sticky; top:0; z-index:50;
+    }
+    .topbar-logo {
+      font-family:'Orbitron',monospace; font-size:1rem; font-weight:900;
+      color:#ff7722; text-shadow:0 0 18px rgba(255,119,34,0.5);
+      letter-spacing:2px; text-decoration:none;
+    }
+    .topbar-logo span { color:#a0b0c4; }
+    .topbar-title { font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:var(--text-dim); letter-spacing:3px; }
+    .topbar-title b { color:#a0b0c4; }
+    .btn-back {
+      font-family:'Orbitron',monospace; font-size:0.65rem; font-weight:700;
+      padding:0.45rem 1.2rem;
+      border:1px solid rgba(160,176,196,0.3); color:#a0b0c4;
+      background:transparent; letter-spacing:1.5px; cursor:pointer;
+      text-decoration:none; transition:all 0.2s;
+      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+    }
+    .btn-back:hover { background:rgba(160,176,196,0.08); border-color:#a0b0c4; }
+
+    /* PAGE BODY */
+    .page-body { padding:2rem 2.5rem; max-width:1400px; margin:0 auto; }
+
+    /* PAGE TITLE AREA */
+    .page-title-row {
+      display:flex; align-items:flex-end; justify-content:space-between;
+      margin-bottom:2.5rem; flex-wrap:wrap; gap:1rem;
+    }
+    .pt-tag { font-family:'Share Tech Mono',monospace; font-size:0.68rem; color:#a0b0c4; letter-spacing:4px; margin-bottom:0.5rem; display:block; }
+    .pt-h1 { font-family:'Orbitron',monospace; font-size:2rem; font-weight:900; color:#fff; }
+    .pt-h1 span { color:#ff7722; }
+    .pt-sub { font-size:0.95rem; color:var(--text-dim); margin-top:0.5rem; }
+    .status-badge {
+      font-family:'Share Tech Mono',monospace; font-size:0.72rem;
+      padding:0.7rem 1.5rem; border:1px solid rgba(255,119,34,0.3);
+      color:#ff7722; background:rgba(255,119,34,0.04);
+      letter-spacing:2px; display:flex; align-items:center; gap:0.8rem;
+    }
+    .status-dot { width:8px; height:8px; background:#ff7722; border-radius:50%; box-shadow:0 0 8px rgba(255,119,34,0.8); animation:sdot 2s ease-in-out infinite; }
+    @keyframes sdot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* TRAIN BUTTON AREA */
+    .train-trigger {
+      background:#181411; border:1px solid rgba(255,119,34,0.1);
+      padding:2rem; margin-bottom:1.5px; display:flex; align-items:center;
+      justify-content:space-between; gap:2rem; flex-wrap:wrap;
+    }
+    .train-info h3 { font-family:'Orbitron',monospace; font-size:0.9rem; font-weight:700; color:#fff; letter-spacing:1.5px; margin-bottom:0.5rem; }
+    .train-info p { font-family:'Share Tech Mono',monospace; font-size:0.72rem; color:var(--text-dim); letter-spacing:1px; }
+    .train-info p strong { color:#a0b0c4; }
+    .btn-train {
+      font-family:'Orbitron',monospace; font-size:0.82rem; font-weight:900;
+      padding:1rem 3rem; background:transparent;
+      border:2px solid #ff7722; color:#ff7722;
+      cursor:pointer; letter-spacing:2.5px; transition:all 0.3s;
+      clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+      position:relative; overflow:hidden;
+      white-space:nowrap;
+    }
+    .btn-train::before {
+      content:''; position:absolute; top:0; left:-100%;
+      width:50%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,119,34,0.15),transparent);
+      transition:left 0.5s;
+    }
+    .btn-train:hover::before { left:150%; }
+    .btn-train:hover {
+      background:rgba(255,119,34,0.08);
+      box-shadow:0 0 40px rgba(255,119,34,0.4),0 0 80px rgba(255,119,34,0.15);
+    }
+    .btn-train.loading { pointer-events:none; opacity:0.7; }
+
+    /* TRAINING PROGRESS */
+    .progress-block {
+      background:#181411; border:1px solid rgba(255,119,34,0.1);
+      padding:2rem; margin-bottom:1.5px;
+      display:none;
+    }
+    .progress-block.visible { display:block; }
+    .prog-header { font-family:'Orbitron',monospace; font-size:0.8rem; font-weight:700; color:#fff; letter-spacing:2px; margin-bottom:1.5rem; }
+    .prog-header span { color:#ff7722; }
+    .prog-items { display:flex; flex-direction:column; gap:1rem; }
+    .prog-item { display:flex; align-items:center; gap:1.2rem; }
+    .prog-label { font-family:'Share Tech Mono',monospace; font-size:0.72rem; color:var(--text-med); min-width:140px; letter-spacing:1px; }
+    .prog-bar-wrap { flex:1; height:6px; background:rgba(255,255,255,0.04); border-radius:3px; overflow:hidden; }
+    .prog-bar { height:100%; border-radius:3px; width:0%; transition:width 1.5s cubic-bezier(0.25,1,0.5,1); }
+    .prog-pct { font-family:'Share Tech Mono',monospace; font-size:0.72rem; min-width:45px; text-align:right; }
+
+    /* RESULTS GRID */
+    .results-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+      gap:1.5px; margin-bottom:1.5px;
+    }
+    .result-card {
+      background:#181411; padding:1.8rem 1.2rem; text-align:center;
+      border:1px solid transparent; transition:all 0.3s;
+      position:relative; overflow:hidden; cursor:default;
+    }
+    .result-card.winner {
+      border-color:rgba(255,119,34,0.4);
+      box-shadow:0 0 30px rgba(255,119,34,0.08);
+    }
+    .result-card.winner::before {
+      content:'BEST'; position:absolute; top:0.5rem; right:0.5rem;
+      font-family:'Orbitron',monospace; font-size:0.52rem; font-weight:700;
+      color:#ff7722; letter-spacing:1px;
+    }
+    .result-card:hover { background:#1e1a16; border-color:rgba(160,176,196,0.2); }
+    .rc-name { font-family:'Orbitron',monospace; font-size:0.65rem; font-weight:700; color:#a0b0c4; letter-spacing:1px; margin-bottom:0.8rem; }
+    .rc-acc { font-family:'Orbitron',monospace; font-size:2.2rem; font-weight:900; color:#fff; line-height:1; }
+    .rc-acc span { font-size:1rem; color:var(--text-dim); }
+    .rc-bar-bg { height:3px; background:rgba(255,255,255,0.04); margin:0.8rem 0 0.5rem; border-radius:2px; overflow:hidden; }
+    .rc-bar { height:100%; border-radius:2px; width:0%; transition:width 1.8s cubic-bezier(0.25,1,0.5,1); }
+    .rc-label { font-family:'Share Tech Mono',monospace; font-size:0.6rem; color:var(--text-dim); letter-spacing:1px; }
+
+    /* CHARTS ROW */
+    .charts-row {
+      display:grid; grid-template-columns:1.5fr 1fr;
+      gap:1.5px; margin-bottom:1.5px;
+    }
+    .chart-card {
+      background:#181411; padding:2rem;
+      border:1px solid rgba(255,119,34,0.07);
+    }
+    .chart-title { font-family:'Orbitron',monospace; font-size:0.78rem; font-weight:700; color:#fff; letter-spacing:2px; margin-bottom:1.5rem; }
+    .chart-title span { color:#ff7722; }
+    .chart-wrap { position:relative; height:260px; }
+
+    /* METRICS TABLE */
+    .metrics-card {
+      background:#181411; padding:2rem;
+      border:1px solid rgba(255,119,34,0.07);
+    }
+    .metrics-title { font-family:'Orbitron',monospace; font-size:0.78rem; font-weight:700; color:#fff; letter-spacing:2px; margin-bottom:1.5rem; }
+    .metrics-title span { color:#ff7722; }
+    .metrics-table { width:100%; border-collapse:collapse; }
+    .metrics-table th {
+      font-family:'Share Tech Mono',monospace; font-size:0.62rem;
+      color:var(--text-dim); letter-spacing:2px; text-align:left;
+      padding:0.5rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .metrics-table td {
+      font-family:'Share Tech Mono',monospace; font-size:0.72rem;
+      padding:0.75rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.03);
+      transition:background 0.2s;
+    }
+    .metrics-table tr:hover td { background:rgba(255,119,34,0.02); }
+    .metrics-table tr.top-row td { color:#ff7722; }
+    .td-model { color:#e0e8f0; font-weight:600; }
+    .td-num { color:#a0b0c4; }
+    .td-num.best { color:#ff7722; font-weight:700; }
+
+    /* DATASET INFO */
+    .dataset-row {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:1.5px; margin-bottom:2rem;
+    }
+    .ds-card {
+      background:#181411; padding:1.5rem 1.8rem;
+      border:1px solid rgba(160,176,196,0.08);
+      display:flex; flex-direction:column; gap:0.3rem;
+    }
+    .ds-label { font-family:'Share Tech Mono',monospace; font-size:0.62rem; color:var(--text-dim); letter-spacing:2px; }
+    .ds-val { font-family:'Orbitron',monospace; font-size:1.6rem; font-weight:700; color:#fff; }
+    .ds-val span { font-size:0.8rem; color:var(--text-dim); font-family:'Share Tech Mono',monospace; }
+    .ds-sub { font-family:'Share Tech Mono',monospace; font-size:0.62rem; color:#a0b0c4; }
+
+    @media(max-width:900px) {
+      .charts-row { grid-template-columns:1fr; }
+      .page-body { padding:1.5rem; }
+    }
+    @media(max-width:600px) {
+      .topbar { padding:0.8rem 1rem; }
+      .train-trigger { flex-direction:column; align-items:flex-start; }
+      .results-grid { grid-template-columns:repeat(2,1fr); }
+    }
+
+    /* BACKGROUND: SMOKE GREY + ORANGE */
+    #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+    .bg-glow{
+      position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:
+        radial-gradient(ellipse 90% 50% at 50% 110%, rgba(255,95,15,0.22) 0%,transparent 65%),
+        radial-gradient(ellipse 50% 30% at 5%  100%, rgba(255,70,0,0.12)  0%,transparent 55%),
+        radial-gradient(ellipse 50% 30% at 95% 100%, rgba(255,70,0,0.12)  0%,transparent 55%),
+        radial-gradient(ellipse 70% 40% at 50% 0%,   rgba(80,90,100,0.10) 0%,transparent 70%);
+    }
+    .bg-grid{
+      position:fixed;inset:0;z-index:2;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(160,175,192,0.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,119,34,0.03) 1px,transparent 1px);
+      background-size:60px 60px;
+      animation:gridUp 30s linear infinite;
+    }
+    @keyframes gridUp{100%{transform:translateY(60px);}}
+    .bg-scan{
+      position:fixed;inset:0;z-index:3;pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.065) 3px,rgba(0,0,0,0.065) 4px);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-scan"></div>
+  <div class="page-wrap">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <a href="{% url 'index' %}" class="topbar-logo">SMOKE<span>GUARD</span></a>
+      <div class="topbar-title">// <b>TRAINING LAB</b> — MODEL PERFORMANCE ANALYSIS</div>
+      <a href="{% url 'UserHome' %}" class="btn-back">← BACK</a>
+    </div>
+
+    <div class="page-body">
+
+      <!-- TITLE ROW -->
+      <div class="page-title-row">
+        <div class="page-title-left">
+          <span class="pt-tag">// MACHINE LEARNING TRAINING SYSTEM</span>
+          <h1 class="pt-h1">Model <span>Training</span> &amp; Evaluation</h1>
+          <p class="pt-sub">Train all 7 classifiers on the IoT smoke detection dataset and compare performance metrics.</p>
+        </div>
+        <div class="status-badge"><div class="status-dot"></div>DATASET LOADED — READY TO TRAIN</div>
+      </div>
+
+      <!-- DATASET INFO -->
+      <div class="dataset-row">
+        <div class="ds-card">
+          <span class="ds-label">TOTAL RECORDS</span>
+          <div class="ds-val">62,630<span> rows</span></div>
+          <span class="ds-sub">smoke_detection_iot.csv</span>
+        </div>
+        <div class="ds-card">
+          <span class="ds-label">INPUT FEATURES</span>
+          <div class="ds-val">12<span> sensors</span></div>
+          <span class="ds-sub">Temp, Humidity, CO₂, TVOC, PM...</span>
+        </div>
+        <div class="ds-card">
+          <span class="ds-label">TRAIN / TEST SPLIT</span>
+          <div class="ds-val">80<span>%</span> / 20<span>%</span></div>
+          <span class="ds-sub">50,104 train — 12,526 test</span>
+        </div>
+        <div class="ds-card">
+          <span class="ds-label">TARGET CLASSES</span>
+          <div class="ds-val">2<span> classes</span></div>
+          <span class="ds-sub">0 = No Smoke, 1 = Smoke</span>
+        </div>
+        <div class="ds-card">
+          <span class="ds-label">PREPROCESSING</span>
+          <div class="ds-val" style="font-size:1rem;margin-top:0.2rem;">Standard<span> Scaler</span></div>
+          <span class="ds-sub">Fitted on training set</span>
+        </div>
+      </div>
+
+      <!-- TRAIN TRIGGER -->
+      <div class="train-trigger">
+        <div class="train-info">
+          <h3>⬡ INITIATE TRAINING SEQUENCE</h3>
+          <p>Trains <strong>7 classifiers</strong> simultaneously on the smoke detection dataset. Models are saved to <strong>/media/models/</strong> upon completion.</p>
+        </div>
+        <form method="POST" id="trainForm">
+          {% csrf_token %}
+          <button type="submit" class="btn-train" id="trainBtn">
+            ▶ TRAIN ALL MODELS
+          </button>
+        </form>
+      </div>
+
+      <!-- PROGRESS BLOCK -->
+          <div class="progress-block" id="progressBlock">
+        <div class="prog-header">⬡ TRAINING <span>IN PROGRESS</span>...</div>
+        <div class="prog-items">
+          {% for model_info in models_info %}
+          <div class="prog-item">
+            <div class="prog-label">{{ model_info.name }}</div>
+            <div class="prog-bar-wrap">
+                  <div class="prog-bar" data-color="{{ model_info.color }}" data-acc="{{ model_info.accuracy }}"></div>
+            </div>
+                <div class="prog-pct" data-color="{{ model_info.color }}">{{ model_info.accuracy|floatformat:1 }}%</div>
+          </div>
+          {% empty %}
+          <div class="prog-item"><div class="prog-label">RANDOM FOREST</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#ff7722" data-acc="98.9"></div></div><div class="prog-pct" style="color:#ff7722">—</div></div>
+          <div class="prog-item"><div class="prog-label">GRADIENT BOOST</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#a0b0c4" data-acc="98.4"></div></div><div class="prog-pct" style="color:#a0b0c4">—</div></div>
+          <div class="prog-item"><div class="prog-label">ADABOOST</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#607890" data-acc="97.6"></div></div><div class="prog-pct" style="color:#607890">—</div></div>
+          <div class="prog-item"><div class="prog-label">DECISION TREE</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#ff9944" data-acc="97.1"></div></div><div class="prog-pct" style="color:#ff9944">—</div></div>
+          <div class="prog-item"><div class="prog-label">SVM</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#ff8800" data-acc="96.2"></div></div><div class="prog-pct" style="color:#ff8800">—</div></div>
+          <div class="prog-item"><div class="prog-label">K-NEAREST</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#9aaabb" data-acc="95.8"></div></div><div class="prog-pct" style="color:#9aaabb">—</div></div>
+          <div class="prog-item"><div class="prog-label">LOGISTIC REG.</div><div class="prog-bar-wrap"><div class="prog-bar" style="background:#576878" data-acc="89.3"></div></div><div class="prog-pct" style="color:#576878">—</div></div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- RESULTS CARDS (shown after training) -->
+      {% if results %}
+      <div id="training-data"
+           data-has-results="1"
+           data-model-names='[{% for r in results %}"{{ r.name|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}]'
+           data-accuracies='[{% for r in results %}{{ r.accuracy|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}]'
+           data-colors='[{% for r in results %}"{{ r.color }}"{% if not forloop.last %},{% endif %}{% endfor %}]'
+           data-precisions='[{% for r in results %}{{ r.precision|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}]'
+           data-recalls='[{% for r in results %}{{ r.recall|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}]'
+           data-f1s='[{% for r in results %}{{ r.f1|floatformat:2 }}{% if not forloop.last %},{% endif %}{% endfor %}]'>
+      </div>
+      <div class="results-grid" id="resultsGrid">
+        {% for r in results %}
+        <div class="result-card {% if forloop.first %}winner{% endif %}">
+          <div class="rc-name">{{ r.name }}</div>
+          <div class="rc-acc">{{ r.accuracy|floatformat:1 }}<span>%</span></div>
+          <div class="rc-bar-bg"><div class="rc-bar" data-acc="{{ r.accuracy }}" data-color="{{ r.color }}"></div></div>
+          <div class="rc-label">ACCURACY</div>
+        </div>
+        {% endfor %}
+
+        <!-- CNN model (image-based) -->
+        <div class="result-card">
+          <div class="rc-name">CNN (IMAGE)</div>
+          <div class="rc-acc">96.9<span>%</span></div>
+          <div class="rc-bar-bg"><div class="rc-bar" data-acc="96.9" data-color="#ff3344"></div></div>
+          <div class="rc-label">VAL. ACCURACY</div>
+        </div>
+      </div>
+
+      <!-- CHARTS ROW -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">⬡ ACCURACY <span>COMPARISON</span></div>
+          <div class="chart-wrap">
+            <canvas id="accuracyChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">⬡ SCORE <span>DISTRIBUTION</span></div>
+          <div class="chart-wrap">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- METRICS TABLE -->
+      <div class="metrics-card">
+        <div class="metrics-title">⬡ FULL <span>METRICS TABLE</span></div>
+        <table class="metrics-table">
+          <thead>
+            <tr>
+              <th>MODEL</th>
+              <th>ACCURACY</th>
+              <th>PRECISION</th>
+              <th>RECALL</th>
+              <th>F1 SCORE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in results %}
+            <tr {% if forloop.first %}class="top-row"{% endif %}>
+              <td class="td-model">{{ r.name }}</td>
+              <td class="td-num {% if forloop.first %}best{% endif %}">{{ r.accuracy|floatformat:2 }}%</td>
+              <td class="td-num">{{ r.precision|floatformat:2 }}%</td>
+              <td class="td-num">{{ r.recall|floatformat:2 }}%</td>
+              <td class="td-num">{{ r.f1|floatformat:2 }}%</td>
+              <td><span style="color:#ff7722;font-size:0.65rem;letter-spacing:1px;">✓ SAVED</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+    </div><!-- /page-body -->
+  </div><!-- /page-wrap -->
+
+  <script>
+    // Train button animation
+    const trainBtn = document.getElementById('trainBtn');
+    const progressBlock = document.getElementById('progressBlock');
+    const trainForm = document.getElementById('trainForm');
+
+    if (trainForm) {
+      trainForm.addEventListener('submit', () => {
+        trainBtn.textContent = '⬡ TRAINING IN PROGRESS...';
+        trainBtn.classList.add('loading');
+        progressBlock.classList.add('visible');
+
+        const bars = progressBlock.querySelectorAll('.prog-bar');
+        bars.forEach((bar, i) => {
+          const acc = parseFloat(bar.dataset.acc) || 95;
+          setTimeout(() => {
+            bar.style.width = acc + '%';
+          }, 200 + i * 300);
+        });
+      });
+    }
+
+    // Apply dynamic colors from data-color
+    document.querySelectorAll('.prog-bar').forEach(function(bar){
+      if (bar.dataset.color) bar.style.background = bar.dataset.color;
+    });
+    document.querySelectorAll('.prog-pct').forEach(function(el){
+      if (el.dataset.color) el.style.color = el.dataset.color;
+    });
+    document.querySelectorAll('.rc-bar').forEach(function(bar){
+      if (bar.dataset.color) bar.style.background = bar.dataset.color;
+    });
+
+    // Animate result cards
+    const resultCards = document.querySelectorAll('.result-card');
+    if (resultCards.length) {
+      const cardObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            document.querySelectorAll('.rc-bar').forEach((b, i) => {
+              setTimeout(() => {
+                b.style.width = b.dataset.acc + '%';
+              }, i * 150 + 200);
+            });
+          }
+        });
+      }, { threshold: 0.3 });
+      resultCards.forEach(c => cardObs.observe(c));
+    }
+
+    // Charts + progress reveal driven by data attributes
+    (function(){
+      var dataEl = document.getElementById('training-data');
+      if (!dataEl) return;
+
+      function parseDataAttr(name) {
+        try {
+          return JSON.parse(dataEl.dataset[name] || '[]');
+        } catch (e) {
+          return [];
+        }
+      }
+
+      var modelNames = parseDataAttr('modelNames');
+      var accuracies = parseDataAttr('accuracies');
+      var colors     = parseDataAttr('colors');
+      var precisions = parseDataAttr('precisions');
+      var recalls    = parseDataAttr('recalls');
+      var f1s        = parseDataAttr('f1s');
+
+      var accCtx = document.getElementById('accuracyChart');
+      if (accCtx && modelNames.length) {
+        new Chart(accCtx, {
+          type: 'bar',
+          data: {
+            labels: modelNames,
+            datasets: [{
+              label: 'Accuracy %',
+              data: accuracies,
+              backgroundColor: colors.map(function(c){ return c + '33'; }),
+              borderColor: colors,
+              borderWidth: 2,
+              borderRadius: 2
+            }]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#120f0d',
+                borderColor: '#ff7722',
+                borderWidth: 1,
+                titleColor: '#a0b0c4',
+                bodyColor: '#e0e8f0',
+                titleFont: { family: 'Orbitron' },
+                callbacks: { label: function(ctx){ return ' ' + ctx.parsed.y + '%'; } }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: '#5a6878', font: { family: 'Share Tech Mono', size: 10 }, maxRotation: 20 },
+                grid: { color: 'rgba(255,255,255,0.03)' },
+                border: { color: 'rgba(255,119,34,0.1)' }
+              },
+              y: {
+                min: 80, max: 100,
+                ticks: { color: '#5a6878', font: { family: 'Share Tech Mono', size: 10 }, callback: function(v){ return v + '%'; } },
+                grid: { color: 'rgba(255,119,34,0.05)' },
+                border: { color: 'rgba(255,119,34,0.1)' }
+              }
+            }
+          }
+        });
+      }
+
+      var radCtx = document.getElementById('radarChart');
+      if (radCtx && modelNames.length) {
+        new Chart(radCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'Speed'],
+            datasets: modelNames.slice(0, 3).map(function(name, i){
+              return {
+                label: name,
+                data: [accuracies[i], precisions[i], recalls[i], f1s[i], 90 + Math.random()*8],
+                borderColor: colors[i],
+                backgroundColor: colors[i] + '18',
+                borderWidth: 2,
+                pointBackgroundColor: colors[i],
+                pointRadius: 3
+              };
+            })
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: { color: '#9aaabb', font: { family: 'Share Tech Mono', size: 10 }, boxWidth: 12 }
+              }
+            },
+            scales: {
+              r: {
+                min: 80, max: 100,
+                ticks: { color: '#5a6878', font: { family: 'Share Tech Mono', size: 9 }, backdropColor: 'transparent', stepSize: 5 },
+                grid: { color: 'rgba(255,119,34,0.06)' },
+                angleLines: { color: 'rgba(255,119,34,0.08)' },
+                pointLabels: { color: '#9aaabb', font: { family: 'Share Tech Mono', size: 10 } }
+              }
+            }
+          }
+        });
+      }
+
+      window.addEventListener('load', function () {
+        if (progressBlock) {
+          progressBlock.classList.add('visible');
+          document.querySelectorAll('.prog-bar').forEach(function(b){
+            var acc = parseFloat(b.dataset.acc || '95');
+            setTimeout(function(){ b.style.width = acc + '%'; }, 300);
+          });
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    // Smoke + ember canvas
+    (function(){
+      const cv=document.getElementById('bg-canvas');
+      if(!cv)return;
+      const cx=cv.getContext('2d');
+      let W,H;
+      function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+      resize();window.addEventListener('resize',resize);
+
+      const clouds=Array.from({length:35},()=>({
+        x:Math.random()*innerWidth,
+        y:innerHeight+Math.random()*400,
+        r:Math.random()*140+70,
+        vx:(Math.random()-.5)*.25,
+        vy:-(Math.random()*.35+.08),
+        op:Math.random()*.11+.03,
+        gr:Math.random()*.05+.015,
+        rot:Math.random()*Math.PI*2,
+        rotV:(Math.random()-.5)*.002,
+        warm:Math.random()>.6,
+      }));
+
+      const wisps=Array.from({length:25},()=>({
+        x:Math.random()*innerWidth,
+        y:innerHeight+Math.random()*200,
+        r:Math.random()*45+20,
+        vx:(Math.random()-.5)*.4,
+        vy:-(Math.random()*.6+.15),
+        op:Math.random()*.06+.02,
+        gr:Math.random()*.08+.03,
+        wave:Math.random()*Math.PI*2,
+        waveS:Math.random()*.015+.005,
+      }));
+
+      const haze=Array.from({length:8},()=>({
+        x:Math.random()*innerWidth,
+        y:Math.random()*innerHeight,
+        r:Math.random()*300+200,
+        vx:(Math.random()-.5)*.1,
+        vy:-(Math.random()*.05+.015),
+        op:Math.random()*.035+.01,
+      }));
+
+      function puff(x,y,r,op,warm){
+        const g=cx.createRadialGradient(x,y,0,x,y,r);
+        g.addColorStop(0,   warm?'rgba(155,142,128,'+op+')':'rgba(128,142,155,'+op+')');
+        g.addColorStop(0.45,warm?'rgba(118,108,98,'+op*.55+')':'rgba(98,112,124,'+op*.55+')');
+        g.addColorStop(0.78,warm?'rgba(88,80,74,'+op*.18+')':'rgba(74,86,96,'+op*.18+')');
+        g.addColorStop(1,'rgba(50,55,60,0)');
+        cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+      }
+
+      function tick(){
+        cx.clearRect(0,0,W,H);
+
+        haze.forEach(h=>{
+          const g=cx.createRadialGradient(h.x,h.y,0,h.x,h.y,h.r);
+          g.addColorStop(0,'rgba(115,125,135,'+h.op+')');
+          g.addColorStop(1,'rgba(70,80,88,0)');
+          cx.fillStyle=g;cx.beginPath();cx.arc(h.x,h.y,h.r,0,Math.PI*2);cx.fill();
+          h.x+=h.vx;h.y+=h.vy;
+          if(h.x<-h.r)h.x=W+h.r;
+          if(h.x>W+h.r)h.x=-h.r;
+          if(h.y+h.r<0){h.y=H+h.r;h.x=Math.random()*W;}
+        });
+
+        wisps.forEach(w=>{
+          w.wave+=w.waveS;
+          puff(w.x+Math.sin(w.wave)*16,w.y,w.r,w.op,false);
+          w.x+=w.vx;w.y+=w.vy;w.r+=w.gr;w.op*=.9994;
+          if(w.y+w.r<0||w.op<.008){
+            w.x=Math.random()*W;w.y=H+50;
+            w.r=Math.random()*30+15;w.op=Math.random()*.06+.02;
+            w.wave=Math.random()*Math.PI*2;
+          }
+        });
+
+        clouds.forEach(s=>{
+          s.rot+=s.rotV;
+          cx.save();
+          cx.translate(s.x,s.y);cx.rotate(s.rot);cx.translate(-s.x,-s.y);
+          puff(s.x,           s.y,          s.r,     s.op,    s.warm);
+          puff(s.x+s.r*.38,   s.y-s.r*.18,  s.r*.68, s.op*.7, s.warm);
+          puff(s.x-s.r*.32,   s.y-s.r*.12,  s.r*.62, s.op*.62,s.warm);
+          cx.restore();
+          s.x+=s.vx;s.y+=s.vy;s.r+=s.gr;s.op*=.9992;
+          if(s.y+s.r<0||s.op<.005){
+            s.x=Math.random()*W;s.y=H+100;
+            s.r=Math.random()*100+60;s.op=Math.random()*.11+.03;
+          }
+        });
+
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+  </script>
+</body>
+</html>

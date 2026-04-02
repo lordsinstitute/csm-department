@@ -1,0 +1,59 @@
+{% extends 'admins/adminbase.html' %}
+{% load static %}
+{% block contents %}
+<div class="theme-page-wrap">
+  <h1 class="theme-page-title">Registered <span>Users</span></h1>
+  <p class="theme-page-sub">View and activate registered user accounts.</p>
+  <div class="theme-table-wrap">
+    <table class="theme-table">
+      <thead>
+        <tr>
+          <th>S.NO</th>
+          <th>NAME</th>
+          <th>LOGIN ID</th>
+          <th>MOBILE</th>
+          <th>EMAIL</th>
+          <th>LOCALITY</th>
+          <th>STATUS</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in data %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ i.name }}</td>
+          <td>{{ i.loginid }}</td>
+          <td>{{ i.mobile }}</td>
+          <td>{{ i.email }}</td>
+          <td>{{ i.locality }}</td>
+          <td>
+            {% if i.status == 'waiting' %}
+              <span style="color:#ff7722; font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:1px;">⏳ WAITING</span>
+            {% else %}
+              <span style="color:#a0b0c4; font-family:'Share Tech Mono',monospace; font-size:0.68rem; letter-spacing:1px;">✓ ACTIVE</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if i.status == 'waiting' %}
+              <a href="{% url 'ActivaUsers' %}?uid={{ i.id }}"
+                 style="font-family:'Orbitron',monospace; font-size:0.62rem; font-weight:700;
+                        color:#141210; background:#ff7722; padding:0.35rem 0.9rem;
+                        text-decoration:none; letter-spacing:1px;
+                        clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+                        display:inline-block; transition:box-shadow 0.2s;"
+                 onmouseover="this.style.boxShadow='0 0 20px rgba(255,119,34,0.5)'"
+                 onmouseout="this.style.boxShadow='none'">
+                ACTIVATE
+              </a>
+            {% else %}
+              <span style="font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:#3a4a5a; letter-spacing:1px;">ACTIVATED</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

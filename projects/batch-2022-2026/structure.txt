@@ -1,0 +1,1188 @@
+Folder PATH listing for volume OS
+Volume serial number is 22F4-0B17
+C:.
+|   .gitignore
+|   .python-version
+|   db.sqlite3
+|   manage.py
+|   METHODOLOGY.md
+|   nixpacks.toml
+|   Procfile
+|   README.md
+|   requirements.txt
+|   structure.txt
+|   train_cnn.py
+|   
++---.pytest_cache
+|   |   .gitignore
+|   |   CACHEDIR.TAG
+|   |   README.md
+|   |   
+|   \---v
+|       \---cache
+|               stepwise
+|               
++---.vscode
+|       settings.json
+|       
++---admins
+|   |   admin.py
+|   |   apps.py
+|   |   models.py
+|   |   tests.py
+|   |   views.py
+|   |   __init__.py
+|   |   
+|   +---migrations
+|   |   |   __init__.py
+|   |   |   
+|   |   \---__pycache__
+|   |           __init__.cpython-310.pyc
+|   |           __init__.cpython-311.pyc
+|   |           __init__.cpython-313.pyc
+|   |           
+|   \---__pycache__
+|           admin.cpython-310.pyc
+|           admin.cpython-311.pyc
+|           admin.cpython-313.pyc
+|           apps.cpython-310.pyc
+|           apps.cpython-311.pyc
+|           apps.cpython-313.pyc
+|           models.cpython-310.pyc
+|           models.cpython-311.pyc
+|           models.cpython-313.pyc
+|           tests.cpython-313.pyc
+|           views.cpython-310.pyc
+|           views.cpython-311.pyc
+|           views.cpython-313.pyc
+|           __init__.cpython-310.pyc
+|           __init__.cpython-311.pyc
+|           __init__.cpython-313.pyc
+|           
++---Buliding_Saftey_Through_Machine_learning
+|   |   asgi.py
+|   |   settings.py
+|   |   urls.py
+|   |   wsgi.py
+|   |   __init__.py
+|   |   
+|   \---__pycache__
+|           settings.cpython-310.pyc
+|           settings.cpython-311.pyc
+|           settings.cpython-313.pyc
+|           urls.cpython-310.pyc
+|           urls.cpython-311.pyc
+|           urls.cpython-313.pyc
+|           wsgi.cpython-310.pyc
+|           wsgi.cpython-311.pyc
+|           wsgi.cpython-313.pyc
+|           __init__.cpython-310.pyc
+|           __init__.cpython-311.pyc
+|           __init__.cpython-313.pyc
+|           
++---media
+|   |   cnn_classes.json
+|   |   cnn_model.h5
+|   |   scaler.pkl
+|   |   smoke_detection_iot.csv
+|   |   
+|   +---cnn_dataset
+|   |   +---fire
+|   |   |       fire.1.png
+|   |   |       fire.10.png
+|   |   |       fire.100.png
+|   |   |       fire.101.png
+|   |   |       fire.102.png
+|   |   |       fire.103.png
+|   |   |       fire.104.png
+|   |   |       fire.105.png
+|   |   |       fire.106.png
+|   |   |       fire.107.png
+|   |   |       fire.108.png
+|   |   |       fire.109.png
+|   |   |       fire.11.png
+|   |   |       fire.110.png
+|   |   |       fire.111.png
+|   |   |       fire.112.png
+|   |   |       fire.113.png
+|   |   |       fire.114.png
+|   |   |       fire.115.png
+|   |   |       fire.116.png
+|   |   |       fire.117.png
+|   |   |       fire.118.png
+|   |   |       fire.119.png
+|   |   |       fire.12.png
+|   |   |       fire.120.png
+|   |   |       fire.121.png
+|   |   |       fire.122.png
+|   |   |       fire.123.png
+|   |   |       fire.124.png
+|   |   |       fire.125.png
+|   |   |       fire.126.png
+|   |   |       fire.127.png
+|   |   |       fire.128.png
+|   |   |       fire.129.png
+|   |   |       fire.13.png
+|   |   |       fire.130.png
+|   |   |       fire.131.png
+|   |   |       fire.132.png
+|   |   |       fire.133.png
+|   |   |       fire.134.png
+|   |   |       fire.135.png
+|   |   |       fire.136.png
+|   |   |       fire.137.png
+|   |   |       fire.138.png
+|   |   |       fire.139.png
+|   |   |       fire.14.png
+|   |   |       fire.140.png
+|   |   |       fire.141.png
+|   |   |       fire.142.png
+|   |   |       fire.143.png
+|   |   |       fire.144.png
+|   |   |       fire.145.png
+|   |   |       fire.146.png
+|   |   |       fire.147.png
+|   |   |       fire.148.png
+|   |   |       fire.149.png
+|   |   |       fire.15.png
+|   |   |       fire.150.png
+|   |   |       fire.151.png
+|   |   |       fire.152.png
+|   |   |       fire.153.png
+|   |   |       fire.154.png
+|   |   |       fire.155.png
+|   |   |       fire.156.png
+|   |   |       fire.157.png
+|   |   |       fire.158.png
+|   |   |       fire.159.png
+|   |   |       fire.16.png
+|   |   |       fire.160.png
+|   |   |       fire.161.png
+|   |   |       fire.162.png
+|   |   |       fire.163.png
+|   |   |       fire.164.png
+|   |   |       fire.165.png
+|   |   |       fire.166.png
+|   |   |       fire.167.png
+|   |   |       fire.168.png
+|   |   |       fire.169.png
+|   |   |       fire.17.png
+|   |   |       fire.170.png
+|   |   |       fire.171.png
+|   |   |       fire.172.png
+|   |   |       fire.173.png
+|   |   |       fire.174.png
+|   |   |       fire.175.png
+|   |   |       fire.176.png
+|   |   |       fire.177.png
+|   |   |       fire.178.png
+|   |   |       fire.179.png
+|   |   |       fire.18.png
+|   |   |       fire.180.png
+|   |   |       fire.181.png
+|   |   |       fire.182.png
+|   |   |       fire.183.png
+|   |   |       fire.184.png
+|   |   |       fire.185.png
+|   |   |       fire.186.png
+|   |   |       fire.187.png
+|   |   |       fire.188.png
+|   |   |       fire.189.png
+|   |   |       fire.19.png
+|   |   |       fire.190.png
+|   |   |       fire.191.png
+|   |   |       fire.192.png
+|   |   |       fire.193.png
+|   |   |       fire.194.png
+|   |   |       fire.195.png
+|   |   |       fire.196.png
+|   |   |       fire.197.png
+|   |   |       fire.198.png
+|   |   |       fire.199.png
+|   |   |       fire.2.png
+|   |   |       fire.20.png
+|   |   |       fire.200.png
+|   |   |       fire.201.png
+|   |   |       fire.202.png
+|   |   |       fire.203.png
+|   |   |       fire.204.png
+|   |   |       fire.205.png
+|   |   |       fire.206.png
+|   |   |       fire.207.png
+|   |   |       fire.208.png
+|   |   |       fire.209.png
+|   |   |       fire.21.png
+|   |   |       fire.210.png
+|   |   |       fire.211.png
+|   |   |       fire.212.png
+|   |   |       fire.213.png
+|   |   |       fire.214.png
+|   |   |       fire.215.png
+|   |   |       fire.216.png
+|   |   |       fire.217.png
+|   |   |       fire.218.png
+|   |   |       fire.219.png
+|   |   |       fire.22.png
+|   |   |       fire.220.png
+|   |   |       fire.221.png
+|   |   |       fire.222.png
+|   |   |       fire.223.png
+|   |   |       fire.224.png
+|   |   |       fire.225.png
+|   |   |       fire.226.png
+|   |   |       fire.227.png
+|   |   |       fire.228.png
+|   |   |       fire.229.png
+|   |   |       fire.23.png
+|   |   |       fire.230.png
+|   |   |       fire.231.png
+|   |   |       fire.232.png
+|   |   |       fire.233.png
+|   |   |       fire.234.png
+|   |   |       fire.235.png
+|   |   |       fire.236.png
+|   |   |       fire.237.png
+|   |   |       fire.238.png
+|   |   |       fire.239.png
+|   |   |       fire.24.png
+|   |   |       fire.240.png
+|   |   |       fire.241.png
+|   |   |       fire.242.png
+|   |   |       fire.243.png
+|   |   |       fire.244.png
+|   |   |       fire.245.png
+|   |   |       fire.246.png
+|   |   |       fire.247.png
+|   |   |       fire.248.png
+|   |   |       fire.249.png
+|   |   |       fire.25.png
+|   |   |       fire.250.png
+|   |   |       fire.251.png
+|   |   |       fire.252.png
+|   |   |       fire.253.png
+|   |   |       fire.254.png
+|   |   |       fire.255.png
+|   |   |       fire.256.png
+|   |   |       fire.257.png
+|   |   |       fire.258.png
+|   |   |       fire.259.png
+|   |   |       fire.26.png
+|   |   |       fire.260.png
+|   |   |       fire.261.png
+|   |   |       fire.262.png
+|   |   |       fire.263.png
+|   |   |       fire.264.png
+|   |   |       fire.265.png
+|   |   |       fire.266.png
+|   |   |       fire.267.png
+|   |   |       fire.268.png
+|   |   |       fire.269.png
+|   |   |       fire.27.png
+|   |   |       fire.270.png
+|   |   |       fire.271.png
+|   |   |       fire.272.png
+|   |   |       fire.273.png
+|   |   |       fire.274.png
+|   |   |       fire.275.png
+|   |   |       fire.276.png
+|   |   |       fire.277.png
+|   |   |       fire.278.png
+|   |   |       fire.279.png
+|   |   |       fire.28.png
+|   |   |       fire.280.png
+|   |   |       fire.281.png
+|   |   |       fire.282.png
+|   |   |       fire.283.png
+|   |   |       fire.284.png
+|   |   |       fire.285.png
+|   |   |       fire.286.png
+|   |   |       fire.287.png
+|   |   |       fire.288.png
+|   |   |       fire.289.png
+|   |   |       fire.29.png
+|   |   |       fire.290.png
+|   |   |       fire.291.png
+|   |   |       fire.292.png
+|   |   |       fire.293.png
+|   |   |       fire.294.png
+|   |   |       fire.295.png
+|   |   |       fire.296.png
+|   |   |       fire.297.png
+|   |   |       fire.298.png
+|   |   |       fire.299.png
+|   |   |       fire.3.png
+|   |   |       fire.30.png
+|   |   |       fire.300.png
+|   |   |       fire.301.png
+|   |   |       fire.302.png
+|   |   |       fire.303.png
+|   |   |       fire.304.png
+|   |   |       fire.305.png
+|   |   |       fire.306.png
+|   |   |       fire.307.png
+|   |   |       fire.308.png
+|   |   |       fire.309.png
+|   |   |       fire.31.png
+|   |   |       fire.310.png
+|   |   |       fire.311.png
+|   |   |       fire.312.png
+|   |   |       fire.313.png
+|   |   |       fire.314.png
+|   |   |       fire.315.png
+|   |   |       fire.316.png
+|   |   |       fire.317.png
+|   |   |       fire.318.png
+|   |   |       fire.319.png
+|   |   |       fire.32.png
+|   |   |       fire.320.png
+|   |   |       fire.321.png
+|   |   |       fire.322.png
+|   |   |       fire.323.png
+|   |   |       fire.324.png
+|   |   |       fire.325.png
+|   |   |       fire.326.png
+|   |   |       fire.327.png
+|   |   |       fire.328.png
+|   |   |       fire.329.png
+|   |   |       fire.33.png
+|   |   |       fire.330.png
+|   |   |       fire.331.png
+|   |   |       fire.332.png
+|   |   |       fire.333.png
+|   |   |       fire.334.png
+|   |   |       fire.335.png
+|   |   |       fire.336.png
+|   |   |       fire.337.png
+|   |   |       fire.338.png
+|   |   |       fire.339.png
+|   |   |       fire.34.png
+|   |   |       fire.340.png
+|   |   |       fire.341.png
+|   |   |       fire.342.png
+|   |   |       fire.343.png
+|   |   |       fire.344.png
+|   |   |       fire.345.png
+|   |   |       fire.346.png
+|   |   |       fire.347.png
+|   |   |       fire.348.png
+|   |   |       fire.349.png
+|   |   |       fire.35.png
+|   |   |       fire.350.png
+|   |   |       fire.351.png
+|   |   |       fire.352.png
+|   |   |       fire.353.png
+|   |   |       fire.354.png
+|   |   |       fire.355.png
+|   |   |       fire.356.png
+|   |   |       fire.357.png
+|   |   |       fire.358.png
+|   |   |       fire.359.png
+|   |   |       fire.36.png
+|   |   |       fire.360.png
+|   |   |       fire.361.png
+|   |   |       fire.362.png
+|   |   |       fire.363.png
+|   |   |       fire.364.png
+|   |   |       fire.365.png
+|   |   |       fire.366.png
+|   |   |       fire.367.png
+|   |   |       fire.368.png
+|   |   |       fire.369.png
+|   |   |       fire.37.png
+|   |   |       fire.370.png
+|   |   |       fire.371.png
+|   |   |       fire.372.png
+|   |   |       fire.373.png
+|   |   |       fire.374.png
+|   |   |       fire.375.png
+|   |   |       fire.376.png
+|   |   |       fire.377.png
+|   |   |       fire.378.png
+|   |   |       fire.379.png
+|   |   |       fire.38.png
+|   |   |       fire.380.png
+|   |   |       fire.381.png
+|   |   |       fire.382.png
+|   |   |       fire.383.png
+|   |   |       fire.384.png
+|   |   |       fire.385.png
+|   |   |       fire.386.png
+|   |   |       fire.387.png
+|   |   |       fire.388.png
+|   |   |       fire.389.png
+|   |   |       fire.39.png
+|   |   |       fire.390.png
+|   |   |       fire.391.png
+|   |   |       fire.392.png
+|   |   |       fire.393.png
+|   |   |       fire.394.png
+|   |   |       fire.395.png
+|   |   |       fire.396.png
+|   |   |       fire.397.png
+|   |   |       fire.398.png
+|   |   |       fire.399.png
+|   |   |       fire.4.png
+|   |   |       fire.40.png
+|   |   |       fire.400.png
+|   |   |       fire.401.png
+|   |   |       fire.402.png
+|   |   |       fire.403.png
+|   |   |       fire.404.png
+|   |   |       fire.405.png
+|   |   |       fire.406.png
+|   |   |       fire.407.png
+|   |   |       fire.408.png
+|   |   |       fire.409.png
+|   |   |       fire.41.png
+|   |   |       fire.410.png
+|   |   |       fire.411.png
+|   |   |       fire.412.png
+|   |   |       fire.413.png
+|   |   |       fire.414.png
+|   |   |       fire.415.png
+|   |   |       fire.416.png
+|   |   |       fire.417.png
+|   |   |       fire.418.png
+|   |   |       fire.419.png
+|   |   |       fire.42.png
+|   |   |       fire.420.png
+|   |   |       fire.421.png
+|   |   |       fire.422.png
+|   |   |       fire.423.png
+|   |   |       fire.424.png
+|   |   |       fire.425.png
+|   |   |       fire.426.png
+|   |   |       fire.427.png
+|   |   |       fire.428.png
+|   |   |       fire.429.png
+|   |   |       fire.43.png
+|   |   |       fire.430.png
+|   |   |       fire.431.png
+|   |   |       fire.432.png
+|   |   |       fire.433.png
+|   |   |       fire.434.png
+|   |   |       fire.435.png
+|   |   |       fire.436.png
+|   |   |       fire.437.png
+|   |   |       fire.438.png
+|   |   |       fire.439.png
+|   |   |       fire.44.png
+|   |   |       fire.440.png
+|   |   |       fire.441.png
+|   |   |       fire.442.png
+|   |   |       fire.443.png
+|   |   |       fire.444.png
+|   |   |       fire.445.png
+|   |   |       fire.446.png
+|   |   |       fire.447.png
+|   |   |       fire.448.png
+|   |   |       fire.449.png
+|   |   |       fire.45.png
+|   |   |       fire.450.png
+|   |   |       fire.451.png
+|   |   |       fire.452.png
+|   |   |       fire.453.png
+|   |   |       fire.454.png
+|   |   |       fire.455.png
+|   |   |       fire.456.png
+|   |   |       fire.457.png
+|   |   |       fire.458.png
+|   |   |       fire.459.png
+|   |   |       fire.46.png
+|   |   |       fire.460.png
+|   |   |       fire.461.png
+|   |   |       fire.462.png
+|   |   |       fire.463.png
+|   |   |       fire.464.png
+|   |   |       fire.465.png
+|   |   |       fire.466.png
+|   |   |       fire.467.png
+|   |   |       fire.468.png
+|   |   |       fire.469.png
+|   |   |       fire.47.png
+|   |   |       fire.470.png
+|   |   |       fire.471.png
+|   |   |       fire.472.png
+|   |   |       fire.473.png
+|   |   |       fire.474.png
+|   |   |       fire.475.png
+|   |   |       fire.476.png
+|   |   |       fire.477.png
+|   |   |       fire.478.png
+|   |   |       fire.479.png
+|   |   |       fire.48.png
+|   |   |       fire.480.png
+|   |   |       fire.481.png
+|   |   |       fire.482.png
+|   |   |       fire.483.png
+|   |   |       fire.484.png
+|   |   |       fire.485.png
+|   |   |       fire.486.png
+|   |   |       fire.487.png
+|   |   |       fire.488.png
+|   |   |       fire.489.png
+|   |   |       fire.49.png
+|   |   |       fire.490.png
+|   |   |       fire.491.png
+|   |   |       fire.492.png
+|   |   |       fire.493.png
+|   |   |       fire.494.png
+|   |   |       fire.495.png
+|   |   |       fire.496.png
+|   |   |       fire.497.png
+|   |   |       fire.498.png
+|   |   |       fire.499.png
+|   |   |       fire.5.png
+|   |   |       fire.50.png
+|   |   |       fire.500.png
+|   |   |       fire.501.png
+|   |   |       fire.502.png
+|   |   |       fire.503.png
+|   |   |       fire.504.png
+|   |   |       fire.505.png
+|   |   |       fire.506.png
+|   |   |       fire.507.png
+|   |   |       fire.508.png
+|   |   |       fire.509.png
+|   |   |       fire.51.png
+|   |   |       fire.510.png
+|   |   |       fire.511.png
+|   |   |       fire.512.png
+|   |   |       fire.513.png
+|   |   |       fire.514.png
+|   |   |       fire.515.png
+|   |   |       fire.516.png
+|   |   |       fire.517.png
+|   |   |       fire.518.png
+|   |   |       fire.519.png
+|   |   |       fire.52.png
+|   |   |       fire.520.png
+|   |   |       fire.521.png
+|   |   |       fire.522.png
+|   |   |       fire.523.png
+|   |   |       fire.524.png
+|   |   |       fire.525.png
+|   |   |       fire.526.png
+|   |   |       fire.527.png
+|   |   |       fire.528.png
+|   |   |       fire.529.png
+|   |   |       fire.53.png
+|   |   |       fire.530.png
+|   |   |       fire.531.png
+|   |   |       fire.532.png
+|   |   |       fire.533.png
+|   |   |       fire.534.png
+|   |   |       fire.535.png
+|   |   |       fire.536.png
+|   |   |       fire.537.png
+|   |   |       fire.538.png
+|   |   |       fire.539.png
+|   |   |       fire.54.png
+|   |   |       fire.540.png
+|   |   |       fire.541.png
+|   |   |       fire.542.png
+|   |   |       fire.543.png
+|   |   |       fire.544.png
+|   |   |       fire.545.png
+|   |   |       fire.546.png
+|   |   |       fire.547.png
+|   |   |       fire.548.png
+|   |   |       fire.549.png
+|   |   |       fire.55.png
+|   |   |       fire.550.png
+|   |   |       fire.551.png
+|   |   |       fire.552.png
+|   |   |       fire.553.png
+|   |   |       fire.554.png
+|   |   |       fire.555.png
+|   |   |       fire.556.png
+|   |   |       fire.557.png
+|   |   |       fire.558.png
+|   |   |       fire.559.png
+|   |   |       fire.56.png
+|   |   |       fire.560.png
+|   |   |       fire.561.png
+|   |   |       fire.562.png
+|   |   |       fire.563.png
+|   |   |       fire.564.png
+|   |   |       fire.565.png
+|   |   |       fire.566.png
+|   |   |       fire.567.png
+|   |   |       fire.568.png
+|   |   |       fire.569.png
+|   |   |       fire.57.png
+|   |   |       fire.570.png
+|   |   |       fire.571.png
+|   |   |       fire.572.png
+|   |   |       fire.573.png
+|   |   |       fire.574.png
+|   |   |       fire.575.png
+|   |   |       fire.576.png
+|   |   |       fire.577.png
+|   |   |       fire.578.png
+|   |   |       fire.579.png
+|   |   |       fire.58.png
+|   |   |       fire.580.png
+|   |   |       fire.581.png
+|   |   |       fire.582.png
+|   |   |       fire.583.png
+|   |   |       fire.584.png
+|   |   |       fire.585.png
+|   |   |       fire.586.png
+|   |   |       fire.587.png
+|   |   |       fire.588.png
+|   |   |       fire.589.png
+|   |   |       fire.59.png
+|   |   |       fire.590.png
+|   |   |       fire.591.png
+|   |   |       fire.592.png
+|   |   |       fire.593.png
+|   |   |       fire.594.png
+|   |   |       fire.595.png
+|   |   |       fire.596.png
+|   |   |       fire.597.png
+|   |   |       fire.598.png
+|   |   |       fire.599.png
+|   |   |       fire.6.png
+|   |   |       fire.60.png
+|   |   |       fire.600.png
+|   |   |       fire.601.png
+|   |   |       fire.602.png
+|   |   |       fire.603.png
+|   |   |       fire.604.png
+|   |   |       fire.605.png
+|   |   |       fire.606.png
+|   |   |       fire.607.png
+|   |   |       fire.608.png
+|   |   |       fire.609.png
+|   |   |       fire.61.png
+|   |   |       fire.610.png
+|   |   |       fire.611.png
+|   |   |       fire.612.png
+|   |   |       fire.613.png
+|   |   |       fire.614.png
+|   |   |       fire.615.png
+|   |   |       fire.616.png
+|   |   |       fire.617.png
+|   |   |       fire.618.png
+|   |   |       fire.619.png
+|   |   |       fire.62.png
+|   |   |       fire.620.png
+|   |   |       fire.621.png
+|   |   |       fire.622.png
+|   |   |       fire.623.png
+|   |   |       fire.624.png
+|   |   |       fire.625.png
+|   |   |       fire.626.png
+|   |   |       fire.627.png
+|   |   |       fire.628.png
+|   |   |       fire.629.png
+|   |   |       fire.63.png
+|   |   |       fire.630.png
+|   |   |       fire.631.png
+|   |   |       fire.632.png
+|   |   |       fire.633.png
+|   |   |       fire.634.png
+|   |   |       fire.635.png
+|   |   |       fire.636.png
+|   |   |       fire.637.png
+|   |   |       fire.638.png
+|   |   |       fire.639.png
+|   |   |       fire.64.png
+|   |   |       fire.640.png
+|   |   |       fire.641.png
+|   |   |       fire.642.png
+|   |   |       fire.643.png
+|   |   |       fire.644.png
+|   |   |       fire.645.png
+|   |   |       fire.646.png
+|   |   |       fire.647.png
+|   |   |       fire.648.png
+|   |   |       fire.649.png
+|   |   |       fire.65.png
+|   |   |       fire.650.png
+|   |   |       fire.651.png
+|   |   |       fire.652.png
+|   |   |       fire.653.png
+|   |   |       fire.654.png
+|   |   |       fire.655.png
+|   |   |       fire.656.png
+|   |   |       fire.657.png
+|   |   |       fire.658.png
+|   |   |       fire.659.png
+|   |   |       fire.66.png
+|   |   |       fire.660.png
+|   |   |       fire.661.png
+|   |   |       fire.662.png
+|   |   |       fire.663.png
+|   |   |       fire.664.png
+|   |   |       fire.665.png
+|   |   |       fire.666.png
+|   |   |       fire.667.png
+|   |   |       fire.668.png
+|   |   |       fire.669.png
+|   |   |       fire.67.png
+|   |   |       fire.670.png
+|   |   |       fire.671.png
+|   |   |       fire.672.png
+|   |   |       fire.673.png
+|   |   |       fire.674.png
+|   |   |       fire.675.png
+|   |   |       fire.676.png
+|   |   |       fire.677.png
+|   |   |       fire.678.png
+|   |   |       fire.679.png
+|   |   |       fire.68.png
+|   |   |       fire.680.png
+|   |   |       fire.681.png
+|   |   |       fire.682.png
+|   |   |       fire.683.png
+|   |   |       fire.684.png
+|   |   |       fire.685.png
+|   |   |       fire.686.png
+|   |   |       fire.687.png
+|   |   |       fire.688.png
+|   |   |       fire.689.png
+|   |   |       fire.69.png
+|   |   |       fire.690.png
+|   |   |       fire.691.png
+|   |   |       fire.692.png
+|   |   |       fire.693.png
+|   |   |       fire.694.png
+|   |   |       fire.695.png
+|   |   |       fire.696.png
+|   |   |       fire.697.png
+|   |   |       fire.698.png
+|   |   |       fire.699.png
+|   |   |       fire.7.png
+|   |   |       fire.70.png
+|   |   |       fire.700.png
+|   |   |       fire.701.png
+|   |   |       fire.702.png
+|   |   |       fire.703.png
+|   |   |       fire.704.png
+|   |   |       fire.705.png
+|   |   |       fire.706.png
+|   |   |       fire.707.png
+|   |   |       fire.708.png
+|   |   |       fire.709.png
+|   |   |       fire.71.png
+|   |   |       fire.710.png
+|   |   |       fire.711.png
+|   |   |       fire.712.png
+|   |   |       fire.713.png
+|   |   |       fire.714.png
+|   |   |       fire.715.png
+|   |   |       fire.716.png
+|   |   |       fire.717.png
+|   |   |       fire.718.png
+|   |   |       fire.719.png
+|   |   |       fire.72.png
+|   |   |       fire.720.png
+|   |   |       fire.721.png
+|   |   |       fire.722.png
+|   |   |       fire.723.png
+|   |   |       fire.724.png
+|   |   |       fire.725.png
+|   |   |       fire.726.png
+|   |   |       fire.727.png
+|   |   |       fire.728.png
+|   |   |       fire.729.png
+|   |   |       fire.73.png
+|   |   |       fire.730.png
+|   |   |       fire.731.png
+|   |   |       fire.732.png
+|   |   |       fire.733.png
+|   |   |       fire.734.png
+|   |   |       fire.735.png
+|   |   |       fire.736.png
+|   |   |       fire.737.png
+|   |   |       fire.738.png
+|   |   |       fire.739.png
+|   |   |       fire.74.png
+|   |   |       fire.740.png
+|   |   |       fire.741.png
+|   |   |       fire.742.png
+|   |   |       fire.743.png
+|   |   |       fire.744.png
+|   |   |       fire.745.png
+|   |   |       fire.746.png
+|   |   |       fire.747.png
+|   |   |       fire.748.png
+|   |   |       fire.749.png
+|   |   |       fire.75.png
+|   |   |       fire.750.png
+|   |   |       fire.751.png
+|   |   |       fire.752.png
+|   |   |       fire.753.png
+|   |   |       fire.754.png
+|   |   |       fire.755.png
+|   |   |       fire.76.png
+|   |   |       fire.77.png
+|   |   |       fire.78.png
+|   |   |       fire.79.png
+|   |   |       fire.8.png
+|   |   |       fire.80.png
+|   |   |       fire.81.png
+|   |   |       fire.82.png
+|   |   |       fire.83.png
+|   |   |       fire.84.png
+|   |   |       fire.85.png
+|   |   |       fire.86.png
+|   |   |       fire.87.png
+|   |   |       fire.88.png
+|   |   |       fire.89.png
+|   |   |       fire.9.png
+|   |   |       fire.90.png
+|   |   |       fire.91.png
+|   |   |       fire.92.png
+|   |   |       fire.93.png
+|   |   |       fire.94.png
+|   |   |       fire.95.png
+|   |   |       fire.96.png
+|   |   |       fire.97.png
+|   |   |       fire.98.png
+|   |   |       fire.99.png
+|   |   |       
+|   |   \---no_fire
+|   |           non_fire.1.png
+|   |           non_fire.10.png
+|   |           non_fire.100.png
+|   |           non_fire.101.png
+|   |           non_fire.102.png
+|   |           non_fire.103.png
+|   |           non_fire.104.png
+|   |           non_fire.105.png
+|   |           non_fire.106.png
+|   |           non_fire.107.png
+|   |           non_fire.108.png
+|   |           non_fire.109.png
+|   |           non_fire.11.png
+|   |           non_fire.110.png
+|   |           non_fire.111.png
+|   |           non_fire.112.png
+|   |           non_fire.113.png
+|   |           non_fire.114.png
+|   |           non_fire.115.png
+|   |           non_fire.116.png
+|   |           non_fire.117.png
+|   |           non_fire.118.png
+|   |           non_fire.119.png
+|   |           non_fire.12.png
+|   |           non_fire.120.png
+|   |           non_fire.121.png
+|   |           non_fire.122.png
+|   |           non_fire.123.png
+|   |           non_fire.124.png
+|   |           non_fire.125.png
+|   |           non_fire.126.png
+|   |           non_fire.127.png
+|   |           non_fire.128.png
+|   |           non_fire.129.png
+|   |           non_fire.13.png
+|   |           non_fire.130.png
+|   |           non_fire.131.png
+|   |           non_fire.132.png
+|   |           non_fire.133.png
+|   |           non_fire.134.png
+|   |           non_fire.135.png
+|   |           non_fire.136.png
+|   |           non_fire.137.png
+|   |           non_fire.138.png
+|   |           non_fire.139.png
+|   |           non_fire.14.png
+|   |           non_fire.140.png
+|   |           non_fire.141.png
+|   |           non_fire.142.png
+|   |           non_fire.143.png
+|   |           non_fire.144.png
+|   |           non_fire.145.png
+|   |           non_fire.146.png
+|   |           non_fire.147.png
+|   |           non_fire.148.png
+|   |           non_fire.149.png
+|   |           non_fire.15.png
+|   |           non_fire.150.png
+|   |           non_fire.151.png
+|   |           non_fire.152.png
+|   |           non_fire.153.png
+|   |           non_fire.154.png
+|   |           non_fire.155.png
+|   |           non_fire.156.png
+|   |           non_fire.157.png
+|   |           non_fire.158.png
+|   |           non_fire.159.png
+|   |           non_fire.16.png
+|   |           non_fire.160.png
+|   |           non_fire.161.png
+|   |           non_fire.162.png
+|   |           non_fire.163.png
+|   |           non_fire.164.png
+|   |           non_fire.165.png
+|   |           non_fire.166.png
+|   |           non_fire.167.png
+|   |           non_fire.168.png
+|   |           non_fire.169.png
+|   |           non_fire.17.png
+|   |           non_fire.170.png
+|   |           non_fire.171.png
+|   |           non_fire.172.png
+|   |           non_fire.173.png
+|   |           non_fire.174.png
+|   |           non_fire.175.png
+|   |           non_fire.176.png
+|   |           non_fire.177.png
+|   |           non_fire.178.png
+|   |           non_fire.179.png
+|   |           non_fire.18.png
+|   |           non_fire.180.png
+|   |           non_fire.181.png
+|   |           non_fire.182.png
+|   |           non_fire.183.png
+|   |           non_fire.184.png
+|   |           non_fire.185.png
+|   |           non_fire.186.png
+|   |           non_fire.187.png
+|   |           non_fire.188.png
+|   |           non_fire.189.png
+|   |           non_fire.19.png
+|   |           non_fire.190.png
+|   |           non_fire.191.png
+|   |           non_fire.192.png
+|   |           non_fire.193.png
+|   |           non_fire.194.png
+|   |           non_fire.195.png
+|   |           non_fire.196.png
+|   |           non_fire.197.png
+|   |           non_fire.198.png
+|   |           non_fire.199.png
+|   |           non_fire.2.png
+|   |           non_fire.20.png
+|   |           non_fire.200.png
+|   |           non_fire.201.png
+|   |           non_fire.202.png
+|   |           non_fire.203.png
+|   |           non_fire.204.png
+|   |           non_fire.205.png
+|   |           non_fire.206.png
+|   |           non_fire.207.png
+|   |           non_fire.208.png
+|   |           non_fire.209.png
+|   |           non_fire.21.png
+|   |           non_fire.210.png
+|   |           non_fire.211.png
+|   |           non_fire.212.png
+|   |           non_fire.213.png
+|   |           non_fire.214.png
+|   |           non_fire.215.png
+|   |           non_fire.216.png
+|   |           non_fire.217.png
+|   |           non_fire.218.png
+|   |           non_fire.219.png
+|   |           non_fire.22.png
+|   |           non_fire.220.png
+|   |           non_fire.221.png
+|   |           non_fire.222.png
+|   |           non_fire.223.png
+|   |           non_fire.224.png
+|   |           non_fire.225.png
+|   |           non_fire.226.png
+|   |           non_fire.227.png
+|   |           non_fire.228.png
+|   |           non_fire.229.png
+|   |           non_fire.23.png
+|   |           non_fire.230.png
+|   |           non_fire.231.png
+|   |           non_fire.232.png
+|   |           non_fire.233.png
+|   |           non_fire.234.png
+|   |           non_fire.235.png
+|   |           non_fire.236.png
+|   |           non_fire.237.png
+|   |           non_fire.238.png
+|   |           non_fire.239.png
+|   |           non_fire.24.png
+|   |           non_fire.240.png
+|   |           non_fire.241.png
+|   |           non_fire.242.png
+|   |           non_fire.243.png
+|   |           non_fire.244.png
+|   |           non_fire.25.png
+|   |           non_fire.26.png
+|   |           non_fire.27.png
+|   |           non_fire.28.png
+|   |           non_fire.29.png
+|   |           non_fire.3.png
+|   |           non_fire.30.png
+|   |           non_fire.31.png
+|   |           non_fire.32.png
+|   |           non_fire.33.png
+|   |           non_fire.34.png
+|   |           non_fire.35.png
+|   |           non_fire.36.png
+|   |           non_fire.37.png
+|   |           non_fire.38.png
+|   |           non_fire.39.png
+|   |           non_fire.4.png
+|   |           non_fire.40.png
+|   |           non_fire.41.png
+|   |           non_fire.42.png
+|   |           non_fire.43.png
+|   |           non_fire.44.png
+|   |           non_fire.45.png
+|   |           non_fire.46.png
+|   |           non_fire.47.png
+|   |           non_fire.48.png
+|   |           non_fire.49.png
+|   |           non_fire.5.png
+|   |           non_fire.50.png
+|   |           non_fire.51.png
+|   |           non_fire.52.png
+|   |           non_fire.53.png
+|   |           non_fire.54.png
+|   |           non_fire.55.png
+|   |           non_fire.56.png
+|   |           non_fire.57.png
+|   |           non_fire.58.png
+|   |           non_fire.59.png
+|   |           non_fire.6.png
+|   |           non_fire.60.png
+|   |           non_fire.61.png
+|   |           non_fire.62.png
+|   |           non_fire.63.png
+|   |           non_fire.64.png
+|   |           non_fire.65.png
+|   |           non_fire.66.png
+|   |           non_fire.67.png
+|   |           non_fire.68.png
+|   |           non_fire.69.png
+|   |           non_fire.7.png
+|   |           non_fire.70.png
+|   |           non_fire.71.png
+|   |           non_fire.72.png
+|   |           non_fire.73.png
+|   |           non_fire.74.png
+|   |           non_fire.75.png
+|   |           non_fire.76.png
+|   |           non_fire.77.png
+|   |           non_fire.78.png
+|   |           non_fire.79.png
+|   |           non_fire.8.png
+|   |           non_fire.80.png
+|   |           non_fire.81.png
+|   |           non_fire.82.png
+|   |           non_fire.83.png
+|   |           non_fire.84.png
+|   |           non_fire.85.png
+|   |           non_fire.86.png
+|   |           non_fire.87.png
+|   |           non_fire.88.png
+|   |           non_fire.89.png
+|   |           non_fire.9.png
+|   |           non_fire.90.png
+|   |           non_fire.91.png
+|   |           non_fire.92.png
+|   |           non_fire.93.png
+|   |           non_fire.94.png
+|   |           non_fire.95.png
+|   |           non_fire.96.png
+|   |           non_fire.97.png
+|   |           non_fire.98.png
+|   |           non_fire.99.png
+|   |           
+|   +---models
+|   |       AdaBoost.pkl
+|   |       best.pt
+|   |       DecisionTree.pkl
+|   |       GradientBoosting.pkl
+|   |       KNN.pkl
+|   |       LogisticRegression.pkl
+|   |       RandomForest.pkl
+|   |       SVM.pkl
+|   |       
+|   +---results
+|   |       yolo_1a96b125059e4aa1b5eec66173ff07b5.jpg
+|   |       yolo_33d5c900d4574ceb928e287b66c3c7de.jpg
+|   |       yolo_4b9be2abfdbf4b17ae2249ae4c962bfc.jpg
+|   |       yolo_50532da720174a98ab3e9b890ee68ff8.jpg
+|   |       yolo_94c9fe36597b4ff3b97b8d105ed5edfe.jpg
+|   |       yolo_9c8503d3d1e24aeeb58ff7584186787a.jpg
+|   |       yolo_9f9f730832e945c989f5683ccf27f978.jpg
+|   |       yolo_a46b21a3cbaf4871b459154320679956.jpg
+|   |       yolo_c2a82da4dabe44ad8e6b865e17ccf5fc.jpg
+|   |       
+|   \---uploads
+|           1a96b125059e4aa1b5eec66173ff07b5.jpg
+|           33d5c900d4574ceb928e287b66c3c7de.jpg
+|           4b9be2abfdbf4b17ae2249ae4c962bfc.jpg
+|           50532da720174a98ab3e9b890ee68ff8.jpg
+|           94c9fe36597b4ff3b97b8d105ed5edfe.jpg
+|           9c8503d3d1e24aeeb58ff7584186787a.jpg
+|           9f9f730832e945c989f5683ccf27f978.jpg
+|           a46b21a3cbaf4871b459154320679956.jpg
+|           c2a82da4dabe44ad8e6b865e17ccf5fc.jpg
+|           
++---static
+|   \---imgs
++---templates
+|   |   AdminLogin.html
+|   |   base.html
+|   |   index.html
+|   |   UserLogin.html
+|   |   UserRegistrations.html
+|   |   
+|   +---admins
+|   |       adminbase.html
+|   |       AdminHome.html
+|   |       viewregisterusers.html
+|   |       
+|   \---users
+|           cnn_predict.html
+|           predict_form.html
+|           training.html
+|           userbase.html
+|           UserHomePage.html
+|           viewdataset.html
+|           
+\---users
+    |   admin.py
+    |   apps.py
+    |   forms.py
+    |   models.py
+    |   tests.py
+    |   views.py
+    |   __init__.py
+    |   
+    +---migrations
+    |   |   0001_initial.py
+    |   |   __init__.py
+    |   |   
+    |   \---__pycache__
+    |           0001_initial.cpython-310.pyc
+    |           0001_initial.cpython-311.pyc
+    |           0001_initial.cpython-313.pyc
+    |           __init__.cpython-310.pyc
+    |           __init__.cpython-311.pyc
+    |           __init__.cpython-313.pyc
+    |           
+    \---__pycache__
+            admin.cpython-310.pyc
+            admin.cpython-311.pyc
+            admin.cpython-313.pyc
+            apps.cpython-310.pyc
+            apps.cpython-311.pyc
+            apps.cpython-313.pyc
+            forms.cpython-310.pyc
+            forms.cpython-311.pyc
+            forms.cpython-313.pyc
+            models.cpython-310.pyc
+            models.cpython-311.pyc
+            models.cpython-313.pyc
+            tests.cpython-313.pyc
+            views.cpython-310.pyc
+            views.cpython-311.pyc
+            views.cpython-313.pyc
+            __init__.cpython-310.pyc
+            __init__.cpython-311.pyc
+            __init__.cpython-313.pyc
+            

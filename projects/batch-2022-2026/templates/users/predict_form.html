@@ -1,0 +1,910 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmokeGuard AI — Run Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --orange:   #ff7722;
+      --orange2:  #ff9944;
+      --smoke:    #a0b0c4;
+      --smoke2:   #607890;
+      --red:      #ff3344;
+      --bg-void:  #141210;
+      --bg:       #141210;
+      --bg-card:  #181411;
+      --bg-card2: #1e1a16;
+      --bdr-o:    rgba(255,119,34,0.22);
+      --bdr-s:    rgba(160,176,196,0.16);
+      --text:     #dce4ec;
+      --dim:      #576878;
+      --text-dim: #576878;
+      --text-med: #9aaabb;
+      --neon-red: #ff3344;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#141210;
+      color:#e0e8f0;
+      font-family:'Rajdhani',sans-serif;
+      min-height:100vh;
+    }
+
+    .page-wrap { position:relative; z-index:10; min-height:100vh; }
+
+    /* TOP BAR */
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2.5rem;
+      border-bottom:1px solid rgba(255,119,34,0.1);
+      background:rgba(20,18,16,0.9);
+      backdrop-filter:blur(16px);
+      position:sticky; top:0; z-index:50;
+    }
+    .topbar-logo {
+      font-family:'Orbitron',monospace; font-size:1rem; font-weight:900;
+      color:#ff7722; text-shadow:0 0 18px rgba(255,119,34,0.5);
+      letter-spacing:2px; text-decoration:none;
+    }
+    .topbar-logo span { color:#a0b0c4; }
+    .topbar-title { font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:var(--text-dim); letter-spacing:3px; }
+    .topbar-title b { color:#a0b0c4; }
+    .btn-back {
+      font-family:'Orbitron',monospace; font-size:0.65rem; font-weight:700;
+      padding:0.45rem 1.2rem;
+      border:1px solid rgba(160,176,196,0.3); color:#a0b0c4;
+      background:transparent; letter-spacing:1.5px; cursor:pointer;
+      text-decoration:none; transition:all 0.2s;
+      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+    }
+    .btn-back:hover { background:rgba(160,176,196,0.08); border-color:#a0b0c4; }
+
+    .page-wrap { position:relative; z-index:10; min-height:100vh; }
+
+    /* TOP BAR */
+    .topbar {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2.5rem;
+      border-bottom:1px solid rgba(255,119,34,0.1);
+      background:rgba(20,18,16,0.9);
+      backdrop-filter:blur(16px);
+      position:sticky; top:0; z-index:50;
+    }
+    .topbar-logo {
+      font-family:'Orbitron',monospace; font-size:1rem; font-weight:900;
+      color:#ff7722; text-shadow:0 0 18px rgba(255,119,34,0.5);
+      letter-spacing:2px; text-decoration:none;
+    }
+    .topbar-logo span { color:#a0b0c4; }
+    .topbar-title {
+      font-family:'Share Tech Mono',monospace; font-size:0.75rem;
+      color:var(--text-dim); letter-spacing:3px;
+    }
+    .topbar-title span { color:#a0b0c4; }
+    .topbar-user {
+      font-family:'Share Tech Mono',monospace; font-size:0.72rem;
+      color:var(--text-dim); display:flex; align-items:center; gap:1rem;
+    }
+    .user-dot { width:8px; height:8px; background:#ff7722; border-radius:50%; box-shadow:0 0 8px rgba(255,119,34,0.7); animation:heartbeat 2s ease-in-out infinite; }
+    @keyframes heartbeat { 0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(255,119,34,0.7)} 50%{transform:scale(1.3);box-shadow:0 0 18px rgba(255,119,34,1)} }
+
+    /* MAIN GRID */
+    .main-grid {
+      display:grid;
+      grid-template-columns:1fr 420px;
+      gap:1.5px;
+      max-width:1400px; margin:0 auto;
+      padding:2rem 2rem;
+      min-height:calc(100vh - 64px);
+    }
+
+    /* FORM PANEL */
+    .form-panel { display:flex; flex-direction:column; gap:1.5px; }
+
+    .panel-header {
+      background:#181411; padding:1.8rem 2rem;
+      border:1px solid rgba(255,119,34,0.1);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .panel-title {
+      font-family:'Orbitron',monospace; font-size:0.85rem; font-weight:700;
+      color:#fff; letter-spacing:2px;
+    }
+    .panel-title span { color:#ff7722; }
+    .panel-badge {
+      font-family:'Share Tech Mono',monospace; font-size:0.65rem;
+      color:#ff7722; border:1px solid rgba(255,119,34,0.3);
+      padding:0.25rem 0.8rem; letter-spacing:2px;
+      animation:pulseBadge 3s ease-in-out infinite;
+    }
+    @keyframes pulseBadge { 0%,100%{opacity:0.7} 50%{opacity:1;box-shadow:0 0 12px rgba(255,119,34,0.2)} }
+
+    /* MODEL SELECTOR */
+    .model-selector-wrap {
+      background:#181411; padding:1.5rem 2rem;
+      border:1px solid rgba(255,119,34,0.08);
+    }
+    .model-label {
+      font-family:'Share Tech Mono',monospace; font-size:0.68rem;
+      color:var(--text-dim); letter-spacing:3px; margin-bottom:1rem; display:block;
+    }
+    .model-tabs { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .model-tab {
+      font-family:'Orbitron',monospace; font-size:0.62rem; font-weight:700;
+      padding:0.5rem 1rem; border:1px solid rgba(160,176,196,0.2);
+      color:var(--text-dim); background:transparent;
+      cursor:pointer; letter-spacing:1px; transition:all 0.2s;
+      clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+    }
+    .model-tab:hover { border-color:rgba(160,176,196,0.5); color:#a0b0c4; }
+    .model-tab.active {
+      border-color:#a0b0c4; color:#141210;
+      background:#a0b0c4; box-shadow:0 0 20px rgba(160,176,196,0.35);
+    }
+    .cnn-hint {
+      margin-top:0.9rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.75rem;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .cnn-hint-label {
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.62rem;
+      color:var(--text-dim);
+      letter-spacing:1px;
+    }
+    .cnn-link-btn {
+      font-family:'Orbitron',monospace; font-size:0.62rem; font-weight:700;
+      padding:0.4rem 0.9rem;
+      border:1px solid rgba(255,119,34,0.6);
+      color:#ff7722; background:transparent;
+      text-decoration:none; letter-spacing:1px;
+      clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+      transition:background 0.2s, box-shadow 0.2s, color 0.2s;
+    }
+    .cnn-link-btn:hover {
+      background:rgba(255,119,34,0.12);
+      box-shadow:0 0 18px rgba(255,119,34,0.5);
+      color:#ffe6d5;
+    }
+
+    /* SENSOR INPUTS */
+    .sensors-wrap {
+      background:#181411; padding:2rem;
+      border:1px solid rgba(255,119,34,0.08); flex:1;
+    }
+    .sensors-label {
+      font-family:'Share Tech Mono',monospace; font-size:0.68rem;
+      color:var(--text-dim); letter-spacing:3px; margin-bottom:1.5rem; display:block;
+    }
+    .sensors-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+      gap:1rem;
+    }
+    .sensor-field { display:flex; flex-direction:column; gap:0.4rem; }
+    .sensor-field label {
+      font-family:'Share Tech Mono',monospace; font-size:0.62rem;
+      color:var(--text-dim); letter-spacing:2px; text-transform:uppercase;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .sensor-unit {
+      font-size:0.58rem; color:rgba(160,176,196,0.5);
+      border:1px solid rgba(160,176,196,0.2); padding:0.1rem 0.4rem;
+    }
+    .sensor-input-wrap { position:relative; }
+    .sensor-input {
+      width:100%; background:#1a1714;
+      border:1px solid rgba(255,119,34,0.12);
+      color:#e0e8f0; font-family:'Share Tech Mono',monospace;
+      font-size:0.9rem; padding:0.7rem 1rem;
+      outline:none; transition:all 0.25s;
+      clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);
+    }
+    .sensor-input:focus {
+      border-color:rgba(255,119,34,0.5);
+      box-shadow:0 0 0 1px rgba(255,119,34,0.15), inset 0 0 20px rgba(255,119,34,0.03);
+      background:rgba(255,119,34,0.02);
+    }
+    .sensor-input::placeholder { color:var(--text-dim); }
+    .sensor-bar {
+      height:2px; background:rgba(255,119,34,0.06); margin-top:3px; border-radius:1px;
+    }
+    .sensor-bar-fill {
+      height:100%; width:0%; border-radius:1px;
+      background:linear-gradient(to right, #a0b0c4, #ff7722);
+      transition:width 0.4s ease;
+    }
+
+    /* SUBMIT */
+    .submit-wrap {
+      background:#181411; padding:1.5rem 2rem;
+      border:1px solid rgba(255,119,34,0.08);
+      display:flex; align-items:center; gap:1rem;
+    }
+    .btn-detect {
+      flex:1;
+      font-family:'Orbitron',monospace; font-size:0.85rem; font-weight:900;
+      padding:1.1rem 2rem; background:#ff7722;
+      color:#141210; border:none; cursor:pointer;
+      letter-spacing:2.5px; transition:all 0.2s;
+      clip-path:polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);
+      position:relative; overflow:hidden;
+    }
+    .btn-detect::before {
+      content:''; position:absolute; top:0; left:-100%;
+      width:50%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+      transition:left 0.4s;
+    }
+    .btn-detect:hover::before { left:150%; }
+    .btn-detect:hover { box-shadow:0 0 50px rgba(255,119,34,0.55),0 0 100px rgba(255,119,34,0.2); transform:translateY(-1px); }
+    .btn-reset {
+      font-family:'Orbitron',monospace; font-size:0.72rem; font-weight:700;
+      padding:1.1rem 1.5rem; border:1px solid rgba(255,51,85,0.3);
+      color:rgba(255,51,85,0.7); background:transparent; cursor:pointer;
+      letter-spacing:1.5px; transition:all 0.2s;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    }
+    .btn-reset:hover { border-color:var(--neon-red); color:var(--neon-red); background:rgba(255,51,85,0.05); }
+
+    /* RIGHT PANEL */
+    .result-panel { display:flex; flex-direction:column; gap:1.5px; }
+
+    /* RESULT DISPLAY */
+    .result-display {
+      background:#181411; flex:1;
+      border:1px solid rgba(255,119,34,0.08);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:2.5rem 2rem; text-align:center;
+      position:relative; overflow:hidden; min-height:340px;
+    }
+    .result-display::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at center, rgba(255,119,34,0.04) 0%, transparent 70%);
+      pointer-events:none;
+    }
+
+    /* IDLE STATE */
+    .state-idle { display:flex; flex-direction:column; align-items:center; gap:1.2rem; }
+    .idle-ring {
+      width:140px; height:140px;
+      border:1px solid rgba(255,119,34,0.15); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+      animation:idleSpin 12s linear infinite;
+    }
+    @keyframes idleSpin { 0%{border-color:rgba(255,119,34,0.15)} 50%{border-color:rgba(255,119,34,0.35)} 100%{border-color:rgba(255,119,34,0.15)} }
+    .idle-ring::before {
+      content:''; position:absolute;
+      width:120px; height:120px;
+      border:1px dashed rgba(160,176,196,0.12); border-radius:50%;
+      animation:idleSpinR 8s linear infinite reverse;
+    }
+    @keyframes idleSpinR { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .idle-ring::after {
+      content:''; position:absolute;
+      width:90px; height:90px;
+      border:1px solid rgba(255,119,34,0.08); border-radius:50%;
+    }
+    .idle-icon { font-size:2.5rem; }
+    .idle-text {
+      font-family:'Orbitron',monospace; font-size:0.8rem; font-weight:700;
+      color:var(--text-dim); letter-spacing:3px;
+    }
+    .idle-sub {
+      font-family:'Share Tech Mono',monospace; font-size:0.68rem;
+      color:rgba(107,122,141,0.5); letter-spacing:2px;
+    }
+
+    /* SAFE STATE */
+    .state-safe { display:none; flex-direction:column; align-items:center; gap:1.2rem; }
+    .safe-ring {
+      width:150px; height:150px;
+      border:2px solid #ff7722; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 0 40px rgba(255,119,34,0.4), inset 0 0 40px rgba(255,119,34,0.05);
+      animation:safePulse 2.5s ease-in-out infinite;
+    }
+    @keyframes safePulse { 0%,100%{box-shadow:0 0 30px rgba(255,119,34,0.3)} 50%{box-shadow:0 0 60px rgba(255,119,34,0.6),inset 0 0 30px rgba(255,119,34,0.07)} }
+    .safe-icon { font-size:3.5rem; }
+    .safe-label {
+      font-family:'Orbitron',monospace; font-size:1.4rem; font-weight:900;
+      color:#ff7722; text-shadow:0 0 25px rgba(255,119,34,0.6); letter-spacing:4px;
+    }
+
+    /* DANGER STATE */
+    .state-danger { display:none; flex-direction:column; align-items:center; gap:1.2rem; }
+    .danger-ring {
+      width:150px; height:150px;
+      border:2px solid var(--neon-red); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      position:relative; animation:dangerPulse 1.2s ease-in-out infinite;
+    }
+    .danger-ring::before, .danger-ring::after {
+      content:''; position:absolute;
+      border:1px solid rgba(255,51,85,0.3); border-radius:50%;
+      animation:dangerRipple 1.2s ease-out infinite;
+    }
+    .danger-ring::before { width:190px; height:190px; animation-delay:0.2s; }
+    .danger-ring::after { width:230px; height:230px; animation-delay:0.4s; }
+    @keyframes dangerPulse { 0%,100%{box-shadow:0 0 30px rgba(255,51,85,0.4)} 50%{box-shadow:0 0 70px rgba(255,51,85,0.8),inset 0 0 30px rgba(255,51,85,0.1)} }
+    @keyframes dangerRipple { 0%{opacity:0.6;transform:scale(1)} 100%{opacity:0;transform:scale(1.3)} }
+    .danger-icon { font-size:3.5rem; animation:dangerShake 0.5s ease-in-out infinite; }
+    @keyframes dangerShake { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+    .danger-label {
+      font-family:'Orbitron',monospace; font-size:1.2rem; font-weight:900;
+      color:var(--neon-red); text-shadow:0 0 25px rgba(255,51,85,0.7); letter-spacing:3px;
+      animation:blinkText 1.2s step-end infinite;
+    }
+    @keyframes blinkText { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* CONFIDENCE METER */
+    .confidence-wrap {
+      background:#181411; padding:1.5rem 2rem;
+      border:1px solid rgba(255,119,34,0.08);
+    }
+    .conf-label {
+      font-family:'Share Tech Mono',monospace; font-size:0.65rem;
+      color:var(--text-dim); letter-spacing:3px; margin-bottom:1rem; display:flex;
+      align-items:center; justify-content:space-between;
+    }
+    .conf-val { font-size:1.4rem; font-weight:700; color:#fff; font-family:'Orbitron',monospace; }
+    .conf-bar-bg {
+      height:8px; background:rgba(255,255,255,0.04);
+      border-radius:4px; overflow:hidden; position:relative;
+    }
+    .conf-bar {
+      height:100%; width:0%; border-radius:4px;
+      transition:width 1.2s cubic-bezier(0.25,1,0.5,1);
+      background:linear-gradient(to right, #a0b0c4, #ff7722);
+      position:relative;
+    }
+    .conf-bar::after {
+      content:''; position:absolute; right:0; top:50%;
+      transform:translateY(-50%);
+      width:10px; height:10px;
+      background:#ff7722;
+      border-radius:50%;
+      box-shadow:0 0 10px rgba(255,119,34,0.8);
+    }
+    .conf-ticks { display:flex; justify-content:space-between; margin-top:0.4rem; }
+    .conf-tick { font-family:'Share Tech Mono',monospace; font-size:0.58rem; color:var(--text-dim); }
+
+    /* RESULT META */
+    .result-meta {
+      background:#181411; padding:1.5rem 2rem;
+      border:1px solid rgba(255,119,34,0.08);
+    }
+    .meta-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0.6rem 0;
+      border-bottom:1px solid rgba(255,255,255,0.04);
+      font-family:'Share Tech Mono',monospace; font-size:0.72rem;
+    }
+    .meta-row:last-child { border-bottom:none; }
+    .meta-key { color:var(--text-dim); letter-spacing:1px; }
+    .meta-val { color:#e0e8f0; }
+    .meta-val.green { color:#ff7722; }
+    .meta-val.cyan { color:#a0b0c4; }
+    .meta-val.red { color:var(--neon-red); }
+
+    /* SENSOR GAUGE BAR (mini) */
+    .sensor-gauges {
+      background:#181411; padding:1.5rem 2rem;
+      border:1px solid rgba(255,119,34,0.08);
+    }
+    .gauge-label { font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:var(--text-dim); letter-spacing:3px; margin-bottom:1rem; display:block; }
+    .gauge-items { display:flex; flex-direction:column; gap:0.7rem; }
+    .gauge-item { display:flex; flex-direction:column; gap:0.3rem; }
+    .gauge-name { font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:var(--text-med); display:flex; justify-content:space-between; }
+    .gauge-name span { color:#a0b0c4; }
+    .gauge-bg { height:4px; background:rgba(255,255,255,0.04); border-radius:2px; overflow:hidden; }
+    .gauge-fill { height:100%; border-radius:2px; width:0%; transition:width 1s ease; }
+
+    /* DJANGO form messages */
+    .messages-wrap { padding:0 2rem 1rem; }
+    .msg-success, .msg-error {
+      font-family:'Share Tech Mono',monospace; font-size:0.75rem;
+      padding:0.8rem 1.2rem; letter-spacing:1px; border:1px solid;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    }
+    .msg-success { color:#ff7722; border-color:rgba(255,119,34,0.3); background:rgba(255,119,34,0.04); }
+    .msg-error { color:var(--neon-red); border-color:rgba(255,51,85,0.3); background:rgba(255,51,85,0.04); }
+
+    @media(max-width:1024px) {
+      .main-grid { grid-template-columns:1fr; }
+      .result-panel { grid-row:1; }
+    }
+    @media(max-width:600px) {
+      .topbar { padding:0.8rem 1rem; }
+      .main-grid { padding:1rem; }
+      .sensors-grid { grid-template-columns:1fr 1fr; }
+      .model-tabs { gap:0.3rem; }
+    }
+
+    /* BACKGROUND: SMOKE GREY + ORANGE */
+    #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+    .bg-glow{
+      position:fixed;inset:0;z-index:1;pointer-events:none;
+      background:
+        radial-gradient(ellipse 90% 50% at 50% 110%, rgba(255,95,15,0.22) 0%,transparent 65%),
+        radial-gradient(ellipse 50% 30% at 5%  100%, rgba(255,70,0,0.12)  0%,transparent 55%),
+        radial-gradient(ellipse 50% 30% at 95% 100%, rgba(255,70,0,0.12)  0%,transparent 55%),
+        radial-gradient(ellipse 70% 40% at 50% 0%,   rgba(80,90,100,0.10) 0%,transparent 70%);
+    }
+    .bg-grid{
+      position:fixed;inset:0;z-index:2;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(160,175,192,0.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,119,34,0.03) 1px,transparent 1px);
+      background-size:60px 60px;
+      animation:gridUp 30s linear infinite;
+    }
+    @keyframes gridUp{100%{transform:translateY(60px);}}
+    .bg-scan{
+      position:fixed;inset:0;z-index:3;pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.065) 3px,rgba(0,0,0,0.065) 4px);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-scan"></div>
+  <div class="page-wrap">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <a href="{% url 'index' %}" class="topbar-logo">SMOKE<span>GUARD</span></a>
+      <div class="topbar-title">// <span>DETECTION ENGINE</span> — REALTIME CLASSIFIER</div>
+      <div class="topbar-user">
+        <div class="user-dot"></div>
+        OPERATOR: <span style="color:#a0b0c4">{{ request.session.loggeduser|default:"Operator" }}</span>
+        <a href="{% url 'UserHome' %}" class="btn-back">← BACK</a>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    {% if messages %}
+    <div class="messages-wrap" style="padding:1rem 2rem 0;">
+      {% for msg in messages %}
+        <div class="{% if msg.tags == 'success' %}msg-success{% else %}msg-error{% endif %}">
+          {{ msg }}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="main-grid">
+
+      <!-- LEFT: FORM -->
+      <div class="form-panel">
+
+        <div class="panel-header">
+          <div class="panel-title">⬡ SENSOR <span>INPUT MATRIX</span></div>
+          <div class="panel-badge">AWAITING INPUT</div>
+        </div>
+
+        <!-- MODEL SELECTOR -->
+        <div class="model-selector-wrap">
+          <span class="model-label">// SELECT CLASSIFIER MODEL</span>
+          <div class="model-tabs" id="modelTabs">
+            <div class="model-tab active" data-model="RandomForest">RANDOM FOREST</div>
+            <div class="model-tab" data-model="GradientBoosting">GRAD BOOST</div>
+            <div class="model-tab" data-model="AdaBoost">ADABOOST</div>
+            <div class="model-tab" data-model="DecisionTree">DEC. TREE</div>
+            <div class="model-tab" data-model="SVM">SVM</div>
+            <div class="model-tab" data-model="KNN">KNN</div>
+            <div class="model-tab" data-model="LogisticRegression">LOG. REG.</div>
+          </div>
+          <div class="cnn-hint">
+            <span class="cnn-hint-label">Need image-based fire/smoke detection?</span>
+            <a href="{% url 'CNNPrediction' %}" class="cnn-link-btn">OPEN CNN DETECT</a>
+          </div>
+        </div>
+
+        <!-- SENSOR INPUTS -->
+        <div class="sensors-wrap">
+          <span class="sensors-label">// IOT SENSOR READINGS — ENTER VALUES BELOW</span>
+          <form method="POST" id="detectForm">
+            {% csrf_token %}
+            <input type="hidden" name="model" id="selectedModel" value="RandomForest"/>
+
+            <div class="sensors-grid">
+              <div class="sensor-field">
+                <label>Temperature <span class="sensor-unit">°C</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="Temperature[C]" placeholder="e.g. 20.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>Humidity <span class="sensor-unit">%</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="Humidity[%]" placeholder="e.g. 57.4" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>TVOC <span class="sensor-unit">ppb</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="TVOC[ppb]" placeholder="e.g. 0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>eCO₂ <span class="sensor-unit">ppm</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="eCO2[ppm]" placeholder="e.g. 400" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>Raw H₂ <span class="sensor-unit">Ω</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="Raw H2" placeholder="e.g. 12306" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>Raw Ethanol <span class="sensor-unit">Ω</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="Raw Ethanol" placeholder="e.g. 18520" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>Pressure <span class="sensor-unit">hPa</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="Pressure[hPa]" placeholder="e.g. 939.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>PM 1.0 <span class="sensor-unit">µg/m³</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="PM1.0" placeholder="e.g. 0.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>PM 2.5 <span class="sensor-unit">µg/m³</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="PM2.5" placeholder="e.g. 0.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>NC 0.5 <span class="sensor-unit">#/cm³</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="NC0.5" placeholder="e.g. 0.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>NC 1.0 <span class="sensor-unit">#/cm³</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="NC1.0" placeholder="e.g. 0.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>NC 2.5 <span class="sensor-unit">#/cm³</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="NC2.5" placeholder="e.g. 0.0" required oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+              <div class="sensor-field">
+                <label>CNT <span class="sensor-unit">—</span></label>
+                <div class="sensor-input-wrap">
+                  <input class="sensor-input" type="number" step="any" name="CNT" placeholder="e.g. 0" required min="0" max="25000" oninput="updateBar(this)"/>
+                  <div class="sensor-bar"><div class="sensor-bar-fill"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="submit-wrap" style="margin-top:1.5px;">
+              <button type="submit" class="btn-detect" id="detectBtn">⬡ ANALYZE SENSOR DATA</button>
+              <button type="button" class="btn-reset" onclick="resetForm()">✕ RESET</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- RIGHT: RESULT PANEL -->
+      <div class="result-panel">
+
+        <!-- RESULT DISPLAY -->
+        <div class="result-display">
+          <!-- IDLE -->
+          <div class="state-idle" id="stateIdle">
+            <div class="idle-ring"><div class="idle-icon">🔬</div></div>
+            <div class="idle-text">AWAITING ANALYSIS</div>
+            <div class="idle-sub">// ENTER SENSOR DATA TO BEGIN</div>
+          </div>
+          <!-- SAFE -->
+          <div class="state-safe" id="stateSafe">
+            <div class="safe-ring"><div class="safe-icon">✅</div></div>
+            <div class="safe-label">NO SMOKE</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--text-dim);letter-spacing:2px;">ENVIRONMENT CLEAR</div>
+          </div>
+          <!-- DANGER -->
+          <div class="state-danger" id="stateDanger">
+            <div class="danger-ring"><div class="danger-icon">🔥</div></div>
+            <div class="danger-label">⚠ SMOKE DETECTED</div>
+            <div style="font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--neon-red);letter-spacing:2px;">ALERT — EVACUATE NOW</div>
+          </div>
+
+          {% if prediction is not None %}
+          <div id="prediction-state" data-value="{{ prediction }}" style="display:none"></div>
+          <script>
+            (function(){
+              var el=document.getElementById('prediction-state');
+              if(el){
+                document.getElementById('stateIdle').style.display='none';
+                document.getElementById(el.dataset.value==='1'?'stateDanger':'stateSafe').style.display='flex';
+              }
+            })();
+          </script>
+          {% endif %}
+        </div>
+
+        <!-- CONFIDENCE METER -->
+        {% if confidence %}<div id="confidence-data" data-value="{{ confidence|floatformat:1 }}" style="display:none"></div>{% endif %}
+        <div class="confidence-wrap">
+          <div class="conf-label">
+            <span>// PREDICTION CONFIDENCE</span>
+            <span class="conf-val" id="confVal">
+              {% if confidence %}{{ confidence|floatformat:1 }}%{% else %}—%{% endif %}
+            </span>
+          </div>
+          <div class="conf-bar-bg">
+            <div class="conf-bar" id="confBar"></div>
+          </div>
+          <div class="conf-ticks">
+            <span class="conf-tick">0%</span>
+            <span class="conf-tick">25%</span>
+            <span class="conf-tick">50%</span>
+            <span class="conf-tick">75%</span>
+            <span class="conf-tick">100%</span>
+          </div>
+        </div>
+
+        <!-- META -->
+        <div class="result-meta">
+          <div class="meta-row">
+            <span class="meta-key">MODEL USED</span>
+            <span class="meta-val cyan" id="metaModel">{% if model_name %}{{ model_name }}{% else %}—{% endif %}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">PREDICTION</span>
+            <span class="meta-val {% if prediction == 1 %}red{% elif prediction == 0 %}green{% endif %}" id="metaPred">
+              {% if prediction == 1 %}SMOKE DETECTED{% elif prediction == 0 %}NO SMOKE{% else %}PENDING{% endif %}
+            </span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">THREAT LEVEL</span>
+            <span class="meta-val {% if prediction == 1 %}red{% elif prediction == 0 %}green{% endif %}" id="metaThreat">
+              {% if prediction == 1 %}CRITICAL{% elif prediction == 0 %}SAFE{% else %}UNKNOWN{% endif %}
+            </span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">FEATURES READ</span>
+            <span class="meta-val">12 SENSORS</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">PREPROCESSING</span>
+            <span class="meta-val green">STANDARD SCALER ✓</span>
+          </div>
+        </div>
+
+        <!-- SENSOR GAUGES -->
+        <div class="sensor-gauges">
+          <span class="gauge-label">// SENSOR LEVEL INDICATORS</span>
+          <div class="gauge-items" id="gaugeItems">
+            <div class="gauge-item"><div class="gauge-name">TEMP <span id="g-temp">—</span></div><div class="gauge-bg"><div class="gauge-fill" style="background:linear-gradient(to right,#ff8800,#ff3355)" id="gf-temp"></div></div></div>
+            <div class="gauge-item"><div class="gauge-name">HUMIDITY <span id="g-hum">—</span></div><div class="gauge-bg"><div class="gauge-fill" style="background:linear-gradient(to right,#a0b0c4,#0088ff)" id="gf-hum"></div></div></div>
+            <div class="gauge-item"><div class="gauge-name">eCO₂ <span id="g-co2">—</span></div><div class="gauge-bg"><div class="gauge-fill" style="background:linear-gradient(to right,#ff7722,#a0b0c4)" id="gf-co2"></div></div></div>
+            <div class="gauge-item"><div class="gauge-name">TVOC <span id="g-tvoc">—</span></div><div class="gauge-bg"><div class="gauge-fill" style="background:linear-gradient(to right,#cc00ff,#ff3355)" id="gf-tvoc"></div></div></div>
+            <div class="gauge-item"><div class="gauge-name">PM 2.5 <span id="g-pm25">—</span></div><div class="gauge-bg"><div class="gauge-fill" style="background:linear-gradient(to right,#ff9944,#ff8800)" id="gf-pm25"></div></div></div>
+          </div>
+        </div>
+
+      </div><!-- /result-panel -->
+    </div><!-- /main-grid -->
+  </div><!-- /page-wrap -->
+
+  <script>
+    // Model tabs
+    document.querySelectorAll('.model-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.model-tab').forEach(t=>t.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('selectedModel').value = tab.dataset.model;
+      });
+    });
+
+    // Sensor bar fill animation
+    function updateBar(input) {
+      const bar = input.closest('.sensor-input-wrap').querySelector('.sensor-bar-fill');
+      if (!bar) return;
+      const val = parseFloat(input.value);
+      const max = parseFloat(input.max) || getMax(input.name);
+      const pct = Math.min(100, Math.max(0, (val / max) * 100));
+      bar.style.width = pct + '%';
+      updateGauges();
+    }
+
+    function getMax(name) {
+      const maxes = {
+        'Temperature[C]': 80, 'Humidity[%]': 100, 'TVOC[ppb]': 5000,
+        'eCO2[ppm]': 5000, 'Raw H2': 20000, 'Raw Ethanol': 30000,
+        'Pressure[hPa]': 1100, 'PM1.0': 500, 'PM2.5': 500,
+        'NC0.5': 1000, 'NC1.0': 1000, 'NC2.5': 500, 'CNT': 100
+      };
+      return maxes[name] || 100;
+    }
+
+    function getInputVal(name) {
+      const el = document.querySelector(`[name="${name}"]`);
+      return el ? (parseFloat(el.value) || 0) : 0;
+    }
+
+    function updateGauges() {
+      const fields = [
+        { key:'temp', name:'Temperature[C]', max:80, unit:'°C' },
+        { key:'hum', name:'Humidity[%]', max:100, unit:'%' },
+        { key:'co2', name:'eCO2[ppm]', max:5000, unit:'ppm' },
+        { key:'tvoc', name:'TVOC[ppb]', max:5000, unit:'ppb' },
+        { key:'pm25', name:'PM2.5', max:500, unit:'µg/m³' },
+      ];
+      fields.forEach(f => {
+        const val = getInputVal(f.name);
+        const pct = Math.min(100, (val / f.max) * 100);
+        const el = document.getElementById(`g-${f.key}`);
+        const fill = document.getElementById(`gf-${f.key}`);
+        if (el) el.textContent = val ? val + f.unit : '—';
+        if (fill) fill.style.width = pct + '%';
+      });
+    }
+
+    // Form submit animation
+    const form = document.getElementById('detectForm');
+    const btn = document.getElementById('detectBtn');
+    if (form) {
+      form.addEventListener('submit', () => {
+        btn.textContent = '⬡ ANALYZING...';
+        btn.style.opacity = '0.7';
+        btn.style.cursor = 'wait';
+      });
+    }
+
+    // Reset
+    function resetForm() {
+      document.querySelectorAll('.sensor-input').forEach(i=>{ i.value=''; });
+      document.querySelectorAll('.sensor-bar-fill').forEach(b=>{ b.style.width='0%'; });
+      document.querySelectorAll('.gauge-fill').forEach(f=>{ f.style.width='0%'; });
+      document.querySelectorAll('[id^="g-"]').forEach(e=>{ e.textContent='—'; });
+      document.getElementById('confBar').style.width='0%';
+      document.getElementById('confVal').textContent='—%';
+    }
+
+    // Animate confidence bar on load if result present
+    (function(){
+      var el=document.getElementById('confidence-data');
+      if(el&&el.dataset.value){
+        window.addEventListener('load',()=>{
+          setTimeout(()=>{
+            document.getElementById('confBar').style.width=el.dataset.value+'%';
+          },400);
+        });
+      }
+    })();
+
+    // Smoke + ember canvas
+    (function(){
+      const cv=document.getElementById('bg-canvas');
+      if(!cv)return;
+      const cx=cv.getContext('2d');
+      let W,H;
+      function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+      resize();window.addEventListener('resize',resize);
+
+      const clouds=Array.from({length:35},()=>({
+        x:Math.random()*innerWidth,
+        y:innerHeight+Math.random()*400,
+        r:Math.random()*140+70,
+        vx:(Math.random()-.5)*.25,
+        vy:-(Math.random()*.35+.08),
+        op:Math.random()*.11+.03,
+        gr:Math.random()*.05+.015,
+        rot:Math.random()*Math.PI*2,
+        rotV:(Math.random()-.5)*.002,
+        warm:Math.random()>.6,
+      }));
+
+      const wisps=Array.from({length:25},()=>({
+        x:Math.random()*innerWidth,
+        y:innerHeight+Math.random()*200,
+        r:Math.random()*45+20,
+        vx:(Math.random()-.5)*.4,
+        vy:-(Math.random()*.6+.15),
+        op:Math.random()*.06+.02,
+        gr:Math.random()*.08+.03,
+        wave:Math.random()*Math.PI*2,
+        waveS:Math.random()*.015+.005,
+      }));
+
+      const haze=Array.from({length:8},()=>({
+        x:Math.random()*innerWidth,
+        y:Math.random()*innerHeight,
+        r:Math.random()*300+200,
+        vx:(Math.random()-.5)*.1,
+        vy:-(Math.random()*.05+.015),
+        op:Math.random()*.035+.01,
+      }));
+
+      function puff(x,y,r,op,warm){
+        const g=cx.createRadialGradient(x,y,0,x,y,r);
+        g.addColorStop(0,   warm?'rgba(155,142,128,'+op+')':'rgba(128,142,155,'+op+')');
+        g.addColorStop(0.45,warm?'rgba(118,108,98,'+op*.55+')':'rgba(98,112,124,'+op*.55+')');
+        g.addColorStop(0.78,warm?'rgba(88,80,74,'+op*.18+')':'rgba(74,86,96,'+op*.18+')');
+        g.addColorStop(1,'rgba(50,55,60,0)');
+        cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fill();
+      }
+
+      function tick(){
+        cx.clearRect(0,0,W,H);
+
+        haze.forEach(h=>{
+          const g=cx.createRadialGradient(h.x,h.y,0,h.x,h.y,h.r);
+          g.addColorStop(0,'rgba(115,125,135,'+h.op+')');
+          g.addColorStop(1,'rgba(70,80,88,0)');
+          cx.fillStyle=g;cx.beginPath();cx.arc(h.x,h.y,h.r,0,Math.PI*2);cx.fill();
+          h.x+=h.vx;h.y+=h.vy;
+          if(h.x<-h.r)h.x=W+h.r;
+          if(h.x>W+h.r)h.x=-h.r;
+          if(h.y+h.r<0){h.y=H+h.r;h.x=Math.random()*W;}
+        });
+
+        wisps.forEach(w=>{
+          w.wave+=w.waveS;
+          puff(w.x+Math.sin(w.wave)*16,w.y,w.r,w.op,false);
+          w.x+=w.vx;w.y+=w.vy;w.r+=w.gr;w.op*=.9994;
+          if(w.y+w.r<0||w.op<.008){
+            w.x=Math.random()*W;w.y=H+50;
+            w.r=Math.random()*30+15;w.op=Math.random()*.06+.02;
+            w.wave=Math.random()*Math.PI*2;
+          }
+        });
+
+        clouds.forEach(s=>{
+          s.rot+=s.rotV;
+          cx.save();
+          cx.translate(s.x,s.y);cx.rotate(s.rot);cx.translate(-s.x,-s.y);
+          puff(s.x,           s.y,          s.r,     s.op,    s.warm);
+          puff(s.x+s.r*.38,   s.y-s.r*.18,  s.r*.68, s.op*.7, s.warm);
+          puff(s.x-s.r*.32,   s.y-s.r*.12,  s.r*.62, s.op*.62,s.warm);
+          cx.restore();
+          s.x+=s.vx;s.y+=s.vy;s.r+=s.gr;s.op*=.9992;
+          if(s.y+s.r<0||s.op<.005){
+            s.x=Math.random()*W;s.y=H+100;
+            s.r=Math.random()*100+60;s.op=Math.random()*.11+.03;
+          }
+        });
+
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+  </script>
+</body>
+</html>
