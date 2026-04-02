@@ -1,0 +1,29 @@
+{% extends 'users/userbase.html'%}
+{%load static%}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+{%block contents%}
+<p>
+    <h1 class="mt-4">GAN Anomaly Detection Results</h1>
+
+    <h3 class="mt-4">Evaluation Metrics</h3>
+    <ul>
+        <li>Accuracy: {{ metrics.accuracy }}</li>
+        <li>Precision: {{ metrics.precision }}</li>
+        <li>Recall: {{ metrics.recall }}</li>
+        <li>F1 Score: {{ metrics.f1 }}</li>
+        <li>Confusion Matrix: {{ metrics.conf_matrix }}</li>
+    </ul>
+
+    <h3 class="mt-4">Sample Detection Results</h3>
+    {{ results | safe }}
+
+    <h3 class="mt-4">Visualizations</h3>
+    {% for img in images %}
+        <div class="mb-3">
+            <img src="{% static img %}" class="img-fluid" alt="Graph">
+        </div>
+    {% endfor %}
+
+</p>
+{%endblock%}

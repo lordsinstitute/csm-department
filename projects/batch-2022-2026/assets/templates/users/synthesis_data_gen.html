@@ -1,0 +1,86 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+{% block contents %}
+
+<h1 style="text-align: center; color: #00f0ff; margin-bottom: 30px;">
+    Examine the Role of Generative AI in Enhancing Threat Intelligence and Cyber Security Measures
+</h1>
+
+<div style="display: flex; justify-content: center;">
+  <form action="{%url 'usr_synthesis_data'%}" method="post" style="
+    background-color: #1e1e2f;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    color: #f0f0f0;
+    font-family: 'Segoe UI', sans-serif;
+  ">
+    <h2 style="color: #00e6c3; text-align: center; margin-bottom: 25px;">
+      Cyberattack Simulation
+    </h2>
+ {% csrf_token %}
+    <label for="company" style="display:block; margin-bottom: 8px; font-weight: bold;">Company Name</label>
+    <input type="text" id="company" name="company" placeholder="Enter company name" required
+      style="
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        background-color: #2a2a3a;
+        color: #fff;
+        margin-bottom: 20px;
+      ">
+
+    <label for="goal" style="display:block; margin-bottom: 8px; font-weight: bold;">Select Attack Goal</label>
+    <select id="goal" name="goal" required
+      style="
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: none;
+        background-color: #2a2a3a;
+        color: #fff;
+        margin-bottom: 25px;
+      ">
+      <option value="">-- Select a Goal --</option>
+      <option value="Steal login credentials for their internal HR system">Steal login credentials for their internal HR system</option>
+      <option value="Exfiltrate sensitive customer financial records">Exfiltrate sensitive customer financial records</option>
+      <option value="Gain unauthorized access to internal email servers">Gain unauthorized access to internal email servers</option>
+      <option value="Disable security monitoring systems to avoid detection">Disable security monitoring systems to avoid detection</option>
+      <option value="Deploy ransomware to encrypt corporate file shares">Deploy ransomware to encrypt corporate file shares</option>
+      <option value="Harvest API keys from cloud configuration files">Harvest API keys from cloud configuration files</option>
+      <option value="Manipulate payroll data to redirect salary payments">Manipulate payroll data to redirect salary payments</option>
+      <option value="Plant a backdoor in the company’s mobile app">Plant a backdoor in the company’s mobile app</option>
+      <option value="Capture MFA tokens through phishing pages">Capture MFA tokens through phishing pages</option>
+      <option value="Exploit vulnerabilities in outdated CRM software">Exploit vulnerabilities in outdated CRM software</option>
+      <option value="Intercept internal chat messages for reconnaissance">Intercept internal chat messages for reconnaissance</option>
+      <option value="Modify DNS settings to redirect internal traffic">Modify DNS settings to redirect internal traffic</option>
+      <option value="Steal intellectual property from R&D servers">Steal intellectual property from R&D servers</option>
+      <option value="Create rogue admin accounts for persistence">Create rogue admin accounts for persistence</option>
+      <option value="Bypass firewall rules using SSH tunneling">Bypass firewall rules using SSH tunneling</option>
+      <option value="Interfere with supply chain orders by tampering with ERP system">Interfere with supply chain orders by tampering with ERP system</option>
+      <option value="Obtain VPN credentials via social engineering">Obtain VPN credentials via social engineering</option>
+      <option value="Extract PII from employee onboarding documents">Extract PII from employee onboarding documents</option>
+      <option value="Escalate privileges to domain administrator">Escalate privileges to domain administrator</option>
+      <option value="Deploy keyloggers to capture user credentials">Deploy keyloggers to capture user credentials</option>
+      <option value="Exploit misconfigured S3 buckets for data theft">Exploit misconfigured S3 buckets for data theft</option>
+    </select>
+
+    <div style="text-align: center;">
+      <button type="submit" style="
+        padding: 12px 25px;
+        background-color: #00c896;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      ">Submit</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

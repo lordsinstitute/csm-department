@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contents %}
+
+<div class="main-content">
+    <div class="form-section">
+        <div class="form-container">
+            <h2 class="form-title">Admin Login</h2>
+            <form action="{% url 'AdminLoginCheck' %}" method="POST" class="login-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="loginid" class="form-label">Login ID</label>
+                    <input type="text" name="loginid" id="loginid" required placeholder="Enter Login ID" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="pswd" class="form-label">Password</label>
+                    <input type="password" name="pswd" id="pswd" required placeholder="Enter Password" class="form-input">
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                </div>
+
+                {% if messages %}
+                <div class="message-container">
+                    {% for message in messages %}
+                        <div class="message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .main-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 85vh;
+        background-color: #f3f4f6;
+        padding: 2rem;
+    }
+
+    .form-section {
+        background: #ffffff;
+        padding: 2rem 2.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .form-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-title {
+        font-size: 1.75rem;
+        font-weight: bold;
+        color: #1f2937;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-label {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background-color: #f9fafb;
+        color: #111827;
+        font-size: 1rem;
+        outline: none;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .btn {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: #4f46e5;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #4338ca;
+        box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-secondary {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+
+    .btn-secondary:hover {
+        background-color: #d1d5db;
+    }
+
+    .message-container {
+        margin-top: 1rem;
+    }
+
+    .message {
+        background-color: #ecfdf5;
+        color: #065f46;
+        padding: 0.75rem;
+        border: 1px solid #d1fae5;
+        border-radius: 0.5rem;
+        font-size: 0.95rem;
+        text-align: center;
+    }
+</style>
+
+{% endblock %}

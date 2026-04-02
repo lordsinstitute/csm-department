@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Examine the Role of Generative AI in Cybersecurity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: 'Inter', sans-serif;
+        }
+
+        body {
+          background-color: #0b0c10;
+          color: #f8f9fa;
+          line-height: 1.6;
+        }
+
+        header {
+          background-color: #1f2833;
+          padding: 1rem 2rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .logo {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: #66fcf1;
+        }
+
+        .menu {
+          display: flex;
+          gap: 1.5rem;
+        }
+
+        .menu a {
+          text-decoration: none;
+          color: #c5c6c7;
+          font-weight: 500;
+          transition: color 0.3s ease;
+        }
+
+        .menu a:hover {
+          color: #66fcf1;
+        }
+
+        .container {
+          max-width: 960px;
+          margin: 2rem auto;
+          padding: 2rem;
+          background-color: #1f2833;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+          font-size: 2rem;
+          margin-bottom: 1rem;
+          color: #66fcf1;
+        }
+
+        p {
+          margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+          nav {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          .menu {
+            flex-direction: column;
+            width: 100%;
+            margin-top: 1rem;
+          }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav>
+        <div class="logo">CyberSecureAI</div>
+        <div class="menu">
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'UserLogin' %}">User Login</a>
+            <a href="{% url 'AdminLogin' %}">Admin Login</a>
+            <a href="{% url 'UserRegister' %}">Registrations</a>
+        </div>
+    </nav>
+</header>
+
+<main class="container">
+    {%block contents%}
+
+    {%endblock%}
+</main>
+</body>
+</html>
