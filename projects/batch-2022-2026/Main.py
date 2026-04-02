@@ -1,4 +1,4 @@
-#importing pythom classes and packages
+#importing python classes and packages
 from tkinter import *
 from tkinter import simpledialog
 import tkinter
