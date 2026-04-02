@@ -442,7 +442,6 @@ def runXGBoost():
     xgb_cls = XGBClassifier(n_estimators=10,learning_rate=0.09,max_depth=2)
     xgb_cls.fit(X_train, y_train)
     predict = xgb_cls.predict(X_test)
-    predict[0:9500] = y_test[0:9500]
     calculateMetrics("XGBoost", predict, y_test)
 
 def runDNN():
