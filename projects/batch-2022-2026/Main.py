@@ -297,8 +297,7 @@ def processDataset():
     X = X[indices]
     Y = Y[indices]
 
-    scaler = MinMaxScaler(feature_range = (0, 1)) #use to normalize training data
-    scaler = MinMaxScaler((0,1))
+    scaler = MinMaxScaler((0,1)) #use to normalize training data
     X = scaler.fit_transform(X)#normalized or transform features
 
     text.insert(END, "\nNormalization: MinMaxScaler(0, 1) applied\n")
