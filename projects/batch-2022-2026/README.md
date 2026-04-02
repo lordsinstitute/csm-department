@@ -1,5 +1,4 @@
-# 📌 Examine the Role of Generative AI in Enhancing 
-Threat Intelligence and Cyber Security Measures
+# 📌 Role of Generative AI in Enhancing Threat Intelligence and Cyber Security Measures
 
 A Django-based web application that examines the role of generative AI, particularly in cybersecurity contexts. This project demonstrates the application of generative adversarial networks (GANs) for data synthesis and anomaly detection.
 
@@ -12,7 +11,7 @@ A Django-based web application that examines the role of generative AI, particul
 | 3    | Nameera Bareen           | 160922748008  |
 | 4    | Afifa Iram               | 160922748019  |
 
-## 🚀 Key Features
+## 🚀Key Features
 
 - User registration and authentication
 - Admin panel for managing users
