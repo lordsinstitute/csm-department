@@ -1,0 +1,5 @@
+metric,value
+mean_accuracy_percent,99.08333333333333
+std_accuracy_percent,0.38908725099762387
+min_accuracy_percent,98.66666666666667
+max_accuracy_percent,99.5

@@ -1,0 +1,5 @@
+metric,value
+stream_accuracy,100.0
+average_latency_ms,2.5527524948120117
+attacks_detected,27.0
+total_attacks,27.0
