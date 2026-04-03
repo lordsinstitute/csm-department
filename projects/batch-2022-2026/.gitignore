@@ -1,0 +1,71 @@
+# Python and Virtual Environment
+venv/
+env/
+ENV/
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Django
+*.log
+debug.log
+*.sqlite3
+db.sqlite3
+local_settings.py
+media/
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Node modules (if using npm)
+node_modules/
+npm-debug.log
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.temp
+.tmp/
+
+# IDE cache
+*.cache
+.cache/
+
+# Production files
+*.zip
+*.tar.gz
+*.rar
+
+# Celery
+celerybeat-schedule
+dump.rdb
