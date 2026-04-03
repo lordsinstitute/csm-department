@@ -1,0 +1,2 @@
+python ShipDetection.py
+pause
