@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Medical Chatbot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#1e1e2f',
+            sidebar: '#15151f',
+            bot: '#2e2f3e',
+            user: '#4f46e5'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .chat-bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      margin: 6px 0;
+      line-height: 1.5;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    .bot {
+      background-color: #2e2f3e;
+      color: white;
+      border-top-left-radius: 0;
+    }
+    .user {
+      background-color: #4f46e5;
+      color: white;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+
+    /* Context menu styles */
+    #contextMenu {
+      position: absolute;
+      background: #2e2f3e;
+      border: 1px solid #555;
+      padding: 6px 0;
+      border-radius: 6px;
+      width: 100px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 1000;
+    }
+    #contextMenu button {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      background: transparent;
+      border: none;
+      color: white;
+      text-align: left;
+      cursor: pointer;
+    }
+    #contextMenu button:hover {
+      background: #4f46e5;
+    }
+
+    /* Active history item highlight */
+    #historyList li.active {
+      background-color: #4f46e5;
+      color: white;
+    }
+
+    /* Typing indicator animation */
+    @keyframes typing {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+
+    #typingIndicator {
+      animation: typing 1.5s infinite;
+    }
+  </style>
+</head>
+<body class="bg-dark text-white flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-sidebar p-4 flex flex-col space-y-4 border-r border-gray-700 relative">
+    <h2 class="text-xl font-semibold mb-4">Chat History</h2>
+    <ul id="historyList" class="space-y-2 text-sm overflow-y-auto flex-1"></ul>
+    <button id="newChatBtn" class="mt-4 text-left p-2 rounded bg-blue-600 hover:bg-blue-700">
+      + New Chat
+    </button>
+
+    <!-- Context menu -->
+    <div id="contextMenu">
+      <button id="deleteHistoryBtn">Delete</button>
+    </div>
+  </aside>
+
+  <!-- Main Chat Section -->
+  <main class="flex-1 flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-dark border-b border-gray-700 p-4 flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Medical Chatbot</h1>
+      <!-- Profile -->
+      <div class="flex items-center space-x-3">
+        <span class="text-sm font-medium">Dr. Priya Sharma</span>
+        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Profile" class="w-10 h-10 rounded-full border-2 border-blue-600">
+      </div>
+    </header>
+
+    <!-- Chat Display -->
+    <section id="chatbox" class="flex-1 overflow-y-auto p-6 flex flex-col space-y-2">
+      <div class="chat-bubble bot self-start">
+        Hello! I'm your medical assistant. How can I help you today?
+      </div>
+    </section>
+
+    <!-- Input Area -->
+    <form class="flex items-center p-4 bg-gray-800" onsubmit="sendMessage(event)">
+      <input
+        id="userInput"
+        type="text"
+        placeholder="Type your message..."
+        class="flex-1 px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none"
+        required
+      />
+      <button type="submit" class="ml-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        Send
+      </button>
+    </form>
+
+  </main>
+
+  <!-- Script -->
+  <script>
+    const chatbox = document.getElementById("chatbox");
+    const input = document.getElementById("userInput");
+    const historyList = document.getElementById("historyList");
+    const newChatBtn = document.getElementById("newChatBtn");
+    const contextMenu = document.getElementById("contextMenu");
+    const deleteHistoryBtn = document.getElementById("deleteHistoryBtn");
+
+    let currentChat = [];
+    let chatHistory = [];
+    let contextMenuTargetIndex = null;
+    let activeHistoryIndex = null;  // Track active chat history item
+
+    function appendMessage(text, sender) {
+      const bubble = document.createElement("div");
+      bubble.className = `chat-bubble ${sender} ${sender === 'user' ? 'self-end' : 'self-start'}`;
+      bubble.textContent = text;
+      chatbox.appendChild(bubble);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function renderChat(chat, index = null) {
+      currentChat = [...chat];
+      chatbox.innerHTML = "";
+      for (const msg of chat) {
+        appendMessage(msg.text, msg.sender);
+      }
+      setActiveHistory(index);
+    }
+
+    // Highlight the active chat history item
+    function setActiveHistory(index) {
+      const items = historyList.children;
+      for (let i = 0; i < items.length; i++) {
+        if (i === index) {
+          items[i].classList.add('active');
+          activeHistoryIndex = i;
+        } else {
+          items[i].classList.remove('active');
+        }
+      }
+      if (index === null) activeHistoryIndex = null;
+    }
+
+    async function sendMessage(event) {
+      event.preventDefault();
+      const message = input.value.trim();
+      if (message === "") return;
+
+      // Disable input while waiting for response
+      input.disabled = true;
+      document.querySelector('button[type="submit"]').disabled = true;
+
+      // Add user message
+      currentChat.push({ sender: "user", text: message });
+      appendMessage(message, "user");
+      input.value = "";
+
+      // Show typing indicator
+      const typingIndicator = document.createElement("div");
+      typingIndicator.className = "chat-bubble bot self-start";
+      typingIndicator.id = "typingIndicator";
+      typingIndicator.textContent = "Typing...";
+      chatbox.appendChild(typingIndicator);
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      try {
+        // Call Django backend
+        const response = await fetch('/chatbot/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+          },
+          body: JSON.stringify({ message: message })
+        });
+
+        const data = await response.json();
+        
+        // Remove typing indicator
+        const indicator = document.getElementById("typingIndicator");
+        if (indicator) chatbox.removeChild(indicator);
+
+        if (data.status === 'success') {
+          currentChat.push({ sender: "bot", text: data.response });
+          appendMessage(data.response, "bot");
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      } catch (error) {
+        // Remove typing indicator
+        const indicator = document.getElementById("typingIndicator");
+        if (indicator) chatbox.removeChild(indicator);
+        
+        currentChat.push({ sender: "bot", text: "Sorry, an error occurred. Please try again." });
+        appendMessage("Sorry, an error occurred. Please try again.", "bot");
+        console.error("Error:", error);
+      } finally {
+        // Re-enable input after response
+        input.disabled = false;
+        document.querySelector('button[type="submit"]').disabled = false;
+        input.focus();
+      }
+    }
+
+    function addHistoryItem(chat) {
+      const summary = chat.find(msg => msg.sender === "user")?.text || "New Chat";
+
+      const item = document.createElement("li");
+      item.className = "hover:bg-gray-700 p-2 rounded cursor-pointer truncate";
+      item.textContent = "🗨️ " + summary.slice(0, 30) + (summary.length > 30 ? "..." : "");
+
+      const index = historyList.children.length;
+      item.addEventListener("click", () => {
+        renderChat(chatHistory[index], index);
+      });
+
+      // Right-click to open context menu
+      item.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        contextMenu.style.top = e.pageY + "px";
+        contextMenu.style.left = e.pageX + "px";
+        contextMenu.style.display = "block";
+        contextMenuTargetIndex = index;
+      });
+
+      historyList.appendChild(item);
+    }
+
+    newChatBtn.addEventListener("click", () => {
+      if (currentChat.length > 0) {
+        chatHistory.push([...currentChat]);
+        addHistoryItem(currentChat);
+      }
+      currentChat = [];
+      chatbox.innerHTML = "";
+      appendMessage("Hello! I'm your medical assistant. How can I help you today?", "bot");
+      setActiveHistory(null);
+    });
+
+    // Hide context menu on clicking outside
+    window.addEventListener("click", () => {
+      contextMenu.style.display = "none";
+      contextMenuTargetIndex = null;
+    });
+
+    // Delete history item on clicking delete button in context menu
+    deleteHistoryBtn.addEventListener("click", () => {
+      if (contextMenuTargetIndex !== null) {
+        // Remove from data
+        chatHistory.splice(contextMenuTargetIndex, 1);
+        // Remove from UI
+        historyList.removeChild(historyList.children[contextMenuTargetIndex]);
+
+        // If deleting the currently active chat, reset chat
+        if (activeHistoryIndex === contextMenuTargetIndex) {
+          currentChat = [];
+          chatbox.innerHTML = "";
+          appendMessage("Hello! I'm your medical assistant. How can I help you today?", "bot");
+          setActiveHistory(null);
+        }
+
+        // Update event listeners indices for remaining items
+        // Rebuild event listeners properly
+        for (let i = 0; i < historyList.children.length; i++) {
+          const item = historyList.children[i];
+          item.replaceWith(item.cloneNode(true));  // Remove old listeners
+
+          const newItem = historyList.children[i];
+          newItem.addEventListener("click", () => {
+            renderChat(chatHistory[i], i);
+          });
+
+          newItem.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+            contextMenu.style.top = e.pageY + "px";
+            contextMenu.style.left = e.pageX + "px";
+            contextMenu.style.display = "block";
+            contextMenuTargetIndex = i;
+          });
+        }
+
+        // If after deletion, activeHistoryIndex > removed index, adjust it
+        if (activeHistoryIndex !== null && activeHistoryIndex > contextMenuTargetIndex) {
+          activeHistoryIndex--;
+        }
+      }
+      contextMenu.style.display = "none";
+      contextMenuTargetIndex = null;
+    });
+
+    // Helper function to get CSRF token
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // Initial welcome message
+
+  </script>
+
+</body>
+</html>
