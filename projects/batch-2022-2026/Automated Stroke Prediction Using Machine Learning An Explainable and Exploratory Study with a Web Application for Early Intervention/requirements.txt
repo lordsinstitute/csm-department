@@ -1,0 +1,26 @@
+pip install numpy==1.19.2
+pip install pandas==0.25.3
+pip install matplotlib==3.1.1
+pip install scikit-learn==0.22.2.post1
+pip install shap==0.38.1
+pip install lightgbm==4.0.0
+pip install xgboost==1.6.2
+pip install catboost==1.2
+pip install imbalanced-learn==0.6.2
+pip install imblearn==0.0
+pip install Keras==2.2.4
+pip install tensorflow==1.14.0
+pip install h5py==2.10.0
+pip install protobuf==3.16.0
+pip install jupyter==1.0.0
+pip install jupyter-client==6.1.3
+pip install jupyter-console==6.4.0
+pip install jupyter-core==4.6.3
+pip install jupyterlab-widgets==1.0.0
+pip install seaborn==0.10.1
+pip install ipython==7.9.0
+pip install ipython-genutils==0.2.0
+pip install ipykernel==6.5.0
+
+
+ 
