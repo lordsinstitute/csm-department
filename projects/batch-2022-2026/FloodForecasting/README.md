@@ -43,16 +43,21 @@ Local models → Central aggregation → Global prediction
 ---
 
 ## 🖥️ Run
+- runServer.bat
+- run.bat
 
-```
-runServer.bat
-run.bat
-```
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Team
 
-Mohammed Muzammil Uddin Ahmed  
-GitHub: https://github.com/muzammil98k  
-LinkedIn: https://www.linkedin.com/in/muzammil-ahmed-576345311  
+- **Mohammed Muzammil Uddin Ahmed** (160922748089)  
+- **Syed Amatul Asma** (160922748118)  
+- **Syeda Mah Zehra Zaidi** (160922748062)  
+
+---
+
+## 🔗 Connect
+
+- GitHub: https://github.com/muzammil98k  
+- LinkedIn: https://www.linkedin.com/in/muzammil-ahmed-576345311  
