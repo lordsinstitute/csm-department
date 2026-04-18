@@ -1,0 +1,117 @@
+{% extends 'admins/adminbase.html' %}
+{% load static %}
+{% block contents %}
+
+<h1 class="title">Registered Users</h1>
+
+<table class="data-table">
+    <thead class="table-header">
+        <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Login ID</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Locality</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in data %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.loginid }}</td>
+            <td>{{ user.mobile }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.locality }}</td>
+            <td>
+                {% if user.status == 'waiting' %}
+                <span class="badge waiting">Waiting</span>
+                {% else %}
+                <span class="badge active">Active</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if user.status == 'waiting' %}
+                <a href="/ActivaUsers/?uid={{ user.id }}" class="btn activate">Activate</a>
+                {% else %}
+                <span class="text-success">Activated</span>
+                <a href="/DeleteUsers/?uid={{ user.id }}" class="btn delete">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<style>
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 auto;
+        font-family: 'Segoe UI', sans-serif;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff; /* Ensure table has a white background */
+    }
+
+    .data-table th, .data-table td {
+        padding: 12px 16px;
+        text-align: center;
+        border: 1px solid #ccc;
+        color: #000; /* Ensure text is black for readability */
+    }
+
+    .data-table thead {
+        background-color: #1e40af;
+        color: #ffffff;
+    }
+
+    .data-table tbody tr:nth-child(odd) {
+        background-color: #f4f4f4; /* Light gray for odd rows */
+    }
+
+    .data-table tbody tr:nth-child(even) {
+        background-color: #e2e8f0; /* Slightly darker gray for even rows */
+    }
+
+    .data-table tbody tr:hover {
+        background-color: #cbd5e1; /* Hover effect */
+    }
+
+    .badge.active {
+        background-color: #4ade80;
+        color: #065f46;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .btn {
+        text-decoration: none;
+        padding: 6px 10px;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+
+    .btn.activate {
+        background-color: #3b82f6;
+        color: white;
+    }
+
+    .btn.delete {
+        background-color: #ef4444;
+        color: white;
+        margin-left: 8px;
+    }
+
+    .text-success {
+        color: #16a34a;
+        font-weight: 600;
+    }
+</style>
+
+{% endblock %}

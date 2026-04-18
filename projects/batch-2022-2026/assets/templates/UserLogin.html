@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contents %}
+
+        <h1>User Login Form</h1>
+        <form action="{% url 'UserLoginCheck' %}" method="POST" class="login-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+<label for="loginid" class="form-label" style="color: #f8f9fa;">Login ID</label>
+                <input
+                        type="text"
+                        id="loginid"
+                        name="loginid"
+                        required
+                        placeholder="Enter your Login ID"
+                        class="form-input"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label" style="color: #f8f9fa;">Password</label>
+                <input
+                        type="password"
+                        id="password"
+                        name="pswd"
+                        required
+                        placeholder="Enter your Password"
+                        class="form-input"
+                />
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+
+            {% if messages %}
+            <div class="message-container">
+                {% for message in messages %}
+                <div class="message message-success">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </form>
+
+
+
+<style>
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 80vh;
+        padding: 20px;
+        background-color: #f3f4f6; /* Light background */
+    }
+
+    .form-section {
+        width: 100%;
+        max-width: 400px; /* Increased max-width for larger screens */
+        padding: 30px; /* Increased padding */
+        background-color: #ffffff;
+        border-radius: 12px; /* More rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+        margin-top: 2rem;
+    }
+
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-title {
+        font-size: 2rem; /* Larger font size */
+        font-weight: bold;
+        color: #2d3748; /* Darker heading color */
+        margin-bottom: 2rem; /* Increased margin */
+        text-align: center;
+    }
+
+    .login-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem; /* Increased gap */
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .form-label {
+        font-size: 1rem;
+        font-weight: 600; /* Medium font weight */
+        color: #4a5568; /* Slightly darker label color */
+        margin-bottom: 0.5rem; /* Added margin */
+        display: block; /* Ensure label takes full width */
+    }
+
+    .form-input {
+        width: calc(100% - 2rem); /* Adjusted width for padding */
+        padding: 1rem; /* Increased padding */
+        border: 1px solid #e2e8f0; /* Lighter border */
+        border-radius: 0.75rem; /* More rounded corners */
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Added box-shadow transition */
+        font-size: 1rem;
+        color: #1a202c;
+        background-color: #f7fafc;
+    }
+
+    .form-input:focus {
+        border-color: #4c51bf; /* Indigo focus border */
+        box-shadow: 0 0 0 3px rgba(76, 81, 191, 0.2); /* Focus shadow */
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center; /* Center buttons */
+        gap: 1rem; /* Increased gap */
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem; /* Increased padding */
+        border: none;
+        border-radius: 0.75rem; /* More rounded corners */
+        font-weight: 600; /* Medium font weight */
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease; /* Added shadow */
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px); /* Slight lift on hover */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow on hover*/
+    }
+    .btn:active{
+         transform: translateY(0); /* Slight lift on hover */
+         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Add shadow on hover*/
+    }
+
+    .btn-primary {
+        background-color: #6b7280; /* Indigo color */
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background-color: #4a5568; /* Darker indigo on hover */
+    }
+
+    .btn-secondary {
+        background-color: #e5e7eb; /* Gray color */
+        color: #374151;
+    }
+
+    .btn-secondary:hover {
+        background-color: #d1d5db; /* Darker gray on hover */
+    }
+
+    .message-container {
+        margin-top: 1.5rem; /* Increased margin */
+        text-align: center;
+        width: 100%;
+    }
+
+    .message {
+        padding: 1rem;
+        border-radius: 0.75rem; /* More rounded corners */
+        background-color: #f0fdf4;
+        color: #15803d;
+        border: 1px solid #dcfce7;
+        font-weight: 500;
+        font-size: 1rem;
+    }
+    .space-y-6 > * + * {
+      margin-top: 1.5rem;
+    }
+</style>
+{% endblock %}

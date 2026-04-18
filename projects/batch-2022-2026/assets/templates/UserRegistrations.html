@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block contents %}
+<style>
+    /* Custom input styling */
+    .styled-form input[type="text"],
+    .styled-form input[type="password"],
+    .styled-form input[type="email"],
+    .styled-form input[type="number"],
+    .styled-form textarea, /* Added textarea */
+    .styled-form input[type="tel"] {
+        width: calc(100% - 20px); /* Added some horizontal padding */
+        padding: 12px 10px;
+        border: 2px solid #6366f1; /* Indigo border */
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: #f9fafb;
+        color: #1e293b; /* Darker text */
+        box-sizing: border-box;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        font-family: 'Nunito', sans-serif; /* Added font */
+    }
+
+    .styled-form textarea {
+        resize: vertical; /* Allow vertical resizing */
+        height: 100px;
+    }
+
+    /* Highlight effect on focus */
+    .styled-form input:focus,
+    .styled-form textarea:focus {
+        border-color: #4c1d95; /* A darker shade of indigo */
+        outline: none;
+        box-shadow: 0 0 8px rgba(76, 29, 149, 0.3); /* More subtle shadow */
+    }
+
+    /* Label styling */
+    .styled-form label {
+        display: block;
+        margin-bottom: 5px;
+        color: #4b5563; /* Gray label color */
+        font-weight: 600;
+        font-size: 0.9rem;
+        font-family: 'Nunito', sans-serif;
+    }
+
+    /* Table appearance */
+    .styled-form table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Slightly stronger shadow */
+        border-radius: 12px; /* More rounded table */
+        overflow: hidden; /* Needed for rounded corners on cells */
+        margin-bottom: 20px;
+    }
+
+    .styled-form td {
+        padding: 16px; /* Increased padding */
+        font-size: 1rem;
+        color: #374151; /* Slightly darker text in table cells */
+        border-bottom: 1px solid #f1f5f9; /* Lighter border */
+    }
+
+    /* Remove border from the last row */
+    .styled-form tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Alternate row background colors */
+    .styled-form tr:nth-child(even) {
+        background-color: #f7fafc; /* Very light background */
+    }
+
+    .styled-form tr:nth-child(odd) {
+        background-color: #edf2f7;
+    }
+
+    /* Button styling */
+    .styled-form button {
+        padding: 12px 28px;
+        background-color: #6d28d9; /* A more vibrant purple */
+        color: #fff;
+        font-weight: 700; /* Use 700 for bold */
+        border: none;
+        border-radius: 8px; /* More rounded button */
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform */
+        font-size: 1.1rem;
+        font-family: 'Nunito', sans-serif;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow to button */
+    }
+
+    .styled-form button:hover {
+        background-color: #4c1d95; /* Darker purple on hover */
+        transform: translateY(-2px); /* Slight lift on hover */
+    }
+
+    .styled-form button:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Smaller shadow on active */
+    }
+
+    .message-error {
+        color: #dc2626; /* Stronger red */
+        background-color: #fee2e2;
+        padding: 12px;
+        border-radius: 8px;
+        margin-top: 10px;
+        border: 1px solid #fecaca;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.9rem;
+    }
+
+    .text-2xl {
+        font-size: 1.75rem;  /* 28px */
+        line-height: 2rem;    /* 32px */
+    }
+
+    .font-semibold {
+        font-weight: 600;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mb-6 {
+        margin-bottom: 1.5rem;  /* 24px */
+    }
+
+    .text-gray-800 {
+        color: #1e293b;
+    }
+
+    main {
+        padding: 20px 0;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content-box {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .content-box {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+
+        .styled-form input[type="text"],
+        .styled-form input[type="password"],
+        .styled-form input[type="email"],
+        .styled-form input[type="number"],
+        .styled-form textarea,
+        .styled-form input[type="tel"]{
+            width: calc(100% - 12px);
+        }
+    }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<section class="content-box" id="home">
+
+    <h1 class="text-2xl font-semibold text-center mb-6 text-gray-800">User Registration Form</h1>
+
+    <form action="{% url 'UserRegisterActions' %}" method="POST" class="styled-form">
+        {% csrf_token %}
+
+        <table>
+            <tr>
+                <td><label for="{{ form.name.id_for_label }}">User Name</label></td>
+                <td>{{ form.name }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.loginid.id_for_label }}">Login ID</label></td>
+                <td>{{ form.loginid }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.password.id_for_label }}">Password</label></td>
+                <td>{{ form.password }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.mobile.id_for_label }}">Mobile</label></td>
+                <td>{{ form.mobile }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.email.id_for_label }}">Email</label></td>
+                <td>{{ form.email }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.locality.id_for_label }}">Locality</label></td>
+                <td>{{ form.locality }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.address.id_for_label }}">Address</label></td>
+                <td>{{ form.address }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.city.id_for_label }}">City</label></td>
+                <td>{{ form.city }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.state.id_for_label }}">State</label></td>
+                <td>{{ form.state }}</td>
+            </tr>
+            <tr>
+                <td><label for="{{ form.status.id_for_label }}">Status</label></td>
+                <td>{{ form.status }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <button type="submit">Register</button>
+                </td>
+            </tr>
+            {% if messages %}
+            <tr>
+                <td colspan="2" align="center" class="message-error">
+                    {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+        </table>
+    </form>
+
+</section>
+
+{% endblock %}
