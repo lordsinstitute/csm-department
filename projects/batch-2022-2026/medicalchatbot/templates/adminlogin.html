@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Chatbot - Admin Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2a9d8f;
+            --secondary-color: #264653;
+            --accent-color: #e9c46a;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #4caf50;
+            --danger-color: #e76f51;
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-focus-bg: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--light-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 20px 0;
+            background-color: rgba(42, 157, 143, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--light-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            color: var(--light-color);
+            border: 2px solid var(--accent-color);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-btn i {
+            margin-right: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            text-align: center;
+            padding: 15px;
+            color: var(--light-color);
+            margin-top: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 0 20px;
+            margin: 40px auto;
+        }
+
+        .login-container {
+            background: rgba(38, 70, 83, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--accent-color), #f4a261);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-header p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--light-color);
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background-color: var(--input-focus-bg);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(233, 196, 106, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(42, 157, 143, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: #21867a;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(42, 157, 143, 0.6);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--light-color);
+            border: 2px solid var(--light-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .form-footer {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            color: #f4a261;
+            text-decoration: underline;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .password-toggle:hover {
+            color: var(--accent-color);
+        }
+
+        /* Messages styling */
+        .messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.3s ease-out forwards;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .alert-success {
+            background-color: var(--success-color);
+        }
+
+        .alert-error {
+            background-color: var(--danger-color);
+        }
+
+        .alert-info {
+            background-color: var(--primary-color);
+        }
+
+        .alert-warning {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+        }
+
+        .close-message {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        .message-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .slide-out {
+            animation: slideOut 0.3s ease-in forwards;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .messages {
+                top: 10px;
+                right: 10px;
+                max-width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="main-container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <h1>Medical Chatbot</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="{%url 'basefunction'%}" class="nav-btn"><i class="fas fa-home"></i> Home</a></li>
+                        <li><a href="{%url 'user_login'%}" class="nav-btn"><i class="fas fa-comment-medical"></i> Start Chat</a></li>
+                        <li><a href="{%url 'signup_view'%}" class="nav-btn"><i class="fas fa-user-plus"></i>create Account</a></li>
+                        <li><a href="{%url 'adminlogin'%}" class="nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Messages container -->
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" id="message-{{ forloop.counter }}">
+                    <div>
+                        <i class="fas 
+                            {% if message.tags == 'success' %}fa-check-circle{% endif %}
+                            {% if message.tags == 'error' %}fa-exclamation-circle{% endif %}
+                            {% if message.tags == 'info' %}fa-info-circle{% endif %}
+                            {% if message.tags == 'warning' %}fa-exclamation-triangle{% endif %}
+                            message-icon"></i>
+                        {{ message }}
+                    </div>
+                    <button type="button" class="close-message" onclick="closeMessage('message-{{ forloop.counter }}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="login-container">
+            <div class="login-header">
+                <h2><i class="fas fa-lock"></i> Admin Login</h2>
+                <p>Please enter your credentials to access the admin panel</p>
+            </div>
+
+            <form action="{% url 'adminlogincheck' %}" method="post" id="loginForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="userid"><i class="fas fa-user"></i> Admin User ID</label>
+                    <input type="text" name="userid" id="userid" class="form-control" placeholder="Enter your admin ID"
+                        required>
+                    <i class="fas fa-user input-icon"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-key"></i> Password</label>
+                    <input type="password" name="password" id="password" class="form-control"
+                        placeholder="Enter your password" required>
+                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility()"></i>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+                    <button type="reset" class="btn btn-secondary"><i class="fas fa-redo"></i> Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy; Medical Chatbot. All rights reserved.
+    </footer>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.querySelector(".password-toggle");
+            const type = passwordField.getAttribute("type");
+
+            if (type === "password") {
+                passwordField.setAttribute("type", "text");
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordField.setAttribute("type", "password");
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        }
+
+        // Function to close messages
+        function closeMessage(id) {
+            const message = document.getElementById(id);
+            if (message) {
+                message.classList.add('slide-out');
+                setTimeout(() => {
+                    message.remove();
+                }, 300);
+            }
+        }
+
+        // Auto-close messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.alert');
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.classList.add('slide-out');
+                    setTimeout(() => {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+
+</html>

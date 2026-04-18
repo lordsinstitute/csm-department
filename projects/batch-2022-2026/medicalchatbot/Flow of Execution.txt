@@ -1,0 +1,14 @@
+******* reuire python 3.10.2
+
+
+
+1. first find the path for manage.py file i.e  \crop_predication_chatbot\CODE\crop_predication_chatbot from this location run the server.
+2. in the address bar type CMD
+3. Type python manage.py runserver
+4. on sucessfull running the server you will get the development server i.e http://127.0.0.1:8000/
+5. copy the server number and paste it in the browser
+6. project will get the open on the server
+7. Their you will be having options like HOME,USERLOGIN,ADMINLOGIN,SIGNUP
+8. First the user have to create the login credentials by clicking on signup
+9. On creating details by default status will be Waiting admin have to activate then only the login credentials will get activate admin login credential are admin , admin
+10. Now the user can login with the registred details and monitor the machine learning and deep learning themes     
