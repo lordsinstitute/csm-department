@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<section class="theme-form-wrap">
+  <div class="theme-card">
+    <h2 class="theme-card-title">// ADMIN LOGIN</h2>
+    <form action="{% url 'AdminLoginCheck' %}" method="POST">
+      {% csrf_token %}
+      <label>Login ID</label>
+      <input type="text" class="theme-input" name="loginid" required placeholder="Enter Login Id">
+      <label>Password</label>
+      <input type="password" class="theme-input" name="pswd" required placeholder="Enter Password">
+      <div style="display:flex; gap:1rem; justify-content:space-between; margin-top:1.25rem;">
+        <button type="submit" class="theme-btn-form">LOGIN</button>
+        <button type="reset" class="theme-btn-form secondary">RESET</button>
+      </div>
+      {% if messages %}
+        <div class="theme-msg success" style="margin-top:1rem;">
+          {% for message in messages %}<p style="margin:0;">{{ message }}</p>{% endfor %}
+        </div>
+      {% endif %}
+    </form>
+  </div>
+</section>
+{% endblock %}

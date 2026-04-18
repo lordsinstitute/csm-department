@@ -1,0 +1,488 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+{% block contents %}
+
+<style>
+  /* ── Page layout ── */
+  .cnn-wrap { padding: 4rem 4rem 6rem; max-width: 1200px; margin: 0 auto; }
+
+  /* ── Eyebrow / header ── */
+  .cnn-eyebrow {
+    font-family:'Share Tech Mono',monospace; font-size:0.7rem;
+    color:var(--text-dim); letter-spacing:4px; text-transform:uppercase;
+    margin-bottom:0.6rem; display:flex; align-items:center; gap:0.8rem;
+  }
+  .cnn-eyebrow::before { content:''; width:28px; height:1px; background:rgba(255,119,34,0.4); display:inline-block; }
+  .cnn-page-title { font-family:'Orbitron',monospace; font-size:clamp(1.8rem,3.5vw,2.6rem); font-weight:900; color:#fff; }
+  .cnn-page-title span { color:#ff7722; }
+  .cnn-page-sub { font-family:'Share Tech Mono',monospace; font-size:0.78rem; color:var(--text-dim); margin-top:0.5rem; }
+  .cnn-divider { width:100%; height:1px; background:linear-gradient(to right,transparent,rgba(255,119,34,0.2),transparent); margin:2rem 0; }
+
+  /* ── Status badge ── */
+  .cnn-status {
+    display:inline-flex; align-items:center; gap:0.6rem;
+    border:1px solid rgba(255,119,34,0.2); padding:0.35rem 1rem;
+    font-family:'Share Tech Mono',monospace; font-size:0.65rem;
+    color:#ff7722; letter-spacing:2px; margin-bottom:2.5rem;
+    background:rgba(255,119,34,0.03);
+  }
+  .cnn-status-dot { width:6px; height:6px; border-radius:50%; background:#ff7722; animation:dotPulse 1.5s infinite; }
+  @keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+  /* ── Two-col grid (upload + CNN result) ── */
+  .cnn-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; align-items:start; }
+  @media(max-width:768px){ .cnn-grid{ grid-template-columns:1fr; } }
+
+  /* ── Panels ── */
+  .cnn-panel {
+    background:var(--bg-card); border:1px solid rgba(255,119,34,0.15);
+    box-shadow:0 0 40px rgba(255,119,34,0.06); position:relative; overflow:hidden;
+  }
+  .cnn-panel::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(to right,transparent,#ff7722,transparent);
+  }
+  .cnn-panel-head {
+    font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:#a0b0c4;
+    letter-spacing:3px; padding:1.1rem 1.5rem;
+    border-bottom:1px solid rgba(255,119,34,0.08);
+  }
+  .cnn-panel-body { padding:1.5rem; }
+
+  /* ── Drop zone ── */
+  .cnn-dropzone {
+    border:2px dashed rgba(255,119,34,0.22); padding:2.5rem 1.5rem;
+    text-align:center; cursor:pointer; transition:all 0.3s;
+    background:rgba(255,119,34,0.02); position:relative;
+  }
+  .cnn-dropzone:hover, .cnn-dropzone.drag { border-color:#ff7722; background:rgba(255,119,34,0.05); box-shadow:0 0 20px rgba(255,119,34,0.1); }
+  .cnn-dropzone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .cnn-drop-icon { font-size:2.4rem; margin-bottom:0.8rem; }
+  .cnn-drop-text { font-family:'Share Tech Mono',monospace; font-size:0.75rem; color:var(--text-dim); }
+  .cnn-drop-text span { color:#ff7722; }
+  .cnn-drop-hint { font-family:'Share Tech Mono',monospace; font-size:0.6rem; color:#3a4a5a; margin-top:0.4rem; }
+
+  /* ── Preview ── */
+  .cnn-preview { display:none; margin-top:1.2rem; }
+  .cnn-preview.show { display:block; }
+  .cnn-preview img { width:100%; max-height:200px; object-fit:cover; border:1px solid rgba(255,119,34,0.2); }
+  .cnn-preview-name { font-family:'Share Tech Mono',monospace; font-size:0.62rem; color:var(--text-dim); text-align:center; margin-top:0.4rem; }
+
+  /* ── Submit ── */
+  .cnn-submit {
+    width:100%; margin-top:1.2rem; padding:0.9rem;
+    font-family:'Orbitron',monospace; font-size:0.75rem; font-weight:700;
+    letter-spacing:2px; background:#ff7722; color:#141210;
+    border:none; cursor:pointer;
+    clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+    transition:all 0.2s;
+  }
+  .cnn-submit:hover { box-shadow:0 0 50px rgba(255,119,34,0.6); transform:translateY(-2px); }
+  .cnn-submit:disabled { opacity:0.45; cursor:not-allowed; transform:none; box-shadow:none; }
+
+  /* ── Spec table ── */
+  .cnn-specs { margin-top:1.5rem; border:1px solid rgba(255,119,34,0.1); background:rgba(255,119,34,0.02); }
+  .cnn-specs-title { font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:#a0b0c4; letter-spacing:3px; padding:0.8rem 1rem; border-bottom:1px solid rgba(255,119,34,0.08); }
+  .cnn-spec-row { display:flex; justify-content:space-between; padding:0.5rem 1rem; border-bottom:1px solid rgba(255,255,255,0.03); font-family:'Share Tech Mono',monospace; font-size:0.68rem; }
+  .cnn-spec-row:last-child { border:none; }
+  .cnn-spec-key { color:var(--text-dim); }
+  .cnn-spec-val { color:#a0b0c4; }
+  .cnn-spec-val.accent { color:#ff7722; }
+
+  /* ── CNN Result panel ── */
+  .cnn-result-panel {
+    background:var(--bg-card); border:1px solid rgba(255,119,34,0.15);
+    box-shadow:0 0 40px rgba(255,119,34,0.06); position:relative; overflow:hidden;
+    min-height:380px; display:flex; flex-direction:column;
+  }
+  .cnn-result-panel::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(to right,transparent,#a0b0c4,transparent);
+  }
+
+  /* Awaiting state */
+  .cnn-awaiting {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; padding:3rem; text-align:center; gap:1rem;
+  }
+  .cnn-await-ring {
+    width:110px; height:110px;
+    border:1px solid rgba(255,119,34,0.15); border-top:2px solid #ff7722;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:2.5rem; animation:spin 4s linear infinite;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .cnn-await-label { font-family:'Share Tech Mono',monospace; font-size:0.72rem; color:#3a4a5a; letter-spacing:3px; }
+
+  /* Result body */
+  .cnn-result-body {
+    flex:1; padding:2rem; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; gap:1.2rem;
+  }
+  .cnn-ring {
+    width:130px; height:130px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:2.8rem;
+  }
+  .cnn-ring.danger { border:2px solid #ff3344; box-shadow:0 0 30px rgba(255,51,68,0.4),0 0 70px rgba(255,51,68,0.1); animation:dangerPulse 1.5s ease-in-out infinite; }
+  .cnn-ring.safe   { border:2px solid #ff7722; box-shadow:0 0 30px rgba(255,119,34,0.3),0 0 60px rgba(255,119,34,0.1); }
+  @keyframes dangerPulse { 0%,100%{box-shadow:0 0 30px rgba(255,51,68,0.35)} 50%{box-shadow:0 0 60px rgba(255,51,68,0.75)} }
+
+  .cnn-result-title { font-family:'Orbitron',monospace; font-size:1.15rem; font-weight:900; letter-spacing:2px; }
+  .cnn-result-title.danger { color:#ff3344; text-shadow:0 0 20px rgba(255,51,68,0.55); }
+  .cnn-result-title.safe   { color:#ff7722; text-shadow:0 0 20px rgba(255,119,34,0.5); }
+  .cnn-result-sub { font-family:'Share Tech Mono',monospace; font-size:0.68rem; color:var(--text-dim); letter-spacing:2px; }
+
+  /* Confidence bar */
+  .cnn-bar-wrap { width:100%; }
+  .cnn-bar-labels { display:flex; justify-content:space-between; font-family:'Share Tech Mono',monospace; font-size:0.63rem; color:var(--text-dim); margin-bottom:0.4rem; }
+  .cnn-bar-labels .val { color:#ff7722; font-size:0.82rem; }
+  .cnn-bar-bg { height:4px; background:rgba(255,255,255,0.05); border-radius:2px; }
+  .cnn-bar { height:100%; border-radius:2px; width:0%; transition:width 1.1s ease; }
+  .cnn-bar.danger { background:linear-gradient(to right,#ff3344,#ff6680); }
+  .cnn-bar.safe   { background:linear-gradient(to right,#a0b0c4,#ff7722); }
+
+  /* ═══════════════════════════════════════════════════════════
+     YOLO SECTION
+  ═══════════════════════════════════════════════════════════ */
+  .yolo-section {
+    margin-top: 2.5rem;
+  }
+  .yolo-section-title {
+    font-family:'Orbitron',monospace; font-size:1rem; font-weight:700;
+    color:#fff; margin-bottom:1.5rem; display:flex; align-items:center; gap:1rem;
+  }
+  .yolo-section-title::after {
+    content:''; flex:1; height:1px; background:linear-gradient(to right,rgba(255,119,34,0.3),transparent);
+  }
+  .yolo-badge {
+    font-family:'Share Tech Mono',monospace; font-size:0.6rem; letter-spacing:2px;
+    background:rgba(255,119,34,0.12); border:1px solid rgba(255,119,34,0.3);
+    color:#ff7722; padding:0.2rem 0.6rem;
+  }
+
+  /* YOLO two-col: image + detections table */
+  .yolo-grid { display:grid; grid-template-columns:1.6fr 1fr; gap:1.5rem; align-items:start; }
+  @media(max-width:900px){ .yolo-grid{ grid-template-columns:1fr; } }
+
+  /* Annotated image panel */
+  .yolo-img-panel {
+    background:var(--bg-card); border:1px solid rgba(255,119,34,0.15);
+    position:relative; overflow:hidden;
+  }
+  .yolo-img-panel::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(to right,transparent,#ff7722,transparent);
+  }
+  .yolo-img-head {
+    font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:#a0b0c4;
+    letter-spacing:3px; padding:0.8rem 1.2rem;
+    border-bottom:1px solid rgba(255,119,34,0.08);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .yolo-img-body { padding:1rem; }
+  .yolo-img-body img {
+    width:100%; display:block;
+    border:1px solid rgba(255,119,34,0.15);
+  }
+
+  /* Detections panel */
+  .yolo-det-panel {
+    background:var(--bg-card); border:1px solid rgba(255,119,34,0.15);
+    position:relative; overflow:hidden; height:100%;
+  }
+  .yolo-det-panel::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(to right,transparent,#a0b0c4,transparent);
+  }
+  .yolo-det-head {
+    font-family:'Share Tech Mono',monospace; font-size:0.65rem; color:#a0b0c4;
+    letter-spacing:3px; padding:0.8rem 1.2rem;
+    border-bottom:1px solid rgba(255,119,34,0.08);
+  }
+  .yolo-det-body { padding:1rem; }
+
+  /* Detection rows */
+  .det-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.55rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.04);
+    font-family:'Share Tech Mono',monospace; font-size:0.7rem;
+  }
+  .det-row:last-child { border:none; }
+  .det-class {
+    display:flex; align-items:center; gap:0.6rem;
+  }
+  .det-dot {
+    width:8px; height:8px; border-radius:50%; flex-shrink:0;
+  }
+  .det-dot.fire  { background:#ff4422; box-shadow:0 0 6px rgba(255,68,34,0.7); }
+  .det-dot.smoke { background:#50c8c8; box-shadow:0 0 6px rgba(80,200,200,0.6); }
+  .det-dot.other { background:#ff7722; }
+  .det-class-name { color:#e0e0e0; }
+  .det-conf-wrap { display:flex; align-items:center; gap:0.6rem; }
+  .det-conf-bar-bg { width:60px; height:3px; background:rgba(255,255,255,0.06); border-radius:2px; }
+  .det-conf-bar { height:100%; border-radius:2px; background:linear-gradient(to right,#a0b0c4,#ff7722); transition:width 1s ease; }
+  .det-conf-val { color:#ff7722; font-size:0.72rem; min-width:36px; text-align:right; }
+
+  /* No detections placeholder */
+  .yolo-no-det {
+    padding:2rem; text-align:center;
+    font-family:'Share Tech Mono',monospace; font-size:0.68rem; color:#3a4a5a; letter-spacing:2px;
+  }
+
+  /* YOLO summary row */
+  .yolo-summary {
+    margin-top:1rem; display:flex; gap:0.8rem; flex-wrap:wrap;
+  }
+  .yolo-chip {
+    font-family:'Share Tech Mono',monospace; font-size:0.62rem; letter-spacing:2px;
+    border:1px solid rgba(255,119,34,0.2); padding:0.3rem 0.7rem;
+    background:rgba(255,119,34,0.04); color:#a0b0c4;
+  }
+  .yolo-chip span { color:#ff7722; }
+
+  /* No YOLO notice */
+  .yolo-unavailable {
+    padding:1.5rem; background:rgba(255,119,34,0.03);
+    border:1px dashed rgba(255,119,34,0.12);
+    font-family:'Share Tech Mono',monospace; font-size:0.68rem;
+    color:#3a4a5a; letter-spacing:1px; text-align:center;
+  }
+</style>
+
+<div class="cnn-wrap">
+
+  <!-- ── Header ── -->
+  <div class="fade-up">
+    <div class="cnn-eyebrow">Deep Learning Module</div>
+    <h1 class="cnn-page-title">CNN + YOLO Fire & <span>Smoke Detection</span></h1>
+    <p class="cnn-page-sub">MobileNetV2 classification · YOLO fire & smoke detection — upload an image to run both</p>
+  </div>
+  <div class="cnn-divider"></div>
+  <div class="cnn-status fade-up">
+    <span class="cnn-status-dot"></span>
+    CNN MODEL ACTIVE — MOBILENETV2 &nbsp;|&nbsp; YOLO FIRE & SMOKE DETECTION READY
+  </div>
+
+  <!-- ── Row 1: Upload  +  CNN Result ── -->
+  <div class="cnn-grid fade-up">
+
+    <!-- LEFT: Upload -->
+    <div class="cnn-panel">
+      <div class="cnn-panel-head">// IMAGE INPUT MATRIX</div>
+      <div class="cnn-panel-body">
+        <form method="POST" enctype="multipart/form-data" id="cnnForm">
+          {% csrf_token %}
+          <div class="cnn-dropzone" id="dropzone">
+            <input type="file" name="image" id="imgInput" accept="image/*" required>
+            <div class="cnn-drop-icon">📷</div>
+            <div class="cnn-drop-text">Drop image here or <span>click to browse</span></div>
+            <div class="cnn-drop-hint">Supported: JPG · PNG · JPEG · WEBP</div>
+          </div>
+          <div class="cnn-preview" id="previewWrap">
+            <img id="previewImg" src="" alt="Preview">
+            <div class="cnn-preview-name" id="previewName"></div>
+          </div>
+          <button type="submit" class="cnn-submit" id="submitBtn">⚡ ANALYZE IMAGE</button>
+        </form>
+
+        <div class="cnn-specs">
+          <div class="cnn-specs-title">// MODEL SPECIFICATIONS</div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">CNN Architecture</span><span class="cnn-spec-val accent">MobileNetV2</span></div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">YOLO Model</span><span class="cnn-spec-val accent">YOLOv8 (best.pt)</span></div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">CNN Input Size</span><span class="cnn-spec-val">224 × 224 px</span></div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">CNN Classes</span><span class="cnn-spec-val">Fire · No Fire</span></div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">YOLO Classes</span><span class="cnn-spec-val">Fire · Smoke</span></div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">YOLO Conf Threshold</span><span class="cnn-spec-val">0.25</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: CNN Result -->
+    <div class="cnn-result-panel">
+      <div class="cnn-panel-head">// CNN CLASSIFICATION RESULT</div>
+
+      {% if result %}
+      <div class="cnn-result-body">
+        <div class="cnn-ring {{ label }}">
+          {% if label == 'danger' %}🔥{% else %}✅{% endif %}
+        </div>
+        <div class="cnn-result-title {{ label }}">{{ result }}</div>
+        <div class="cnn-result-sub">
+          {% if label == 'danger' %}ALERT — EVACUATE IMMEDIATELY{% else %}ENVIRONMENT CLEAR{% endif %}
+        </div>
+        <div class="cnn-bar-wrap">
+          <div class="cnn-bar-labels">
+            <span>CNN CONFIDENCE</span>
+            <span class="val">{{ confidence }}%</span>
+          </div>
+          <div class="cnn-bar-bg">
+            <div class="cnn-bar {{ label }}" id="confBar"></div>
+          </div>
+        </div>
+        <div class="cnn-specs" style="width:100%">
+          <div class="cnn-specs-title">// ANALYSIS SUMMARY</div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">Model</span><span class="cnn-spec-val accent">MobileNetV2 CNN</span></div>
+          <div class="cnn-spec-row">
+            <span class="cnn-spec-key">Result</span>
+            <span class="cnn-spec-val {% if label == 'danger' %}accent{% endif %}"
+                  {% if label == 'danger' %}style="color:#ff3344"{% endif %}>{{ result }}</span>
+          </div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">Confidence</span><span class="cnn-spec-val accent">{{ confidence }}%</span></div>
+          <div class="cnn-spec-row"><span class="cnn-spec-key">Method</span><span class="cnn-spec-val">Deep Learning (CNN)</span></div>
+          {% if yolo_available %}
+          <div class="cnn-spec-row"><span class="cnn-spec-key">YOLO Detections</span><span class="cnn-spec-val accent">{{ yolo_detections|length }}</span></div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% else %}
+      <div class="cnn-awaiting">
+        <div class="cnn-await-ring">🔍</div>
+        <div class="cnn-await-label">AWAITING IMAGE INPUT</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:#2a3a4a;letter-spacing:2px;">
+          UPLOAD AN IMAGE TO BEGIN ANALYSIS
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+  </div><!-- /cnn-grid -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       YOLO SECTION — only shown after a result is returned
+  ═════════════════════════════════════════════════════════════ -->
+  {% if result %}
+  <div class="yolo-section fade-up">
+
+    <div class="yolo-section-title">
+      // YOLO FIRE & SMOKE DETECTION
+      <span class="yolo-badge">BOUNDING BOX ANALYSIS</span>
+    </div>
+
+    {% if yolo_available and yolo_img_url %}
+
+      <div class="yolo-grid">
+
+        <!-- Annotated Image -->
+        <div class="yolo-img-panel">
+          <div class="yolo-img-head">
+            <span>// ANNOTATED OUTPUT</span>
+            <span style="color:#ff7722;font-size:0.6rem;">
+              {{ yolo_detections|length }} DETECTION{% if yolo_detections|length != 1 %}S{% endif %}
+            </span>
+          </div>
+          <div class="yolo-img-body">
+            <img src="{{ yolo_img_url }}" alt="YOLO annotated image" id="yoloImg">
+          </div>
+          <!-- Summary chips -->
+          <div style="padding:0 1rem 1rem;">
+            <div class="yolo-summary">
+              {% for det in yolo_detections %}
+              <div class="yolo-chip">
+                {{ det.class }} <span>{{ det.conf }}</span>
+              </div>
+              {% empty %}
+              <div class="yolo-chip">No objects above threshold</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Detections Table -->
+        <div class="yolo-det-panel">
+          <div class="yolo-det-head">// DETECTION LOG</div>
+          <div class="yolo-det-body">
+            {% if yolo_detections %}
+              {% for det in yolo_detections %}
+              <div class="det-row">
+                <div class="det-class">
+                  <div class="det-dot {% if det.class|lower == 'fire' %}fire{% elif det.class|lower == 'smoke' %}smoke{% else %}other{% endif %}"></div>
+                  <span class="det-class-name">{{ det.class }}</span>
+                </div>
+                <div class="det-conf-wrap">
+                  <div class="det-conf-bar-bg">
+                    <div class="det-conf-bar" style="width:{{ det.conf|floatformat:0 }}0%"></div>
+                  </div>
+                  <span class="det-conf-val">{{ det.conf }}</span>
+                </div>
+              </div>
+              {% endfor %}
+
+              <div class="cnn-specs" style="margin-top:1.2rem;">
+                <div class="cnn-specs-title">// YOLO SUMMARY</div>
+                <div class="cnn-spec-row"><span class="cnn-spec-key">Total Detections</span><span class="cnn-spec-val accent">{{ yolo_detections|length }}</span></div>
+                <div class="cnn-spec-row"><span class="cnn-spec-key">Model</span><span class="cnn-spec-val">YOLOv8 best.pt</span></div>
+                <div class="cnn-spec-row"><span class="cnn-spec-key">Conf Threshold</span><span class="cnn-spec-val">0.25</span></div>
+                <div class="cnn-spec-row"><span class="cnn-spec-key">Saved To</span><span class="cnn-spec-val" style="font-size:0.58rem;">media/results/</span></div>
+              </div>
+            {% else %}
+              <div class="yolo-no-det">
+                ⬜ NO OBJECTS DETECTED<br>
+                <span style="font-size:0.58rem;margin-top:0.5rem;display:block;">
+                  All detections below confidence threshold (0.25)
+                </span>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div><!-- /yolo-grid -->
+
+    {% else %}
+      <!-- YOLO not available (no best.pt or runtime error) -->
+      <div class="yolo-unavailable">
+        🔲 &nbsp; YOLO MODEL NOT AVAILABLE
+        <div style="margin-top:0.6rem;font-size:0.6rem;">
+          Place <span style="color:#ff7722;">best.pt</span> in
+          <span style="color:#ff7722;">media/models/</span> and
+          install <span style="color:#ff7722;">ultralytics</span> to enable bounding-box detection.
+        </div>
+      </div>
+    {% endif %}
+
+  </div><!-- /yolo-section -->
+  {% endif %}
+
+</div><!-- /cnn-wrap -->
+
+<script>
+  // Image preview
+  document.getElementById('imgInput').addEventListener('change', function(e) {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('previewName').textContent = file.name;
+      document.getElementById('previewWrap').classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Drag styling
+  const dz = document.getElementById('dropzone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
+  dz.addEventListener('drop', () => dz.classList.remove('drag'));
+
+  // Loading state
+  document.getElementById('cnnForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = '⏳ ANALYZING...';
+    btn.disabled = true;
+  });
+
+  // Animate CNN confidence bar
+  window.addEventListener('load', function() {
+    const bar = document.getElementById('confBar');
+    if (bar) setTimeout(() => { bar.style.width = '{{ confidence }}%'; }, 300);
+
+    // Animate YOLO detection bars
+    document.querySelectorAll('.det-conf-bar').forEach(b => {
+      const w = b.style.width;
+      b.style.width = '0%';
+      setTimeout(() => { b.style.width = w; }, 500);
+    });
+  });
+</script>
+
+{% endblock %}

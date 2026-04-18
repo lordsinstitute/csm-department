@@ -1,0 +1,20 @@
+[
+  {
+    "cve_id": "CVE-2024-12345",
+    "ttp": "T1134",
+    "remediation": "Rotate compromised CI tokens and enforce least privilege on workflow secrets.",
+    "affected_components": ["demo-repo", "ci/gh-actions", "pipelines"]
+  },
+  {
+    "cve_id": "CVE-2023-98765",
+    "ttp": "T1484",
+    "remediation": "Harden Kubernetes RBAC roles and scope service accounts to namespaces.",
+    "affected_components": ["demo-repo", "deploy/k8s/rbac.yaml"]
+  },
+  {
+    "cve_id": "CVE-2022-54321",
+    "ttp": "T1059",
+    "remediation": "Sanitise environment variables before sourcing shell scripts in containers.",
+    "affected_components": ["docker/entrypoint.sh", "uploaded-repo"]
+  }
+]

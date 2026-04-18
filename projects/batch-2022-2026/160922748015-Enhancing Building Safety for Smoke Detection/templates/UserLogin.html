@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<section class="theme-form-wrap">
+  <div class="theme-card">
+    <h2 class="theme-card-title">// USER LOGIN</h2>
+    <form action="{% url 'UserLoginCheck' %}" method="POST">
+      {% csrf_token %}
+      <label>Login ID</label>
+      <input type="text" class="theme-input" name="loginid" required placeholder="Enter Login Id">
+      <label>Password</label>
+      <input type="password" class="theme-input" name="pswd" required placeholder="Enter Password">
+      <div style="display:flex; gap:1rem; justify-content:space-between; margin-top:1.25rem;">
+        <button type="submit" class="theme-btn-form">LOGIN</button>
+        <button type="reset" class="theme-btn-form secondary">RESET</button>
+      </div>
+      {% if messages %}
+        <div class="theme-msg success" style="margin-top:1rem;">
+          {% for message in messages %}<p style="margin:0;">{{ message }}</p>{% endfor %}
+        </div>
+      {% endif %}
+    </form>
+    <div style="margin-top:1.5rem; text-align:center; border-top:1px solid rgba(255,119,34,0.1); padding-top:1.2rem;">
+      <p style="font-family:'Share Tech Mono',monospace; font-size:0.7rem; color:var(--text-dim); letter-spacing:2px; margin-bottom:0.8rem;">
+        DON'T HAVE AN ACCOUNT?
+      </p>
+      <a href="{% url 'UserRegister' %}" class="theme-btn-form" style="display:inline-block; text-align:center; text-decoration:none;">
+        REGISTER
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

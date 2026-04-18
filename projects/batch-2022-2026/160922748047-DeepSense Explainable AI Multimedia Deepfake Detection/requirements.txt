@@ -1,0 +1,16 @@
+absl-py
+accelerate
+altair         # used by plotly/visualisation
+audioread
+librosa
+mtcnn
+opencv-python   # provides cv2
+plotly
+kaleido
+matplotlib
+numpy
+pandas         # (not directly used, but often present)
+streamlit
+tensorflow    # keras, tf functions
+google-genai  # Backend LLM explainer
+keras    # for model loading and inference

@@ -1,0 +1,82 @@
+name: Comment Automation (Faculty Verification)
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  verification-detection:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Detect maintainer review request comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commentBody = context.payload.comment?.body || "";
+            const comment = commentBody.toLowerCase();
+            const issue = context.payload.issue;
+
+            // Ensure it's a PR (not a normal issue)
+            if (!issue.pull_request) {
+              console.log("Skipping: comment is on an issue, not a PR.");
+              return;
+            }
+
+            console.log(`Comment received on PR #${issue.number}: "${commentBody}"`);
+
+            // Trigger phrase (faculty asks to forward to maintainers)
+            if (!comment.includes("requires maintainer review")) {
+              console.log('Skipping: comment does not contain "requires maintainer review".');
+              return;
+            }
+
+            const prNumber = issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const labelName = "requires-maintainer-review";
+            const labelColor = "fbca04"; // do not include '#'
+            const labelDescription = "Maintainer Request required";
+
+            // Ensure the label exists; create it if missing
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: labelName });
+              console.log(`Label "${labelName}" already exists.`);
+            } catch (e) {
+              if (e.status === 404) {
+                console.log(`Label "${labelName}" not found — creating it.`);
+                await github.rest.issues.createLabel({
+                  owner,
+                  repo,
+                  name: labelName,
+                  color: labelColor,
+                  description: labelDescription
+                });
+              } else {
+                throw e;
+              }
+            }
+
+            // Add label to PR
+            await github.rest.issues.addLabels({
+              issue_number: prNumber,
+              owner,
+              repo,
+              labels: [labelName]
+            });
+            console.log(`Label "${labelName}" added to PR #${prNumber}.`);
+
+            // Post confirmation comment
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner,
+              repo,
+              body: "📌 Project requires **Maintainer Review** Forwarding to @abdulvasay-234."
+            });
+            console.log("Confirmation comment posted.");

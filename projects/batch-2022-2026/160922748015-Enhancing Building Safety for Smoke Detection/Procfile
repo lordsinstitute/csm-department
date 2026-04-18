@@ -1,0 +1,1 @@
+web: python postinstall.py && python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn Buliding_Saftey_Through_Machine_learning.wsgi --bind 0.0.0.0:$PORT --workers 1 --timeout 120

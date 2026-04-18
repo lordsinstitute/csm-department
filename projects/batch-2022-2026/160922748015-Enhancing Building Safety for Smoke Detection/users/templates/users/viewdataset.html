@@ -1,0 +1,415 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+{% block contents %}
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<style>
+  /* ── Page Layout ── */
+  .ds-page { padding: 3rem 3rem 5rem; }
+
+  /* ── Hero Header ── */
+  .ds-hero {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255,119,34,0.1);
+  }
+  .ds-hero-left { flex: 1; min-width: 260px; }
+  .ds-eyebrow {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.68rem;
+    color: #a0b0c4; letter-spacing: 4px; text-transform: uppercase;
+    margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.6rem;
+  }
+  .ds-eyebrow::before {
+    content: ''; display: inline-block; width: 28px; height: 1px;
+    background: #a0b0c4;
+  }
+  .ds-title {
+    font-family: 'Orbitron', monospace; font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 900; color: #fff; line-height: 1.1;
+  }
+  .ds-title span { color: #ff7722; }
+  .ds-subtitle {
+    margin-top: 0.6rem; font-size: 0.95rem;
+    color: #6b7a8d; font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* ── Stat Pills ── */
+  .ds-stats { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+  .ds-stat {
+    border: 1px solid rgba(255,119,34,0.18);
+    background: rgba(255,119,34,0.04);
+    padding: 0.85rem 1.4rem;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    text-align: center; min-width: 100px;
+  }
+  .ds-stat-val {
+    font-family: 'Orbitron', monospace; font-size: 1.35rem;
+    font-weight: 700; color: #ff7722;
+    text-shadow: 0 0 15px rgba(255,119,34,0.45);
+  }
+  .ds-stat-lbl {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+    color: #6b7a8d; letter-spacing: 2px; text-transform: uppercase; margin-top: 0.2rem;
+  }
+  .ds-stat.cyan { border-color: rgba(160,176,196,0.22); background: rgba(160,176,196,0.04); }
+  .ds-stat.cyan .ds-stat-val { color: #a0b0c4; text-shadow: 0 0 15px rgba(160,176,196,0.45); }
+
+  /* ── Feature Column Badges ── */
+  .ds-features {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .ds-feat-badge {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.62rem;
+    padding: 0.3rem 0.75rem; letter-spacing: 1px;
+    border: 1px solid rgba(160,176,196,0.2);
+    color: rgba(160,176,196,0.9);
+    background: rgba(160,176,196,0.04);
+    transition: all 0.2s;
+  }
+  .ds-feat-badge:hover { border-color: #a0b0c4; color: #a0b0c4; background: rgba(160,176,196,0.08); }
+  .ds-feat-badge.target {
+    border-color: rgba(255,51,85,0.4); color: #ff6680;
+    background: rgba(255,51,85,0.07);
+  }
+
+  /* ── Table Container ── */
+  .ds-table-container {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,119,34,0.08);
+    overflow: hidden;
+    position: relative;
+  }
+  .ds-table-container::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(to right, transparent, #ff7722, #a0b0c4, transparent);
+  }
+
+  /* ── DataTables Controls ── */
+  .ds-table-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid rgba(255,119,34,0.06);
+    flex-wrap: wrap; gap: 1rem;
+    background: rgba(255,119,34,0.02);
+  }
+  .dt-length-wrap, .dt-search-wrap {
+    display: flex; align-items: center; gap: 0.75rem;
+    font-family: 'Share Tech Mono', monospace; font-size: 0.72rem; color: #6b7a8d;
+  }
+  .dt-control-select, .dt-control-input {
+    background: var(--bg-dark); border: 1px solid rgba(255,119,34,0.2);
+    color: #c0c8d4; font-family: 'Share Tech Mono', monospace; font-size: 0.72rem;
+    padding: 0.4rem 0.7rem; outline: none;
+    transition: border-color 0.2s;
+  }
+  .dt-control-select:focus, .dt-control-input:focus { border-color: #ff7722; }
+  .dt-control-input::placeholder { color: #3a4a5a; }
+
+  /* ── Actual Table ── */
+  .ds-table-scroll { overflow-x: auto; }
+  #smokeTable {
+    width: 100% !important; border-collapse: collapse;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  #smokeTable thead tr {
+    background: rgba(255,119,34,0.03);
+    border-bottom: 1px solid rgba(255,119,34,0.15);
+  }
+  #smokeTable thead th {
+    font-size: 0.62rem; color: #a0b0c4;
+    padding: 0.85rem 1rem; white-space: nowrap;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    border: none; cursor: pointer; user-select: none;
+    position: relative;
+  }
+  #smokeTable thead th::after {
+    content: ' ⇅'; color: rgba(160,176,196,0.5); font-size: 0.55rem;
+  }
+  #smokeTable thead th.sorting_asc::after { content: ' ↑'; color: #ff7722; }
+  #smokeTable thead th.sorting_desc::after { content: ' ↓'; color: #ff7722; }
+  #smokeTable thead th:hover { color: #ff7722; }
+
+  #smokeTable tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.15s;
+  }
+  #smokeTable tbody tr:hover { background: rgba(255,119,34,0.035); }
+  #smokeTable tbody tr:nth-child(even) { background: rgba(0,0,0,0.15); }
+  #smokeTable tbody tr:nth-child(even):hover { background: rgba(255,119,34,0.035); }
+
+  #smokeTable tbody td {
+    font-size: 0.72rem; color: #a0afc0;
+    padding: 0.55rem 1rem; border: none; white-space: nowrap;
+  }
+  #smokeTable tbody td:first-child { color: #6b7a8d; }
+
+  /* Fire Alarm cell highlighting */
+  .alarm-yes {
+    color: #ff3355 !important; font-weight: 600;
+    text-shadow: 0 0 8px rgba(255,51,85,0.5);
+  }
+  .alarm-no { color: #a0b0c4 !important; }
+
+  /* ── Table Footer: Info + Pagination ── */
+  .ds-table-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255,119,34,0.06);
+    flex-wrap: wrap; gap: 1rem;
+    background: rgba(0,0,0,0.2);
+  }
+  .dt-info-text {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: #4a5a6a;
+  }
+  .dt-info-text strong { color: #ff7722; font-weight: 400; }
+
+  /* ── Pagination ── */
+  .ds-pagination { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .ds-pag-btn {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem;
+    padding: 0.35rem 0.75rem; color: #6b7a8d;
+    border: 1px solid rgba(255,119,34,0.12);
+    background: transparent; cursor: pointer;
+    text-decoration: none; transition: all 0.2s; letter-spacing: 1px;
+  }
+  .ds-pag-btn:hover, .ds-pag-btn.active {
+    color: #ff7722; border-color: rgba(255,119,34,0.4);
+    background: rgba(255,119,34,0.06);
+    text-shadow: 0 0 8px rgba(255,119,34,0.4);
+  }
+  .ds-pag-btn.active { color: #fff; background: rgba(255,119,34,0.12); }
+  .ds-pag-btn.disabled { opacity: 0.3; pointer-events: none; }
+  .ds-pag-ellipsis {
+    font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: #3a4a5a;
+  }
+
+  /* ── Loading Bar ── */
+  .ds-loading-bar {
+    height: 2px; width: 100%;
+    background: linear-gradient(to right, #ff7722, #a0b0c4, #ff7722);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    margin-bottom: -2px;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* ── DataTables override: hide default controls ── */
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate { display: none !important; }
+  .dataTables_wrapper { border: none !important; }
+  table.dataTable { margin: 0 !important; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .ds-page { padding: 2rem 1rem 4rem; }
+    .ds-hero { flex-direction: column; align-items: flex-start; }
+    .ds-stats { gap: 0.6rem; }
+  }
+</style>
+
+<div class="ds-page">
+
+  <!-- ── Header ── -->
+  <div class="ds-hero fade-up">
+    <div class="ds-hero-left">
+      <div class="ds-eyebrow">IoT Sensor Records</div>
+      <h1 class="ds-title">Dataset <span>View</span></h1>
+      <p class="ds-subtitle">smoke_detection_iot.csv — Real-time sensor readings for model training</p>
+    </div>
+    <div class="ds-stats">
+      <div class="ds-stat">
+        <div class="ds-stat-val">{{ total_rows|default:"62,630" }}</div>
+        <div class="ds-stat-lbl">Total Rows</div>
+      </div>
+      <div class="ds-stat cyan">
+        <div class="ds-stat-val">13</div>
+        <div class="ds-stat-lbl">Features</div>
+      </div>
+      <div class="ds-stat">
+        <div class="ds-stat-val">7</div>
+        <div class="ds-stat-lbl">ML Models</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Feature Column Badges ── -->
+  <div class="ds-features fade-up">
+    <span class="ds-feat-badge">Temperature[C]</span>
+    <span class="ds-feat-badge">Humidity[%]</span>
+    <span class="ds-feat-badge">TVOC[ppb]</span>
+    <span class="ds-feat-badge">eCO2[ppm]</span>
+    <span class="ds-feat-badge">Raw H2</span>
+    <span class="ds-feat-badge">Raw Ethanol</span>
+    <span class="ds-feat-badge">Pressure[hPa]</span>
+    <span class="ds-feat-badge">PM1.0</span>
+    <span class="ds-feat-badge">PM2.5</span>
+    <span class="ds-feat-badge">NC0.5</span>
+    <span class="ds-feat-badge">NC1.0</span>
+    <span class="ds-feat-badge">NC2.5</span>
+    <span class="ds-feat-badge">CNT</span>
+    <span class="ds-feat-badge target">🔥 Fire Alarm (Target)</span>
+  </div>
+
+  <!-- ── Table Card ── -->
+  <div class="ds-table-container fade-up">
+    <div class="ds-loading-bar" id="loadingBar"></div>
+
+    <!-- Custom Controls Top -->
+    <div class="ds-table-controls">
+      <div class="dt-length-wrap">
+        <span>Show</span>
+        <select class="dt-control-select" id="customLength">
+          <option value="25">25</option>
+          <option value="50" selected>50</option>
+          <option value="100">100</option>
+        </select>
+        <span>entries per page</span>
+      </div>
+      <div class="dt-search-wrap">
+        <span>Search:</span>
+        <input class="dt-control-input" id="customSearch" type="text" placeholder="filter rows..." style="width:180px;">
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="ds-table-scroll">
+      <div id="tableWrap">
+        {{ data|safe }}
+      </div>
+    </div>
+
+    <!-- Custom Controls Bottom -->
+    <div class="ds-table-footer">
+      <div class="dt-info-text" id="dtInfo">Loading...</div>
+      <div class="ds-pagination" id="dtPagination"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+$(document).ready(function () {
+  // Give the injected table an ID
+  $('#tableWrap table').attr('id', 'smokeTable');
+
+  // Init DataTable
+  const dt = $('#smokeTable').DataTable({
+    pageLength: 50,
+    order: [],
+    columnDefs: [
+      { targets: '_all', className: '' }
+    ],
+    drawCallback: function () {
+      updateInfo();
+      updatePagination();
+      styleAlarmCells();
+      $('#loadingBar').hide();
+    }
+  });
+
+  // Hide loading bar after init
+  setTimeout(function () { $('#loadingBar').hide(); }, 600);
+
+  // Custom search
+  $('#customSearch').on('keyup', function () {
+    dt.search(this.value).draw();
+  });
+
+  // Custom length
+  $('#customLength').on('change', function () {
+    dt.page.len(parseInt(this.value, 10)).draw();
+  });
+
+  // Style Fire Alarm column (last column)
+  function styleAlarmCells() {
+    $('#smokeTable tbody tr').each(function () {
+      var lastTd = $(this).find('td').last();
+      var val = lastTd.text().trim();
+      lastTd.removeClass('alarm-yes alarm-no');
+      if (val === '1') {
+        lastTd.addClass('alarm-yes').text('1 ●');
+      } else {
+        lastTd.addClass('alarm-no').text('0 ○');
+      }
+    });
+  }
+
+  // Info text
+  function updateInfo() {
+    var info = dt.page.info();
+    var start = info.start + 1;
+    var end = info.end;
+    var total = info.recordsDisplay;
+    var filtered = info.recordsTotal !== total ? ' (filtered from ' + info.recordsTotal.toLocaleString() + ')' : '';
+    $('#dtInfo').html('Showing rows <strong>' + start.toLocaleString() + '</strong>–<strong>' + end.toLocaleString() + '</strong> of <strong>' + total.toLocaleString() + '</strong>' + filtered);
+  }
+
+  // Pagination buttons
+  function updatePagination() {
+    var info = dt.page.info();
+    var curr = info.page;
+    var total = info.pages;
+    var html = '';
+
+    // Prev
+    html += '<a class="ds-pag-btn ' + (curr === 0 ? 'disabled' : '') + '" data-page="prev">← PREV</a>';
+
+    // Page numbers with ellipsis
+    var pages = getPageRange(curr, total);
+    pages.forEach(function (p) {
+      if (p === '...') {
+        html += '<span class="ds-pag-ellipsis">…</span>';
+      } else {
+        html += '<a class="ds-pag-btn ' + (p === curr ? 'active' : '') + '" data-page="' + p + '">' + (p + 1) + '</a>';
+      }
+    });
+
+    // Next
+    html += '<a class="ds-pag-btn ' + (curr >= total - 1 ? 'disabled' : '') + '" data-page="next">NEXT →</a>';
+
+    $('#dtPagination').html(html);
+
+    // Bind clicks
+    $('#dtPagination .ds-pag-btn').on('click', function () {
+      var page = $(this).data('page');
+      if (page === 'prev') dt.page('previous').draw('page');
+      else if (page === 'next') dt.page('next').draw('page');
+      else dt.page(page).draw('page');
+    });
+  }
+
+  function getPageRange(curr, total) {
+    if (total <= 7) {
+      var arr = [];
+      for (var i = 0; i < total; i++) arr.push(i);
+      return arr;
+    }
+    var pages = [];
+    if (curr <= 3) {
+      pages.push(0, 1, 2, 3, 4, '...', total - 1);
+    } else if (curr >= total - 4) {
+      pages.push(0, '...', total - 5, total - 4, total - 3, total - 2, total - 1);
+    } else {
+      pages.push(0, '...', curr - 1, curr, curr + 1, '...', total - 1);
+    }
+    return pages;
+  }
+
+  // Initial style + controls
+  styleAlarmCells();
+  updateInfo();
+  updatePagination();
+});
+</script>
+
+{% endblock %}

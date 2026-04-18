@@ -1,0 +1,73 @@
+name: Comment Automation (Priority Help)
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  verification-detection:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Detect faculty priority help
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body.toLowerCase();
+            const issue = context.payload.issue;
+
+            // Ensure it's a PR (not a normal issue)
+            if (!issue.pull_request) {
+              console.log("Skipping: comment is on an issue, not a PR.");
+              return;
+            }
+
+            console.log(`Comment received on PR #${issue.number}: "${context.payload.comment.body}"`);
+
+            // Check for helping phrase
+            if (!comment.includes("project reviewed by")) {
+              console.log('Skipping: comment does not contain "Requires maintainer review".');
+              return;
+            }
+
+            const prNumber = issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // Ensure the "priority-request" label exists, create it if not
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: "priority-request" });
+            } catch (e) {
+              if (e.status === 404) {
+                console.log('Label "priority-request" not found — creating it.');
+                await github.rest.issues.createLabel({
+                  owner, repo, name: "priority-request", color: "fbca04",
+                  description: "Maintainer Request required"
+                });
+              } else {
+                throw e;
+              }
+            }
+
+            // 🏷️ Add "priority-request" label
+            await github.rest.issues.addLabels({
+              issue_number: prNumber,
+              owner,
+              repo,
+              labels: ["priority-request"]
+            });
+            console.log(`Label "priority-request" added to PR #${prNumber}.`);
+
+            // 💬 Confirmation comment
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner,
+              repo,
+              body: "⚠️ Project marked as **incomplete** by faculty. Forwarding to the maintainer @abdulvasay-234"
+            });
+            console.log("Confirmation comment posted.");

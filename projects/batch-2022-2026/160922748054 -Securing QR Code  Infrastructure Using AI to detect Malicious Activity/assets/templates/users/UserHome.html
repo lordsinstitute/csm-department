@@ -1,0 +1,131 @@
+{% extends 'users/userbase.html' %}
+
+{% block title %}
+User Home
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.home-banner{
+background:linear-gradient(135deg,#00c6ff,#0072ff);
+padding:50px;
+border-radius:15px;
+text-align:center;
+color:white;
+margin-bottom:30px;
+}
+
+.home-banner h1{
+font-size:32px;
+font-weight:700;
+margin-bottom:15px;
+}
+
+.home-banner p{
+font-size:18px;
+max-width:700px;
+margin:auto;
+}
+
+.feature-card{
+background:rgba(255,255,255,0.05);
+border-radius:12px;
+padding:25px;
+text-align:center;
+transition:0.3s;
+}
+
+.feature-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.feature-card i{
+font-size:40px;
+color:#00d9ff;
+margin-bottom:10px;
+}
+
+</style>
+
+
+<!-- Welcome Banner -->
+
+<div class="home-banner">
+
+<h1>Welcome to QR Classification System</h1>
+
+<p>
+Our QR Classification system uses machine learning to analyze and classify QR codes securely.
+It helps detect malicious links and ensures safe QR code usage for applications like
+authentication, payments, and inventory systems.
+</p>
+
+</div>
+
+
+<!-- Feature Cards -->
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="feature-card">
+
+<i class="bi bi-database"></i>
+
+<h4>Dataset</h4>
+
+<p>View and manage the dataset used for training the QR classification model.</p>
+
+<a href="{% url 'DatasetView' %}" class="btn btn-main btn-sm">
+Open Dataset
+</a>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="feature-card">
+
+<i class="bi bi-cpu"></i>
+
+<h4>Model Training</h4>
+
+<p>Train the machine learning model using the available QR code dataset.</p>
+
+<a href="{% url 'training' %}" class="btn btn-main btn-sm">
+Start Training
+</a>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="feature-card">
+
+<i class="bi bi-search"></i>
+
+<h4>QR Prediction</h4>
+
+<p>Upload or analyze QR codes to detect malicious or safe URLs.</p>
+
+<a href="{% url 'prediction' %}" class="btn btn-main btn-sm">
+Predict QR
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

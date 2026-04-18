@@ -1,0 +1,119 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Model Training{% endblock %}
+
+{% block content %}
+
+<style>
+
+.training-header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.training-header h2{
+font-weight:700;
+color:white;
+}
+
+/* Training Cards */
+
+.training-card{
+background:rgba(255,255,255,0.05);
+border-radius:12px;
+padding:25px;
+transition:0.3s;
+}
+
+.training-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.training-card i{
+font-size:40px;
+color:#00d9ff;
+margin-bottom:10px;
+}
+
+/* Metric box */
+
+.metric{
+background:rgba(255,255,255,0.08);
+padding:10px;
+border-radius:8px;
+margin-bottom:8px;
+}
+
+.metric strong{
+color:#00d9ff;
+}
+
+</style>
+
+
+<div class="training-header">
+<h2>Model Training Results</h2>
+</div>
+
+
+<div class="row g-4">
+
+<!-- Random Forest -->
+
+<div class="col-md-6">
+
+<div class="training-card text-center">
+
+<i class="bi bi-diagram-3"></i>
+
+<h4>Random Forest Classifier</h4>
+
+<div class="metric">
+<strong>Accuracy:</strong> {{ rf_acc|floatformat:4 }}
+</div>
+
+<div class="metric">
+<strong>Precision:</strong> {{ rf_precision|floatformat:4 }}
+</div>
+
+<div class="metric">
+<strong>Recall:</strong> {{ rf_recall|floatformat:4 }}
+</div>
+
+<div class="metric">
+<strong>F1 Score:</strong> {{ rf_f1|floatformat:4 }}
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- Neural Network -->
+
+<div class="col-md-6">
+
+<div class="training-card text-center">
+
+<i class="bi bi-cpu"></i>
+
+<h4>Neural Network Model</h4>
+
+<div class="metric">
+<strong>Validation Accuracy:</strong> {{ nn_acc|floatformat:4 }}
+</div>
+
+<div class="metric">
+<strong>Validation Loss:</strong> {{ nn_loss|floatformat:4 }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

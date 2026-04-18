@@ -1,0 +1,340 @@
+/* Import optimized purple theme - must come before other rules */
+@import './optimized.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Global HSL tokens (manual) – warmed up to orange/amber ===== */
+
+:root {
+  /* Card / surfaces */
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 95%;
+
+  --popover: 0 0% 4%;
+  --popover-foreground: 0 0% 95%;
+
+  /* Warm orange primary & accent */
+  --primary: 32 94% 56%;           /* orange-500-ish */
+  --primary-foreground: 210 20% 10%;
+
+  --secondary: 0 0% 8%;
+  --secondary-foreground: 32 94% 80%;
+
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 70%;
+
+  --accent: 40 96% 60%;           /* amber / golden glow */
+  --accent-foreground: 210 20% 10%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 0 0% 15%;
+  --input: 0 0% 15%;
+  --ring: 32 94% 56%;
+
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: #02010a; /* near-black with slight warmth */
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* ===== Custom scrollbar ===== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent));
+}
+
+/* ===== Glassmorphism tuned to warm glow ===== */
+
+.glass {
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  background-color: rgba(0, 0, 0, 0.08); /* ⬅ EXTREMELY transparent */
+  border: 1px solid rgba(251, 146, 60, 0.08);
+  box-shadow:
+    0 1px 12px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.glass-strong {
+  backdrop-filter: blur(44px) saturate(240%);
+  -webkit-backdrop-filter: blur(44px) saturate(240%);
+  background-color: rgba(0, 0, 0, 0.14); /* ⬅ still very transparent */
+  border: 1px solid rgba(251, 146, 60, 0.12);
+  box-shadow:
+    0 16px 48px rgba(251, 146, 60, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+
+
+
+
+/* ===== Gradient text – orange / amber like the shader & hero ===== */
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    #fed7aa 0%,
+    #fdba74 40%,
+    #fb923c 70%,
+    #f97316 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  will-change: transform;
+}
+
+.gradient-text-alt {
+  background: linear-gradient(135deg, #facc15 0%, #fed7aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Glowing button effects (warm) ===== */
+
+.glow-on-hover {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+
+.glow-on-hover:hover {
+  box-shadow:
+    0 0 20px rgba(251, 146, 60, 0.4),
+    0 0 40px rgba(252, 211, 77, 0.25);
+  transform: translate3d(0, -2px, 0);
+}
+
+/* Warm glow variants */
+.glow-purple {
+  /* keep class name, change color to amber/orange */
+  box-shadow: 0 0 15px rgba(251, 146, 60, 0.35);
+  animation: glow-purple 3s ease-in-out infinite;
+}
+
+.glow-purple-strong {
+  box-shadow:
+    0 0 20px rgba(251, 146, 60, 0.6),
+    0 0 40px rgba(252, 211, 77, 0.4);
+}
+
+/* Spinner */
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Performance / layout basics ===== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hardware acceleration for animations */
+
+.animate-fade-in,
+.animate-slide-in,
+.animate-glow-purple,
+.animate-float {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth transitions */
+
+.transition-all-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-colors-smooth {
+  transition:
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus ring */
+
+.focus\:ring-purple:focus {
+  --tw-ring-color: #f97316; /* orange */
+}
+
+/* Reduce motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ===== Warm theme utilities ===== */
+
+.bg-purple-glass {
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.border-purple-glow {
+  border: 1px solid rgba(251, 146, 60, 0.4);
+  box-shadow: 0 0 10px rgba(251, 146, 60, 0.25);
+}
+
+.text-purple-gradient {
+  background: linear-gradient(135deg, #fed7aa, #facc15);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Tailwind base tokens (light + dark) – dark tuned warm ===== */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+
+    /* light theme primary can stay neutral */
+    --primary: 220.9 39.3% 11%;
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 71.4% 4.1%;
+
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* dark mode: warm, shader-friendly palette */
+    --background: 220 27% 5%;
+    --foreground: 210 20% 96%;
+
+    --card: 220 27% 6%;
+    --card-foreground: 210 20% 96%;
+
+    --popover: 220 27% 6%;
+    --popover-foreground: 210 20% 96%;
+
+    --primary: 32 94% 56%;          /* orange primary */
+    --primary-foreground: 220 27% 5%;
+
+    --secondary: 240 21% 12%;
+    --secondary-foreground: 210 20% 96%;
+
+    --muted: 240 21% 12%;
+    --muted-foreground: 217 15% 65%;
+
+    --accent: 40 96% 60%;           /* amber accent */
+    --accent-foreground: 220 27% 5%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 240 21% 18%;
+    --input: 240 21% 18%;
+    --ring: 32 94% 56%;
+
+    --chart-1: 32 94% 56%;
+    --chart-2: 20 90% 50%;
+    --chart-3: 48 96% 60%;
+    --chart-4: 16 88% 55%;
+    --chart-5: 0 84% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ===== Extra keyframes kept from your inline theme ===== */
+
+@theme inline {
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+}

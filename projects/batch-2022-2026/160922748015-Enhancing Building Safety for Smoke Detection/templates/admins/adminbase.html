@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav_links %}
+<a href="{% url 'AdminHome' %}">HOME</a>
+<a href="{% url 'RegisterUsersView' %}">USER DETAILS</a>
+{% endblock %}
+{% block nav_btns %}
+<a href="{% url 'index' %}" class="nav-btn">LOGOUT</a>
+{% endblock %}
+{% block contents %}
+{% endblock %}

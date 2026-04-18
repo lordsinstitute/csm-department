@@ -1,0 +1,123 @@
+{% extends 'admins/adminbase.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+{% block admin_home %}active{% endblock %}
+
+{% block content %}
+
+<style>
+
+.dashboard-header{
+background:linear-gradient(135deg,#007bff,#00c6ff);
+padding:40px;
+border-radius:12px;
+text-align:center;
+margin-bottom:30px;
+color:white;
+}
+
+.dashboard-header h1{
+font-size:32px;
+font-weight:700;
+}
+
+.dashboard-card{
+background:rgba(255,255,255,0.05);
+border-radius:12px;
+padding:25px;
+text-align:center;
+transition:0.3s;
+}
+
+.dashboard-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.dashboard-card i{
+font-size:40px;
+color:#00d9ff;
+margin-bottom:10px;
+}
+
+</style>
+
+
+<!-- Welcome Section -->
+
+<div class="dashboard-header">
+
+<h1>Admin Dashboard</h1>
+
+<p>
+Welcome to the QR Code Security Admin Panel.  
+Manage users and monitor system activity.
+</p>
+
+</div>
+
+
+
+<!-- Dashboard Cards -->
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="dashboard-card">
+
+<i class="bi bi-people"></i>
+
+<h4>Registered Users</h4>
+
+<p>View and manage registered users.</p>
+
+<a href="{% url 'ViewRegisteredUsers' %}" class="btn btn-info btn-sm">
+View Users
+</a>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="dashboard-card">
+
+<i class="bi bi-shield-check"></i>
+
+<h4>Security Monitoring</h4>
+
+<p>Monitor malicious QR code detection.</p>
+
+<a href="#" class="btn btn-info btn-sm">
+View Logs
+</a>
+
+</div>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="dashboard-card">
+
+<i class="bi bi-speedometer2"></i>
+
+<h4>System Status</h4>
+
+<p>Check application performance.</p>
+
+<a href="#" class="btn btn-info btn-sm">
+View Status
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

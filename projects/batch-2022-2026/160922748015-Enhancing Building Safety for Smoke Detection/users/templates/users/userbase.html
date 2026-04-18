@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block nav_links %}
+<a href="{% url 'UserHome' %}">HOME</a>
+<a href="{% url 'DatasetView' %}">DATASET</a>
+<a href="{% url 'Training' %}">TRAINING</a>
+<a href="{% url 'prediction' %}">PREDICTION</a>
+<a href="{% url 'CNNPrediction' %}">CNN DETECT</a>
+{% endblock %}
+{% block nav_btns %}
+<a href="{% url 'index' %}" class="nav-btn">LOGOUT</a>
+{% endblock %}
+{% block contents %}
+{% endblock %}
