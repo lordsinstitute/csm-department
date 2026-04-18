@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2a9d8f;
+            --secondary-color: #264653;
+            --accent-color: #e9c46a;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #4caf50;
+            --danger-color: #e76f51;
+            --logout-color: #e63946;
+            --weak-color: #ff5252;
+            --medium-color: #ffb74d;
+            --strong-color: #4caf50;
+            --info-color: #2196F3;
+            --warning-color: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--light-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            padding: 20px 0;
+            background-color: rgba(42, 157, 143, 0.9);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--light-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        .nav-btn {
+            background-color: transparent;
+            color: var(--light-color);
+            border: 2px solid var(--accent-color);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-btn i {
+            margin-right: 8px;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            background-color: var(--logout-color);
+            color: var(--light-color);
+            border: 2px solid var(--logout-color);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            margin-left: 30px;
+        }
+
+        .logout-btn:hover {
+            background-color: #d62839;
+            border-color: #d62839;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(230, 57, 70, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 60px 20px;
+            min-height: calc(100vh - 160px);
+            width: 100%;
+        }
+
+        .hero {
+            max-width: 800px;
+            margin-bottom: 50px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--light-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Messages Styling */
+        .messages {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .message {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .message i {
+            margin-right: 10px;
+        }
+
+        .message-success {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+
+        .message-error {
+            background-color: rgba(231, 111, 81, 0.9);
+            color: white;
+        }
+
+        .message-info {
+            background-color: rgba(33, 150, 243, 0.9);
+            color: white;
+        }
+
+        .message-warning {
+            background-color: rgba(255, 152, 0, 0.9);
+            color: white;
+        }
+
+        .close-message {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        /* Signup Form Styles */
+        .signup-form {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--light-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 3px rgba(233, 196, 106, 0.3);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .weak {
+            background-color: var(--weak-color);
+            width: 33%;
+        }
+
+        .medium {
+            background-color: var(--medium-color);
+            width: 66%;
+        }
+
+        .strong {
+            background-color: var(--strong-color);
+            width: 100%;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #21867a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 157, 143, 0.4);
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: rgba(38, 70, 83, 0.9);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .social-links a {
+            color: var(--light-color);
+            margin-left: 15px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 10px 15px;
+            }
+
+            .logout-btn {
+                margin-left: 15px;
+                margin-top: 10px;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .signup-form {
+                padding: 30px 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>Medical Chatbot</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{%url 'basefunction'%}" class="nav-btn"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{%url 'user_login'%}" class="nav-btn"><i class="fas fa-comment-medical"></i> Start Chat</a></li>
+                    <li><a href="{%url 'signup_view'%}" class="nav-btn"><i class="fas fa-user-plus"></i>Create
+                            Account</a></li>
+                    <li><a href="{%url 'adminlogin'%}" class="nav-btn"><i class="fas fa-lock"></i> Admin</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="hero">
+                <h2>USER Signup</h2>
+
+                <!-- Django Messages -->
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">
+                        <div>
+                            {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                            {% elif message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                            {% elif message.tags == 'info' %}
+                            <i class="fas fa-info-circle"></i>
+                            {% elif message.tags == 'warning' %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                        <button class="close-message" onclick="this.parentElement.style.display='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="signup-form">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="first_name">First Name</label>
+                                <input type="text" id="first_name" name="first_name" class="form-control"
+                                    placeholder="Enter first name" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="last_name">Last Name</label>
+                                <input type="text" id="last_name" name="last_name" class="form-control"
+                                    placeholder="Enter last name" required>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" class="form-control"
+                                    placeholder="Enter email address" required>
+                                {% if email_error %}<span class="error-message">{{ email_error }}</span>{% endif %}
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="mobile">Mobile Number</label>
+                                <input type="text" id="mobile" name="mobile" class="form-control"
+                                    placeholder="Enter mobile number" required>
+                                {% if mobile_error %}<span class="error-message">{{ mobile_error }}</span>{% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" class="form-control"
+                                    placeholder="Create password" required>
+                                <div class="password-strength">
+                                    <div class="strength-meter" id="strength-meter"></div>
+                                </div>
+                                <div class="strength-text" id="strength-text"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm_password">Confirm Password</label>
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                    class="form-control" placeholder="Confirm password" required>
+                                {% if password_error %}<span class="error-message">{{ password_error }}</span>{% endif%}
+                               
+                            </div>
+
+                            {% if error %}<div class="error-message full-width">{{ error }}</div>{% endif %}
+                            {% if success %}<div class="success-message full-width">{{ success }}</div>{% endif %}
+
+                            <div class="form-group full-width">
+                                <button type="submit" class="submit-btn">
+                                    <i class="fas fa-user-plus"></i> SIGN UP
+                                </button>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; Medical Chatbot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordInput = document.getElementById('password');
+            const strengthMeter = document.getElementById('strength-meter');
+            const strengthText = document.getElementById('strength-text');
+
+            passwordInput.addEventListener('input', function () {
+                const password = passwordInput.value;
+                const strength = calculatePasswordStrength(password);
+
+                updateStrengthMeter(strength);
+            });
+
+            function calculatePasswordStrength(password) {
+                let strength = 0;
+
+                // Length check
+                if (password.length >= 8) strength += 1;
+                if (password.length >= 12) strength += 1;
+
+                // Character variety
+                if (/[A-Z]/.test(password)) strength += 1; // Uppercase letters
+                if (/[a-z]/.test(password)) strength += 1; // Lowercase letters
+                if (/[0-9]/.test(password)) strength += 1; // Numbers
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1; // Special characters
+
+                return Math.min(strength, 5); // Cap at 5 for our meter
+            }
+
+            function updateStrengthMeter(strength) {
+                // Reset classes
+                strengthMeter.className = 'strength-meter';
+
+                if (strength <= 2) {
+                    strengthMeter.classList.add('weak');
+                    strengthText.textContent = 'Weak';
+                    strengthText.style.color = 'var(--weak-color)';
+                } else if (strength <= 3) {
+                    strengthMeter.classList.add('medium');
+                    strengthText.textContent = 'Medium';
+                    strengthText.style.color = 'var(--medium-color)';
+                } else {
+                    strengthMeter.classList.add('strong');
+                    strengthText.textContent = 'Strong';
+                    strengthText.style.color = 'var(--strong-color)';
+                }
+
+                // Show meter only if there's input
+                if (passwordInput.value.length > 0) {
+                    strengthMeter.style.display = 'block';
+                    strengthText.style.display = 'block';
+                } else {
+                    strengthMeter.style.display = 'none';
+                    strengthText.style.display = 'none';
+                }
+            }
+
+            // Auto-close messages after 5 seconds
+            setTimeout(function () {
+                const messages = document.querySelectorAll('.message');
+                messages.forEach(message => {
+                    message.style.transition = 'opacity 0.5s ease';
+                    message.style.opacity = '0';
+                    setTimeout(() => message.remove(), 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+
+</html>
