@@ -2,6 +2,9 @@
 
 SeaTreasure Detect is a Django-based underwater object detection platform for identifying sea cucumbers, sea urchins, and shells from uploaded images or live camera input. This repository contains the implementation for the project "Research on SeaTreasure Target Detection Technology Based on Improved YOLOv7-Tiny."
 
+#### 👥 Team Members:
+Mohammed Zufair Aslam – 160922748130
+
 ## Features
 
 - User login and profile management
