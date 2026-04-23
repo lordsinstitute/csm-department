@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load percent_filters %}
+
+{% block title %}Detection Results - RetinaDetect{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image-comparison {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .comparison-slider {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        width: 4px;
+        background: #007bff;
+        cursor: ew-resize;
+    }
+    .comparison-slider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40px;
+        height: 40px;
+        background: #007bff;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Detection Results</h2>
+            <div>
+                <a href="{% url 'detection:list' %}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Results
+                </a>
+                <a href="{% url 'reports:generate' %}?patient={{ result.retina_image.patient.id }}" class="btn btn-primary">
+                    <i class="fas fa-download me-2"></i>Generate Report
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="stat-number text-primary">{{ result.microaneurysms_count }}</div>
+                <div class="stat-label">Microaneurysms</div>
+                <i class="fas fa-dot-circle fa-2x text-muted mt-2"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="stat-number text-info">{{ result.lesion_area|floatformat:2 }}</div>
+                <div class="stat-label">Lesion Area (px²)</div>
+                <i class="fas fa-ruler-combined fa-2x text-muted mt-2"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="stat-number text-success">{{ result.confidence_score|to_percent|floatformat:2 }}%</div>
+                <div class="stat-label">Confidence Score</div>
+                <i class="fas fa-chart-line fa-2x text-muted mt-2"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="stat-number text-warning">{{ result.processing_time|floatformat:2 }}s</div>
+                <div class="stat-label">Processing Time</div>
+                <i class="fas fa-clock fa-2x text-muted mt-2"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Image Comparison -->
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-images me-2"></i>Image Comparison
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 text-center">
+                        <h6>Original Image</h6>
+                        <img src="{{ result.retina_image.original_image.url }}" 
+                             alt="Original" 
+                             class="img-fluid rounded shadow"
+                             style="max-height: 400px;">
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <h6>Processed Image</h6>
+                        {% if result.processed_image %}
+                        <img src="{{ result.processed_image.url }}" 
+                             alt="Processed" 
+                             class="img-fluid rounded shadow"
+                             style="max-height: 400px;">
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                Processed image showing detection results
+                            </small>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Processed image not available
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Patient Information -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-user me-2"></i>Patient Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ result.retina_image.patient.first_name }} {{ result.retina_image.patient.last_name }}</p>
+                <p><strong>Patient ID:</strong> {{ result.retina_image.patient.patient_id }}</p>
+                <p><strong>Image Uploaded:</strong> {{ result.retina_image.upload_date|date:"M d, Y H:i" }}</p>
+                <p><strong>Detection Date:</strong> {{ result.detection_date|date:"M d, Y H:i" }}</p>
+                
+                <hr>
+                <a href="{% url 'tracking:patient_progress' result.retina_image.patient.id %}" class="btn btn-outline-primary w-100">
+                    <i class="fas fa-chart-line me-2"></i>View Patient Progress
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Microaneurysms Details -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>Detected Microaneurysms
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if microaneurysms %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>X Coordinate</th>
+                                <th>Y Coordinate</th>
+                                <th>Diameter (px)</th>
+                                <th>Confidence</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ma in microaneurysms %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ ma.x_coordinate }}</td>
+                                <td>{{ ma.y_coordinate }}</td>
+                                <td>{{ ma.diameter|floatformat:2 }}</td>
+                                <td>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar {% if ma.confidence > 0.7 %}bg-success{% elif ma.confidence > 0.4 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                            style="width: {{ ma.confidence|to_percent|floatformat:2 }}%;">
+                                        </div>
+                                    </div>
+                                    <small>{{ ma.confidence|to_percent|floatformat:2 }}%</small>
+                                </td>
+                                <td>
+                                    {% if ma.confidence > 0.7 %}
+                                    <span class="badge bg-success">High</span>
+                                    {% elif ma.confidence > 0.4 %}
+                                    <span class="badge bg-warning">Medium</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Low</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5>No Microaneurysms Detected</h5>
+                    <p class="text-muted">The retina image appears to be clear of microaneurysms.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load percent_filters %}
+
+{% block title %}Detection Results - RetinaDetect{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Detection Results</h2>
+            <a href="{% url 'images:image_list' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Images
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-filter me-2"></i>Filters
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        {{ form.status|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.patient|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.date_from|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.date_to|as_crispy_field }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Apply Filters
+                        </button>
+                        <a href="{% url 'detection:list' %}" class="btn btn-outline-secondary">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list me-2"></i>All Detection Results
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if results %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Patient</th>
+                                <th>Image</th>
+                                <th>Detection Date</th>
+                                <th>Status</th>
+                                <th>Microaneurysms</th>
+                                <th>Confidence</th>
+                                <th>Processing Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>
+                                    <strong>{{ result.retina_image.patient.first_name }} {{ result.retina_image.patient.last_name }}</strong>
+                                    <br>
+                                    <small class="text-muted">ID: {{ result.retina_image.patient.patient_id }}</small>
+                                </td>
+                                <td>
+                                    <img src="{{ result.retina_image.original_image.url }}" 
+                                         alt="Retina Image" 
+                                         class="rounded"
+                                         style="width: 60px; height: 60px; object-fit: cover;">
+                                </td>
+                                <td>{{ result.detection_date|date:"M d, Y H:i" }}</td>
+                                <td>
+                                    {% if result.status == 'completed' %}
+                                    <span class="badge bg-success">Completed</span>
+                                    {% elif result.status == 'processing' %}
+                                    <span class="badge bg-warning">Processing</span>
+                                    {% elif result.status == 'failed' %}
+                                    <span class="badge bg-danger">Failed</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ result.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.status == 'completed' %}
+                                    <span class="badge bg-info">{{ result.microaneurysms_count }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.status == 'completed' %}
+                                    {{ result.confidence_score|to_percent|floatformat:2 }}%
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if result.status == 'completed' %}
+                                    {{ result.processing_time|floatformat:2 }}s
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        {% if result.status == 'completed' %}
+                                        <a href="{% url 'detection:result' result.pk %}" class="btn btn-outline-primary" title="View Results">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a href="{% url 'images:image_detail' result.retina_image.pk %}" class="btn btn-outline-secondary" title="View Image">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                    <h4>No Detection Results Found</h4>
+                    <p class="text-muted">No detection results match your current filters.</p>
+                    <a href="{% url 'images:image_list' %}" class="btn btn-primary">
+                        <i class="fas fa-upload me-2"></i>Upload Images to Get Started
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
