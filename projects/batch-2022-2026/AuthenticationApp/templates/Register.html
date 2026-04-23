@@ -1,0 +1,117 @@
+{% load static %}
+<html>
+<head>
+<title>Remote Data Access </title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
+ <script LANGUAGE="Javascript" >
+function validate(){
+	var x=document.forms["f1"]["username"].value;
+	var y=document.forms["f1"]["password"].value;
+	var c=document.forms["f1"]["contact"].value;
+	var e=document.forms["f1"]["email"].value;
+	var a=document.forms["f1"]["address"].value;
+	var z=document.forms["f1"]["finger"].value;
+	if(x == null || x==""){
+		window.alert("Username must be enter");
+		document.f1.username.focus();
+		return false;
+	}
+	if(y == null || y==""){
+		window.alert("Password must be enter");
+		document.f1.password.focus();
+		return false;
+	}
+	if(c == null || c==""){
+		window.alert("Contact No must be enter");
+		document.f1.contact.focus();
+		return false;
+	}
+	if(isNaN(c)){
+		window.alert("Please enter valid contact number");
+		document.f1.contact.focus();
+		return false;
+	}
+	if(e == null || e==""){
+		window.alert("Email ID must be enter");
+		document.f1.email.focus();
+		return false;
+	}
+	var filter = /^([a-zA-Z0-9_\.\-])+\@(gmail+\.)+(com)+$/;
+	if (!filter.test(e)) {
+		window.alert('enter a valid email address');
+		document.f1.email.focus();
+		return false;
+	}
+	if(a == null || a==""){
+		window.alert("Address must be enter");
+		document.f1.address.focus();
+		return false;
+	}
+	if(z == null || z==""){
+		window.alert("Biometric image must be enter");
+		document.f1.finger.focus();
+		return false;
+	}
+	return true;
+}
+		
+	
+	</script>
+</head>
+<body>
+<div id="wrapper">
+	<div id="header">
+		<div id="logo">
+			<center><font size="4" color="yellow">An Improved Authentication Scheme for Remote Data Access and Sharing Over Cloud Storage in Cyber-Physical-Social-Systems</font></center>
+		</div>
+		<div id="slogan">
+			
+		</div>
+	</div>
+	<div id="menu">
+		<ul><center>
+	  <li><a href="{% url 'index' %}">Home</a></li>
+	  <li><a href="{% url 'Login' %}">User Login</a></li>
+      <li><a href="{% url 'Register' %}">New User Signup Here</a></li>
+			
+		</center></ul>
+<br class="clearfix" />
+				</div>
+			
+	<div id="splash">
+		<img class="pic" src="{% static 'images/investor.jpg' %}" width="870" height="130" alt="" />
+	</div>	
+			<center>
+<form name="f1" method="post" action={% url 'Signup' %} enctype="multipart/form-data" OnSubmit="return validate()">
+	{% csrf_token %}<br/>
+   <h3><b>New User Signup Screen</b></h3>
+   
+	<font size="" color="black"><center>{{ data }}</center></font>
+						
+						<table align="center" width="80" >
+			 <tr><td><font size="3" color="black">Username</b></td><td><input type="text" name="username" style="font-family: Comic Sans MS" size="30"/></td></tr>
+         
+		  
+		<tr><td><font size="3" color="black">Password</b></td><td><input type="password" name="password" style="font-family: Comic Sans MS" size="30"/></td></tr>
+
+		
+		<tr><td><font size="3" color="black">Contact&nbsp;No</b></td><td><input type="text" name="contact" style="font-family: Comic Sans MS" size="20"/></td></tr>
+
+		<tr><td><font size="3" color="black">Email&nbsp;ID</b></td><td><input type="text" name="email" style="font-family: Comic Sans MS" size="40"/></td></tr>
+
+		<tr><td><font size="3" color="black">Address</b></td><td><input type="text" name="address" style="font-family: Comic Sans MS" size="60"/></td></tr>
+
+		<tr><td><font size="3" color="black">Browse&nbsp;Biometric&nbsp;Image</b></td><td><input type="file" name="finger" style="font-family: Comic Sans MS" size="30"/></td></tr>
+		
+		         
+			<tr><td></td><td><input type="submit" value="Register">
+			</td>
+			</table>
+			<br/><br/><br/><br/>
+				</div>	
+					
+				</div>
+				
+	</body>
+</html>
