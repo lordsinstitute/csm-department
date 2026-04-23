@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Cloud Security Anomaly Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 1.2rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li a {
+            color: #f8fafc;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+        }
+
+        .navbar ul li a:hover {
+            background-color: #fca5a5;
+            color: #7f1d1d;
+        }
+
+        .content-container {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar h1 {
+                margin-bottom: 0.8rem;
+                font-size: 1.5rem;
+            }
+            .navbar ul {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="navbar">
+        <h1><i class="fas fa-shield-alt"></i> Cloud Security AI</h1>
+        <ul>
+            <li><a href="{% url 'base' %}"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="{% url 'UserLoginCheck' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a></li>
+            <li><a href="{% url 'AdminLoginCheck' %}"><i class="fas fa-user-shield"></i> Admin</a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="content-container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

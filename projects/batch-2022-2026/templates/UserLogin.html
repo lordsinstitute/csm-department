@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .login-wrapper {
+        max-width: 420px;
+        margin: 4rem auto;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        padding: 2rem 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        color: #f8fafc;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .login-form h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .login-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #f8fafc;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 0.7rem;
+        margin-bottom: 1rem;
+        border: none;
+        border-radius: 10px;
+        background-color: #f1f5f9;
+        font-size: 1rem;
+        color: #1e293b;
+    }
+
+    .login-form button {
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(to right, #22c55e, #16a34a);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .login-form button:hover {
+        background: linear-gradient(to right, #16a34a, #15803d);
+        transform: scale(1.02);
+    }
+
+    .text-danger {
+        color: #f87171;
+        text-align: center;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media screen and (max-width: 600px) {
+        .login-wrapper {
+            margin: 2rem 1rem;
+            padding: 1.5rem;
+        }
+
+        .login-form h1 {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+    <form method="POST" action="{% url 'UserLoginCheck' %}" class="login-form">
+        <h1>👤 User Login</h1>
+        {% csrf_token %}
+
+        <label for="loginid">Login ID</label>
+        <input type="text" name="loginid" id="loginid" placeholder="Enter Login ID" required>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="Enter Password" required>
+
+        <button type="submit">🔐 Login</button>
+
+        {% if messages %}
+        <div class="text-danger">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}
