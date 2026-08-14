@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Machine Learning for Safety and Sustainability in Railway and Powerline Systems</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Additional Libraries -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .intro-section {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                        url('https://www.voestalpine.com/railway-systems/static/sites/railway-systems/.images/CU_Signaling_07_22.png_551917905.png') no-repeat center center;
+            background-size: cover;
+            padding: 80px 20px;
+            color: white;
+            text-align: center;
+        }
+        .intro-section h1 {
+            font-weight: 600;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .intro-section p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .navbar-brand {
+            font-family: 'Orbitron', sans-serif !important;
+            font-size: 20px !important;
+            font-weight: 700;
+            color: rgb(179, 232, 245) !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Optional Top Bar -->
+    <div class="top-bar d-none d-md-block">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6"><div class="top-bar-left"></div></div>
+                <div class="col-md-6"><div class="top-bar-right"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar navbar-expand-lg bg-dark navbar-dark py-3">
+        <div class="container-fluid">
+            <a href="#" class="navbar-brand mb-0">
+                Machine Learning for Safety and Sustainability in Railway and Powerline Systems
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a href="{% url 'AdminHome' %}" class="nav-item nav-link">Home</a>
+                    <a href="{% url 'RegisterUsersView' %}" class="nav-item nav-link">User Details</a>
+                    <a href="{% url 'index' %}" class="nav-item nav-link">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Intro Section -->
+    <div class="intro-section">
+        <h1>Empowering Railway and Powerline Systems</h1>
+        <p>
+            Leveraging Machine Learning to enhance safety and sustainability in critical infrastructure. 
+            Our platform integrates advanced AI to monitor, analyze, and optimize operations across rail and power networks.
+        </p>
+    </div>
+
+    <!-- Page Content -->
+    <main class="my-4">
+        {% block contents %}
+        {% endblock %}
+    </main>
+
+    <!-- JS Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/isotope/isotope.pkgd.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
+    <script src="{% static 'mail/jqBootstrapValidation.min.js' %}"></script>
+    <script src="{% static 'mail/contact.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

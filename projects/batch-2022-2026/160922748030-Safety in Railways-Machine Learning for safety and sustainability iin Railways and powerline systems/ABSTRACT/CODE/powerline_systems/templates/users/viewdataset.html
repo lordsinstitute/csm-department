@@ -1,0 +1,28 @@
+{% extends 'users/userbase.html' %}
+{% block contents %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('table').DataTable({
+            "pageLength": 50
+        });
+    });
+</script>
+
+<div class="section-header">
+    <h2 class="section-title wow fadeInDown" style="color: #a928c6;">Dataset view :</h2>
+    <p class="wow fadeInDown"></p>
+</div>
+
+<div class="row" style="margin:10px;">
+    <!-- Table to display the balanced dataset -->
+    <div>
+        <!-- Render the HTML table for the dataset -->
+        {{ data|safe }}
+    </div>
+</div>
+
+{% endblock %}

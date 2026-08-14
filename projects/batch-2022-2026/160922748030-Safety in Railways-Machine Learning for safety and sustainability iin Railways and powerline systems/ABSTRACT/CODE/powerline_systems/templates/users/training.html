@@ -1,0 +1,106 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block contents %}
+<section class="training-section full-screen d-flex justify-content-center align-items-center" id="training" style="min-height: 100vh; background-color: #f5f5f5;">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12 col-12">
+                <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h3 class="mb-0">Model Training Results</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Metrics Table -->
+                        <div class="metrics-table mb-5">
+                            <h5 class="text-center mb-4" style="color: #333;">Performance Metrics</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover mx-auto" style="max-width: 600px;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Metric</th>
+                                            <th scope="col">Value</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Train Accuracy</strong></td>
+                                            <td>{{ train_acc|floatformat:2 }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Test Accuracy</strong></td>
+                                            <td>{{ test_acc|floatformat:2 }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Train Loss</strong></td>
+                                            <td>{{ train_loss|floatformat:2 }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Test Loss</strong></td>
+                                            <td>{{ test_loss|floatformat:2 }}</td>
+                                        </tr>
+                                        {% if roc_auc %}
+                                        <tr>
+                                            <td><strong>ROC AUC</strong></td>
+                                            <td>{{ roc_auc|floatformat:2 }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Graphs Section -->
+                        <div class="graphs-section">
+                            <h5 class="text-center mb-4" style="color: #333;">Training Visualizations</h5>
+                            <div class="row">
+                                <!-- Accuracy Plot -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-body p-3">
+                                            <h6 class="text-center mb-3">Accuracy Plot</h6>
+                                            <img src="{{ accuracy_plot }}" alt="Accuracy Plot" class="img-fluid" style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Loss Plot -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-body p-3">
+                                            <h6 class="text-center mb-3">Loss Plot</h6>
+                                            <img src="{{ loss_plot }}" alt="Loss Plot" class="img-fluid" style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ROC Curve (if available) -->
+                                {% if roc_plot %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-body p-3">
+                                            <h6 class="text-center mb-3">ROC Curve</h6>
+                                            <img src="{{ roc_plot }}" alt="ROC Curve" class="img-fluid" style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Confusion Matrix -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-body p-3">
+                                            <h6 class="text-center mb-3">Confusion Matrix</h6>
+                                            <img src="{{ confusion_matrix }}" alt="Confusion Matrix" class="img-fluid" style="border-radius: 8px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

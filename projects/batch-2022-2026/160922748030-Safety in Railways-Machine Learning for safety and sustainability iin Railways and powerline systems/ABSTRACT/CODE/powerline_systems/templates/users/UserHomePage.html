@@ -1,0 +1,54 @@
+{% extends 'users/userbase.html' %}
+{% block contents %}
+
+<section class="py-5" style="background: linear-gradient(to right, #e0eafc, #cfdef3); min-height: 90vh;">
+  <div class="container text-center">
+    <h2 class="mb-4 text-danger fw-bold animate__animated animate__fadeInDown">Welcome to the User Home Page</h2>
+    <p class="lead mb-5 text-muted">Empowering safety and sustainability through Machine Learning in Railway and Powerline Systems.</p>
+
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-bold">Railway Safety Monitoring</h5>
+            <p class="card-text text-muted">Real-time data-driven insights to detect faults, signal issues, and optimize operations to prevent accidents.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-bold">Powerline Failure Detection</h5>
+            <p class="card-text text-muted">Use of ML algorithms to monitor power lines and forecast potential failures ensuring uninterrupted power supply.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-bold">Predictive Maintenance</h5>
+            <p class="card-text text-muted">Machine learning models help in early prediction of equipment failures in both railways and powerlines.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card shadow-sm h-100 border-0">
+          <div class="card-body">
+            <h5 class="card-title text-primary fw-bold">Environmental Sustainability</h5>
+            <p class="card-text text-muted">Optimize resource consumption and minimize environmental impact using smart algorithms.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <a href="{% url 'UserRegisterActions' %}" class="btn btn-outline-primary btn-lg me-3">Register New User</a>
+      <a href="{% url 'UserHome' %}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

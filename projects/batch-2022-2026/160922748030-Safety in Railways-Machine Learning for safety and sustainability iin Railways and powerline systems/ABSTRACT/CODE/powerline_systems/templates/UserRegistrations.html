@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+
+<section class="d-flex align-items-center justify-content-center" 
+         style="min-height: 100vh; 
+                background-image: url('https://www.voestalpine.com/railway-systems/static/sites/railway-systems/.images/CU_Signaling_07_22.png_551917905.png'); 
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+                <div class="card shadow-lg border-0 rounded-4 p-4" style="background-color: rgba(255, 255, 255, 0.95);">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-primary">User Registration Form</h3>
+                        <p class="text-muted small">Fill in the details to register</p>
+                    </div>
+                    <form action="{% url 'UserRegisterActions' %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="row g-3">
+                            <!-- Name -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">User Name</label>
+                                <div class="col-8">
+                                    {{ form.name }}
+                                </div>
+                            </div>
+
+                            <!-- Login ID -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Login ID</label>
+                                <div class="col-8">
+                                    {{ form.loginid }}
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Password</label>
+                                <div class="col-8">
+                                    {{ form.password }}
+                                </div>
+                            </div>
+
+                            <!-- Mobile -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Mobile</label>
+                                <div class="col-8">
+                                    {{ form.mobile }}
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Email</label>
+                                <div class="col-8">
+                                    {{ form.email }}
+                                </div>
+                            </div>
+
+                            <!-- Locality -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Locality</label>
+                                <div class="col-8">
+                                    {{ form.locality }}
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Address</label>
+                                <div class="col-8">
+                                    {{ form.address }}
+                                </div>
+                            </div>
+
+                            <!-- City -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">City</label>
+                                <div class="col-8">
+                                    {{ form.city }}
+                                </div>
+                            </div>
+
+                            <!-- State -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">State</label>
+                                <div class="col-8">
+                                    {{ form.state }}
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-12 d-flex align-items-center">
+                                <label class="col-4 col-form-label fw-semibold text-end pe-3">Status</label>
+                                <div class="col-8">
+                                    {{ form.status }}
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12 mt-3 d-grid">
+                                <button type="submit" class="btn btn-primary py-2 fw-semibold">
+                                    <i class="bi bi-person-plus-fill me-2"></i>Register
+                                </button>
+                            </div>
+
+                            {% if messages %}
+                                <div class="col-12 mt-3 text-danger small">
+                                    {% for message in messages %}
+                                        <p>{{ message }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
