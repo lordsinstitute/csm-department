@@ -1,0 +1,67 @@
+{% extends "partials/base.html" %}
+{% block auth_content %}
+<div style="min-height:100vh; background: linear-gradient(135deg, #0a1628 0%, #0d47a1 50%, #0a1628 100%); display:flex; align-items:center; justify-content:center; padding: 20px;">
+    
+    <!-- Animated background dots -->
+    <div style="position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0;">
+        {% for i in "123456" %}
+        <div style="position:absolute; border-radius:50%; background:rgba(0,188,212,0.08); animation: float{{ i }} 8s ease-in-out infinite;
+            width:{{ forloop.counter|add:'80' }}px; height:{{ forloop.counter|add:'80' }}px;
+            top:{{ forloop.counter0|add:'10' }}0%; left:{{ forloop.counter|add:'10' }}0%;"></div>
+        {% endfor %}
+    </div>
+
+    <div style="width:100%; max-width:440px; position:relative; z-index:1;">
+        <!-- Logo -->
+        <div class="text-center mb-4">
+            <div style="width:72px; height:72px; background:linear-gradient(135deg,#00bcd4,#0288d1); border-radius:18px; display:inline-flex; align-items:center; justify-content:center; font-size:34px; color:white; box-shadow:0 8px 32px rgba(0,188,212,0.4);">
+                <i class="bi bi-shield-fill-check"></i>
+            </div>
+            <h3 style="color:white; font-weight:800; margin-top:16px; font-size:22px;">NPP CyberSec Platform</h3>
+            <p style="color:rgba(255,255,255,0.6); font-size:13px;">Nuclear Power Plant Cybersecurity Assessment</p>
+        </div>
+
+        <!-- Card -->
+        <div style="background:rgba(255,255,255,0.97); border-radius:20px; padding:36px; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+            <h5 style="font-weight:700; color:#0d47a1; margin-bottom:6px;">Secure Login</h5>
+            <p style="color:#888; font-size:13px; margin-bottom:24px;">Authorized personnel only</p>
+            
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} py-2" style="font-size:13px;">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label style="font-size:13px; font-weight:600; color:#444; margin-bottom:6px;">Username</label>
+                    <div style="position:relative;">
+                        <i class="bi bi-person-fill" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa;"></i>
+                        <input type="text" name="username" class="form-control ps-4" placeholder="Enter username" style="border-radius:10px; border:1.5px solid #e0e7ef; padding:10px 12px 10px 36px; font-size:14px;">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label style="font-size:13px; font-weight:600; color:#444; margin-bottom:6px;">Password</label>
+                    <div style="position:relative;">
+                        <i class="bi bi-lock-fill" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#aaa;"></i>
+                        <input type="password" name="password" class="form-control ps-4" placeholder="Enter password" style="border-radius:10px; border:1.5px solid #e0e7ef; padding:10px 12px 10px 36px; font-size:14px;">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2" style="border-radius:10px; font-weight:600; font-size:15px; background:linear-gradient(135deg,#0d47a1,#1976d2); border:none;">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login Securely
+                </button>
+            </form>
+            
+            <div style="margin-top:20px; padding-top:16px; border-top:1px solid #f0f4f8; text-align:center;">
+                <p style="font-size:11px; color:#aaa; margin:0;">
+                    <i class="bi bi-lock-fill me-1"></i>
+                    All access is monitored and logged | NEI 13-10 Compliant
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

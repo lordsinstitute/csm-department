@@ -1,0 +1,100 @@
+{% extends "partials/base.html" %}
+{% block title %}Asset Risk Overview{% endblock %}
+{% block page_title %}<i class="bi bi-hdd-network-fill me-2"></i>Asset Risk Overview{% endblock %}
+{% block content %}
+
+<div class="card">
+    <div class="card-body p-4">
+        <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">
+            <i class="bi bi-shield-exclamation me-2 text-primary"></i>
+            Risk Levels per Plant Asset & Control Systems
+        </h6>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Type</th>
+                        <th>Criticality</th>
+                        <th>Risk Score</th>
+                        <th>Risk Level</th>
+                        <th>Active Threats</th>
+                        <th>Unpatched Vulns</th>
+                        <th>Last Assessed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in asset_data %}
+                    <tr>
+                        <td>
+                            <div style="font-weight:600; font-size:13.5px; color:#1a3a5c;">
+                                {{ item.asset.name }}
+                            </div>
+                            <div style="font-size:11px; color:#aaa;">{{ item.asset.location }}</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary rounded-pill px-3" style="font-size:11px;">
+                                {{ item.asset.get_asset_type_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ item.asset.criticality }} rounded-pill px-3">
+                                {{ item.asset.criticality|upper }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if item.assessment %}
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:18px; font-weight:800;
+                                    color:{% if item.assessment.risk_level == 'critical' %}#d32f2f
+                                    {% elif item.assessment.risk_level == 'high' %}#f57c00
+                                    {% elif item.assessment.risk_level == 'medium' %}#fbc02d
+                                    {% else %}#388e3c{% endif %};">
+                                    {{ item.assessment.overall_risk_score }}
+                                </span>
+                                <div class="progress flex-grow-1" style="height:6px; width:70px;">
+                                    <div class="progress-bar" style="
+                                        width:{{ item.assessment.overall_risk_score }}0%;
+                                        background:{% if item.assessment.risk_level == 'critical' %}#d32f2f
+                                        {% elif item.assessment.risk_level == 'high' %}#f57c00
+                                        {% elif item.assessment.risk_level == 'medium' %}#fbc02d
+                                        {% else %}#388e3c{% endif %};">
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <span style="color:#aaa; font-size:12px;">Not assessed</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.assessment %}
+                            <span class="badge badge-{{ item.assessment.risk_level }} rounded-pill px-3">
+                                {{ item.assessment.risk_level|upper }}
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary rounded-pill px-3">UNKNOWN</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span style="font-weight:700; color:{% if item.active_threats > 0 %}#d32f2f{% else %}#388e3c{% endif %};">
+                                {{ item.active_threats }}
+                            </span>
+                        </td>
+                        <td>
+                            <span style="font-weight:700; color:{% if item.unpatched_vulns > 0 %}#f57c00{% else %}#388e3c{% endif %};">
+                                {{ item.unpatched_vulns }}
+                            </span>
+                        </td>
+                        <td style="font-size:12px; color:#888;">
+                            {% if item.assessment %}
+                                {{ item.assessment.assessment_date|date:"M d, Y" }}
+                            {% else %}—{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

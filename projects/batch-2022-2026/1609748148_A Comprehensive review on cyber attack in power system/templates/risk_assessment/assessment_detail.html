@@ -1,0 +1,105 @@
+{% extends "partials/base.html" %}
+{% block title %}Assessment Detail{% endblock %}
+{% block page_title %}<i class="bi bi-clipboard-data-fill me-2"></i>Assessment Detail{% endblock %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 style="font-weight:700; color:#1a3a5c;">{{ assessment.title }}</h5>
+                <div class="row g-3 mt-2">
+                    <div class="col-md-4">
+                        <div style="background:#f0f4ff; border-radius:10px; padding:14px; text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase; margin-bottom:4px;">Confidentiality</div>
+                            <div style="font-size:26px; font-weight:800; color:#0d47a1;">{{ assessment.confidentiality_score }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="background:#f0f4ff; border-radius:10px; padding:14px; text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase; margin-bottom:4px;">Integrity</div>
+                            <div style="font-size:26px; font-weight:800; color:#0d47a1;">{{ assessment.integrity_score }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="background:#f0f4ff; border-radius:10px; padding:14px; text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase; margin-bottom:4px;">Availability</div>
+                            <div style="font-size:26px; font-weight:800; color:#0d47a1;">{{ assessment.availability_score }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="background:#fff3e0; border-radius:10px; padding:14px; text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase; margin-bottom:4px;">Threat Likelihood</div>
+                            <div style="font-size:26px; font-weight:800; color:#f57c00;">{{ assessment.threat_likelihood }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="background:#fff3e0; border-radius:10px; padding:14px; text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase; margin-bottom:4px;">Vulnerability Factor</div>
+                            <div style="font-size:26px; font-weight:800; color:#f57c00;">{{ assessment.vulnerability_factor }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="background:#e8f5e9; border-radius:10px; padding:14px; text-align:center;">
+                            <div style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase; margin-bottom:4px;">Control Effectiveness</div>
+                            <div style="font-size:26px; font-weight:800; color:#388e3c;">{{ assessment.control_effectiveness }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if assessment.notes %}
+                <div class="mt-4">
+                    <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Notes</label>
+                    <p style="margin-top:6px;">{{ assessment.notes }}</p>
+                </div>
+                {% endif %}
+
+                <a href="{% url 'risk_assessment:list' %}" class="btn btn-outline-secondary mt-4">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Assessments
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-body p-4 text-center">
+                <h6 style="font-weight:700; color:#1a3a5c;">Overall Risk Score</h6>
+                <div style="font-size:72px; font-weight:900; line-height:1; margin: 16px 0;
+                    color:{% if assessment.risk_level == 'critical' %}#d32f2f{% elif assessment.risk_level == 'high' %}#f57c00{% elif assessment.risk_level == 'medium' %}#fbc02d{% else %}#388e3c{% endif %};">
+                    {{ assessment.overall_risk_score }}
+                </div>
+                <span class="badge px-4 py-2" style="font-size:14px; border-radius:30px;
+                    background:{% if assessment.risk_level == 'critical' %}#d32f2f{% elif assessment.risk_level == 'high' %}#f57c00{% elif assessment.risk_level == 'medium' %}#fbc02d{% else %}#388e3c{% endif %};
+                    color:{% if assessment.risk_level == 'medium' %}#333{% else %}white{% endif %};">
+                    {{ assessment.risk_level|upper }}
+                </span>
+                <div class="progress mt-3" style="height:10px; border-radius:30px;">
+                    <div class="progress-bar" style="width:{{ assessment.overall_risk_score }}0%;
+                        background:{% if assessment.risk_level == 'critical' %}#d32f2f{% elif assessment.risk_level == 'high' %}#f57c00{% elif assessment.risk_level == 'medium' %}#fbc02d{% else %}#388e3c{% endif %};">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">Assessment Info</h6>
+                <div style="font-size:13px; line-height:2.2; color:#555;">
+                    <div><strong>Asset:</strong> {{ assessment.asset.name }}</div>
+                    <div><strong>Asset Type:</strong> {{ assessment.asset.get_asset_type_display }}</div>
+                    <div><strong>Criticality:</strong>
+                        <span class="badge badge-{{ assessment.asset.criticality }} rounded-pill px-2 ms-1">
+                            {{ assessment.asset.criticality|upper }}
+                        </span>
+                    </div>
+                    <div><strong>Assessed By:</strong> {{ assessment.assessed_by }}</div>
+                    <div><strong>Date:</strong> {{ assessment.assessment_date|date:"M d, Y H:i" }}</div>
+                    <div><strong>Status:</strong>
+                        <span class="badge bg-success rounded-pill px-2 ms-1">{{ assessment.status|upper }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

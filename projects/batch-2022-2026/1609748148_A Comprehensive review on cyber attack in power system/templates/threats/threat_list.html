@@ -1,0 +1,115 @@
+{% extends "partials/base.html" %}
+{% block title %}Threats - NPP CyberSec{% endblock %}
+{% block page_title %}<i class="bi bi-exclamation-triangle-fill me-2"></i>Cyber Threats{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card bg-gradient-blue">
+            <div class="stat-icon mb-1"><i class="bi bi-list-ul"></i></div>
+            <div class="stat-number">{{ total_threats }}</div>
+            <div class="stat-label">Total Threats</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-gradient-red">
+            <div class="stat-icon mb-1"><i class="bi bi-fire"></i></div>
+            <div class="stat-number">{{ critical_threats }}</div>
+            <div class="stat-label">Critical</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-gradient-orange">
+            <div class="stat-icon mb-1"><i class="bi bi-activity"></i></div>
+            <div class="stat-number">{{ active_threats }}</div>
+            <div class="stat-label">Active</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-gradient-green">
+            <div class="stat-icon mb-1"><i class="bi bi-check-circle-fill"></i></div>
+            <div class="stat-number">{{ total_threats|add:"-"|add:active_threats }}</div>
+            <div class="stat-label">Mitigated</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h6 style="font-weight:700; color:#1a3a5c; margin:0;">All Threats</h6>
+            <div class="d-flex gap-2 flex-wrap">
+                <form method="get" class="d-flex gap-2">
+                    <select name="severity" class="form-select form-select-sm" style="width:130px; border-radius:8px;">
+                        <option value="">All Severity</option>
+                        <option value="critical" {% if severity_filter == 'critical' %}selected{% endif %}>Critical</option>
+                        <option value="high" {% if severity_filter == 'high' %}selected{% endif %}>High</option>
+                        <option value="medium" {% if severity_filter == 'medium' %}selected{% endif %}>Medium</option>
+                        <option value="low" {% if severity_filter == 'low' %}selected{% endif %}>Low</option>
+                    </select>
+                    <select name="status" class="form-select form-select-sm" style="width:130px; border-radius:8px;">
+                        <option value="">All Status</option>
+                        <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                        <option value="mitigated" {% if status_filter == 'mitigated' %}selected{% endif %}>Mitigated</option>
+                        <option value="monitoring" {% if status_filter == 'monitoring' %}selected{% endif %}>Monitoring</option>
+                        <option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolved</option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+                    <a href="{% url 'threats:list' %}" class="btn btn-sm btn-outline-secondary">Reset</a>
+                </form>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Threat Title</th>
+                        <th>Category</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Risk Score</th>
+                        <th>Detected</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for threat in threats %}
+                    <tr>
+                        <td style="color:#aaa; font-size:12px;">{{ forloop.counter }}</td>
+                        <td>
+                            <div style="font-weight:600; color:#1a3a5c; font-size:13.5px;">{{ threat.title }}</div>
+                            <div style="font-size:11px; color:#aaa;">{{ threat.attack_vector }}</div>
+                        </td>
+                        <td style="font-size:13px; color:#555;">{{ threat.category.name|default:"N/A" }}</td>
+                        <td><span class="badge badge-{{ threat.severity }} rounded-pill px-3">{{ threat.severity|upper }}</span></td>
+                        <td>
+                            <span class="badge rounded-pill px-3" style="background:{% if threat.status == 'active' %}#d32f2f{% elif threat.status == 'mitigated' %}#388e3c{% elif threat.status == 'monitoring' %}#1976d2{% else %}#757575{% endif %}; color:white;">
+                                {{ threat.status|upper }}
+                            </span>
+                        </td>
+                        <td>
+                            <span style="font-weight:700; font-size:15px; color:{% if threat.risk_score >= 7 %}#d32f2f{% elif threat.risk_score >= 4 %}#f57c00{% else %}#388e3c{% endif %};">
+                                {{ threat.risk_score }}
+                            </span>
+                        </td>
+                        <td style="font-size:12px; color:#888;">{{ threat.detected_date|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'threats:detail' threat.pk %}" class="btn btn-sm btn-outline-primary" style="border-radius:6px;">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="8" class="text-center text-muted py-5">
+                        <i class="bi bi-shield-check" style="font-size:40px; opacity:0.2;"></i>
+                        <p style="margin-top:10px;">No threats found</p>
+                    </td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

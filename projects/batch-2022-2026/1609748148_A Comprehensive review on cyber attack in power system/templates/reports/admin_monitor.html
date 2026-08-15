@@ -1,0 +1,199 @@
+{% extends "partials/base.html" %}
+{% block title %}System Monitor{% endblock %}
+{% block page_title %}<i class="bi bi-speedometer2 me-2"></i>System-Wide Monitor{% endblock %}
+
+{% block content %}
+<!-- System Health Stats -->
+<div class="row g-3 mb-4">
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="stat-card bg-gradient-blue">
+            <div class="stat-icon mb-1"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-number">{{ active_users }}/{{ total_users }}</div>
+            <div class="stat-label">Active Users</div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="stat-card bg-gradient-teal">
+            <div class="stat-icon mb-1"><i class="bi bi-hdd-network-fill"></i></div>
+            <div class="stat-number">{{ total_assets }}</div>
+            <div class="stat-label">Total Assets</div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="stat-card bg-gradient-red">
+            <div class="stat-icon mb-1"><i class="bi bi-fire"></i></div>
+            <div class="stat-number">{{ active_threats }}</div>
+            <div class="stat-label">Active Threats</div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="stat-card bg-gradient-orange">
+            <div class="stat-icon mb-1"><i class="bi bi-bug-fill"></i></div>
+            <div class="stat-number">{{ unpatched_vulns }}</div>
+            <div class="stat-label">Unpatched Vulns</div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="stat-card bg-gradient-green">
+            <div class="stat-icon mb-1"><i class="bi bi-shield-check"></i></div>
+            <div class="stat-number">{{ compliance_rate }}%</div>
+            <div class="stat-label">Control Compliance</div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-4 col-6">
+        <div class="stat-card bg-gradient-purple">
+            <div class="stat-icon mb-1"><i class="bi bi-graph-up-arrow"></i></div>
+            <div class="stat-number">{{ avg_risk_score }}</div>
+            <div class="stat-label">Avg Risk Score</div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">
+                    <i class="bi bi-pie-chart-fill me-2 text-danger"></i>Threat Severity Breakdown
+                </h6>
+                <div style="height:250px; display:flex; align-items:center; justify-content:center;">
+                    <canvas id="threatChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">
+                    <i class="bi bi-bar-chart-fill me-2 text-success"></i>NEI 13-10 Compliance Status
+                </h6>
+                <div style="height:250px; display:flex; align-items:center; justify-content:center;">
+                    <canvas id="complianceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Critical Assets + Recent Assessments -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">
+                    <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i>Critical Risk Assets
+                </h6>
+                {% for a in critical_assets %}
+                <div style="background:#fff3f3; border-radius:10px; padding:12px 14px; margin-bottom:8px; border-left:4px solid #d32f2f;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:600; font-size:13px; color:#1a3a5c;">{{ a.asset.name }}</div>
+                            <div style="font-size:11px; color:#888;">{{ a.asset.get_asset_type_display }} · {{ a.assessment_date|date:"M d, Y" }}</div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:22px; font-weight:800; color:#d32f2f; line-height:1;">{{ a.overall_risk_score }}</div>
+                            <span class="badge badge-critical" style="font-size:10px;">CRITICAL</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center py-4" style="font-size:13px;">No critical risk assets</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">
+                    <i class="bi bi-clipboard-data-fill me-2 text-primary"></i>Recent TAM Assessments
+                </h6>
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr><th>Asset</th><th>Risk Level</th><th>Score</th><th>By</th><th>Date</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for a in recent_assessments %}
+                            <tr>
+                                <td style="font-weight:500; font-size:13px;">{{ a.asset.name|truncatechars:22 }}</td>
+                                <td><span class="badge badge-{{ a.risk_level }} rounded-pill px-2" style="font-size:11px;">{{ a.risk_level|upper }}</span></td>
+                                <td style="font-weight:700; font-size:15px;
+                                    color:{% if a.risk_level == 'critical' %}#d32f2f{% elif a.risk_level == 'high' %}#f57c00{% else %}#388e3c{% endif %};">
+                                    {{ a.overall_risk_score }}
+                                </td>
+                                <td style="font-size:12px; color:#888;">{{ a.assessed_by }}</td>
+                                <td style="font-size:12px; color:#888;">{{ a.assessment_date|date:"M d, Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="card">
+    <div class="card-body p-4">
+        <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">
+            <i class="bi bi-tools me-2 text-primary"></i>Admin Actions
+        </h6>
+        <div class="d-flex flex-wrap gap-3">
+            <a href="{% url 'reports:generate_pdf' %}" class="btn btn-primary">
+                <i class="bi bi-file-earmark-pdf-fill me-2"></i>Download Compliance Report
+            </a>
+            <a href="{% url 'risk_assessment:run' %}" class="btn btn-warning text-white">
+                <i class="bi bi-play-fill me-2"></i>Run New TAM Assessment
+            </a>
+            <a href="{% url 'security_controls:list' %}" class="btn btn-success">
+                <i class="bi bi-shield-lock-fill me-2"></i>Manage Controls
+            </a>
+            <a href="{% url 'security_controls:policy_list' %}" class="btn btn-info text-white">
+                <i class="bi bi-file-text-fill me-2"></i>Manage Policies
+            </a>
+            <a href="{% url 'user_management:list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-people-fill me-2"></i>Manage Users
+            </a>
+            <a href="{% url 'resource_allocation:list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-diagram-3-fill me-2"></i>Resource Allocation
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const thr = {{ threat_by_severity|safe }};
+const comp = {{ control_compliance|safe }};
+
+new Chart(document.getElementById('threatChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Critical','High','Medium','Low'],
+        datasets: [{ data: [thr.critical,thr.high,thr.medium,thr.low],
+            backgroundColor: ['#d32f2f','#f57c00','#fbc02d','#388e3c'],
+            borderWidth: 0, hoverOffset: 8 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'65%',
+        plugins: { legend: { position:'bottom', labels: { padding:14, font:{size:12} } } } }
+});
+
+new Chart(document.getElementById('complianceChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Implemented','Partial','Planned','Not Implemented'],
+        datasets: [{ data: [comp.implemented,comp.partial,comp.planned,comp.not_implemented],
+            backgroundColor: ['#2e7d32','#f57c00','#1976d2','#d32f2f'],
+            borderRadius: 8, borderSkipped: false }]
+    },
+    options: { responsive:true, maintainAspectRatio:false,
+        plugins: { legend:{display:false} },
+        scales: { y:{beginAtZero:true,grid:{color:'#f0f4f8'}}, x:{grid:{display:false}} } }
+});
+</script>
+{% endblock %}
