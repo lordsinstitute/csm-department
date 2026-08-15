@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Model Performance - Admin{% endblock %}
+{% block page_title %}Model Performance Analysis{% endblock %}
+
+{% block content %}
+<div class="section-heading">
+  <h2><i class="bi bi-graph-up-arrow me-2 text-accent"></i>Model Performance</h2>
+  <a href="/admin/detection/modelmetrics/add/" class="btn-ocean btn btn-sm">
+    <i class="bi bi-plus-lg me-1"></i>Add Metrics
+  </a>
+</div>
+
+{% if metrics_list %}
+{% for m in metrics_list %}
+<div class="glass-card p-4 mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h5 class="fw-bold mb-1">{{ m.model_name }} <span class="badge-status badge-completed ms-2">v{{ m.model_version }}</span></h5>
+      {% if m.dataset_name %}<small class="text-ocean">Dataset: {{ m.dataset_name }}</small>{% endif %}
+    </div>
+    <div class="text-ocean" style="font-size:.8rem;">{{ m.created_at|date:"M d, Y" }}</div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-sm-6 col-md-3">
+      <div class="text-center p-3" style="background:rgba(0,212,170,0.06);border-radius:12px;">
+        <div class="fw-bold" style="font-size:2rem;color:var(--accent);">{{ m.map50|floatformat:3|default:"—" }}</div>
+        <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">mAP@0.5</div>
+        {% if m.map50 %}
+        <div class="ocean-progress mt-2"><div class="ocean-progress-bar" style="width:{{ m.map50|floatformat:0 }}%;"></div></div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="text-center p-3" style="background:rgba(13,110,253,0.06);border-radius:12px;">
+        <div class="fw-bold" style="font-size:2rem;color:var(--primary);">{{ m.precision|floatformat:3|default:"—" }}</div>
+        <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Precision</div>
+        {% if m.precision %}
+        <div class="ocean-progress mt-2"><div class="ocean-progress-bar" style="width:{{ m.precision|floatformat:0 }}%;background:linear-gradient(90deg,#0d6efd,#6ea8fe);"></div></div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="text-center p-3" style="background:rgba(255,193,7,0.06);border-radius:12px;">
+        <div class="fw-bold" style="font-size:2rem;color:var(--warning);">{{ m.recall|floatformat:3|default:"—" }}</div>
+        <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Recall</div>
+        {% if m.recall %}
+        <div class="ocean-progress mt-2"><div class="ocean-progress-bar" style="width:{{ m.recall|floatformat:0 }}%;background:linear-gradient(90deg,#ffc107,#ffd966);"></div></div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="text-center p-3" style="background:rgba(239,68,68,0.06);border-radius:12px;">
+        <div class="fw-bold" style="font-size:2rem;color:#f87171;">{{ m.f1_score|floatformat:3|default:"—" }}</div>
+        <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">F1 Score</div>
+        {% if m.f1_score %}
+        <div class="ocean-progress mt-2"><div class="ocean-progress-bar" style="width:{{ m.f1_score|floatformat:0 }}%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-ocean">Avg Inference Time</span>
+        <span class="text-accent fw-semibold">{{ m.avg_inference_time_ms|floatformat:1|default:"—" }} ms</span>
+      </div>
+      <div class="divider" style="margin:.5rem 0;"></div>
+    </div>
+    <div class="col-md-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-ocean">GFLOPs</span>
+        <span class="text-accent fw-semibold">{{ m.gflops|default:"—" }}</span>
+      </div>
+      <div class="divider" style="margin:.5rem 0;"></div>
+    </div>
+    <div class="col-md-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-ocean">Parameters</span>
+        <span class="text-accent fw-semibold">{{ m.parameters_m|default:"—" }} M</span>
+      </div>
+      <div class="divider" style="margin:.5rem 0;"></div>
+    </div>
+    {% if m.training_epochs %}
+    <div class="col-md-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-ocean">Training Epochs</span>
+        <span class="fw-semibold">{{ m.training_epochs }}</span>
+      </div>
+    </div>
+    {% endif %}
+    {% if m.notes %}
+    <div class="col-12">
+      <div class="p-3" style="background:rgba(0,0,0,0.2);border-radius:10px;font-size:.88rem;color:var(--text-secondary);">
+        {{ m.notes }}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="glass-card p-5 text-center">
+  <i class="bi bi-bar-chart" style="font-size:3rem;color:var(--text-secondary);opacity:.4;"></i>
+  <p class="text-ocean mt-3">No model metrics recorded yet.</p>
+  <a href="/admin/detection/modelmetrics/add/" class="btn-ocean btn btn-sm mt-2">
+    <i class="bi bi-plus-lg me-1"></i>Add First Metrics
+  </a>
+</div>
+{% endif %}
+{% endblock %}

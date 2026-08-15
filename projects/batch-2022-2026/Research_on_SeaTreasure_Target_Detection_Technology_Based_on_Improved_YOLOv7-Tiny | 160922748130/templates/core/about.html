@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}About - Sea Treasure Detection{% endblock %}
+{% block page_title %}About The Project{% endblock %}
+
+{% block content %}
+<!-- HEADER SECTION -->
+<div class="row mb-5 justify-content-center">
+  <div class="col-lg-10 text-center">
+    <div class="glass-card mb-4 p-5 text-center position-relative overflow-hidden" style="background:linear-gradient(135deg,rgba(13,110,253,0.1),rgba(0,212,170,0.05));border-color:var(--primary);">
+      <div class="nav-logo-icon mx-auto mb-3" style="width:64px;height:64px;font-size:2rem;background:linear-gradient(135deg,#0d6efd,#00d4aa);border-radius:18px;">🐚</div>
+      <h2 class="fw-bold mb-3"><i class="bi bi-info-circle me-3 text-accent d-none"></i>About SeaTreasure AI</h2>
+      <p class="text-ocean mb-0 fs-5 pb-2" style="max-width:800px;margin:0 auto;line-height:1.6;">
+        An advanced underwater sea treasure detection platform powered by an improved <span class="fw-bold text-accent">UPA-YOLOv7-Tiny</span> deep learning architectue.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-5 justify-content-center">
+  <!-- LEFT COLUMN -->
+  <div class="col-lg-5">
+    <div class="glass-card p-4 mb-4">
+      <h4 class="fw-bold mb-3 border-bottom border-secondary pb-3"><i class="bi bi-bullseye me-2 text-accent"></i>Mission</h4>
+      <p class="text-ocean" style="line-height:1.7;">
+        The primary goal of this project is to provide a highly accurate, real-time object detection system for underwater environments. Detecting marine resources like <strong class="text-primary">sea cucumbers, sea urchins, and shells</strong> is critical for marine biology research, resource management, and ecological monitoring.
+      </p>
+      <p class="text-ocean" style="line-height:1.7;">
+        Underwater imagery presents unique challenges including severe color distortion, low contrast, blurriness, and light attenuation. Our platform leverages an improved YOLOv7-Tiny network featuring an <strong>Underwater Perception Attention (UPA)</strong> module designed specifically to combat these issues.
+      </p>
+    </div>
+    
+    <div class="glass-card p-4">
+      <h4 class="fw-bold mb-3 border-bottom border-secondary pb-3"><i class="bi bi-stack me-2 text-accent"></i>Tech Stack</h4>
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-code-square me-3 text-primary fs-3"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Backend Framework</h6>
+          <p class="text-ocean mb-0" style="font-size:.85rem;">Django 5.2 | Python 3.10+</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-robot me-3 text-success fs-3"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Machine Learning</h6>
+          <p class="text-ocean mb-0" style="font-size:.85rem;">PyTorch | Ultralytics YOLOv8/v7 | OpenCV</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mb-3">
+        <i class="bi bi-database me-3 text-warning fs-3"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Database Layer</h6>
+          <p class="text-ocean mb-0" style="font-size:.85rem;">MySQL Backend</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center">
+        <i class="bi bi-window-sidebar me-3 text-info fs-3"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Frontend UI</h6>
+          <p class="text-ocean mb-0" style="font-size:.85rem;">HTML5 | CSS3 (Ocean Theme) | Bootstrap 5 | Chart.js</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN -->
+  <div class="col-lg-5">
+    <div class="glass-card p-4 h-100">
+      <h4 class="fw-bold mb-4 border-bottom border-secondary pb-3"><i class="bi bi-stars me-2 text-accent"></i>Key Innovations</h4>
+      
+      <div class="mb-4 d-flex align-items-start gap-3">
+        <div class="p-2" style="background:rgba(13,110,253,0.1);border-radius:12px;color:var(--primary);">
+          <i class="bi bi-cpu fs-4"></i>
+        </div>
+        <div>
+          <h6 class="fw-bold text-light">Lightweight Backbone Architecture</h6>
+          <p class="text-ocean mb-0 mt-1" style="font-size:.85rem;line-height:1.6;">
+            The model replaces standard convolutions with FasterNet blocks adopting Partial Convolutions (Pconv). This drastically reduces floating-point operations (FLOPs) and inference latency, achieving speeds suitable for edge devices.
+          </p>
+        </div>
+      </div>
+      
+      <div class="mb-4 d-flex align-items-start gap-3">
+        <div class="p-2" style="background:rgba(0,212,170,0.1);border-radius:12px;color:var(--accent);">
+          <i class="bi bi-eye fs-4"></i>
+        </div>
+        <div>
+          <h6 class="fw-bold text-light">Underwater Perception Attention (UPA)</h6>
+          <p class="text-ocean mb-0 mt-1" style="font-size:.85rem;line-height:1.6;">
+            By integrating Spatial Sub-pixel Convolution and channel attention mechanisms, the model effectively extracts robust multiscale features, filtering out underwater noise like floating sand and improving small-object detection (e.g., shells).
+          </p>
+        </div>
+      </div>
+
+      <div class="mb-4 d-flex align-items-start gap-3">
+        <div class="p-2" style="background:rgba(255,193,7,0.1);border-radius:12px;color:var(--warning);">
+          <i class="bi bi-bounding-box-circles fs-4"></i>
+        </div>
+        <div>
+          <h6 class="fw-bold text-light">WIoUv3 Loss Function</h6>
+          <p class="text-ocean mb-0 mt-1" style="font-size:.85rem;line-height:1.6;">
+            We replaced standard CIoU with WIoUv3, which dynamically allocates weights based on bounding box overlap quality. This prevents the model from being over-penalized by low-quality samples, accelerating convergence and boosting mAP.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4 pt-3 border-top border-secondary text-center">
+        <a href="{% url 'accounts:register' %}" class="btn-accent btn btn-lg mt-2 px-5">
+          <i class="bi bi-rocket-takeoff-fill me-2"></i>Try Detection Now
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

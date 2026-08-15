@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Sea Treasure Detection Platform - Underwater AI Detection</title>
+  <meta name="description" content="Advanced underwater sea treasure detection using UPA-YOLO AI model. Detect sea cucumbers, sea urchins, and shells with high accuracy."/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+  <style>
+    .nav-top {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: rgba(4, 18, 41, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 212, 170, 0.15);
+      padding: 0.9rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-logo-icon { width:40px;height:40px;background:linear-gradient(135deg,#0d6efd,#00d4aa);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem; }
+    .nav-logo-text { font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;color:#e8f4fd; }
+    .feature-icon { width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1rem; }
+    .species-card { border-radius:16px;overflow:hidden;transition:transform .3s ease; }
+    .species-card:hover { transform:translateY(-6px); }
+    .hero-metric { text-align:center;padding:1.5rem; }
+    .hero-metric .value { font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#0d6efd,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
+    .hero-metric .label { font-size:0.8rem;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em; }
+    .wave-svg { position:absolute;bottom:0;left:0;right:0;line-height:0; }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav-top">
+  <a href="{% url 'core:home' %}" class="nav-logo">
+    <div class="nav-logo-icon">🐚</div>
+    <span class="nav-logo-text">SeaTreasure AI</span>
+  </a>
+  <div class="d-flex align-items-center gap-3">
+    <a href="{% url 'core:about' %}" class="btn-glass btn btn-sm">About</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'dashboard:index' %}" class="btn-accent btn btn-sm">Dashboard</a>
+    {% else %}
+      <a href="{% url 'accounts:login' %}" class="btn-glass btn btn-sm">Login</a>
+      <a href="{% url 'accounts:register' %}" class="btn-accent btn btn-sm">Get Started</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-section pt-5">
+  <div class="ocean-bg" aria-hidden="true">
+    {% for i in "1234567" %}
+    <div class="bubble" style="left:{{ forloop.counter|add:5 }}%;width:{{ forloop.counter|add:6 }}px;height:{{ forloop.counter|add:6 }}px;animation-duration:{{ forloop.counter|add:10 }}s;animation-delay:{{ forloop.counter }}s;"></div>
+    {% endfor %}
+  </div>
+  <div class="container" style="position:relative;z-index:1;padding-top:5rem;">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div class="badge-status badge-completed mb-3" style="font-size:.75rem;">
+          <i class="bi bi-activity me-1"></i> Powered by UPA-YOLO v7-Tiny
+        </div>
+        <h1 class="display-4 fw-bold mb-4" style="font-family:'Space Grotesk',sans-serif;line-height:1.1;">
+          Underwater Sea<br/>
+          <span style="background:linear-gradient(135deg,#0d6efd,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Treasure Detection</span>
+        </h1>
+        <p class="text-ocean mb-4" style="font-size:1.1rem;line-height:1.7;">
+          Advanced AI-powered detection platform for identifying sea cucumbers, sea urchins, and shells in underwater imagery with state-of-the-art accuracy.
+        </p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{% url 'accounts:register' %}" class="btn-accent btn btn-lg">
+            <i class="bi bi-rocket-takeoff-fill me-2"></i>Start Detecting
+          </a>
+          <a href="#features" class="btn-glass btn btn-lg">
+            <i class="bi bi-info-circle me-2"></i>Learn More
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <!-- Hero metrics + visual -->
+        <div class="glass-card p-4" style="border-radius:20px;">
+          <div class="row g-3 mb-3">
+            <div class="col-4">
+              <div class="hero-metric glass-card" style="border-radius:12px;">
+                <div class="value">97.8%</div>
+                <div class="label">mAP@0.5</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="hero-metric glass-card" style="border-radius:12px;">
+                <div class="value">12ms</div>
+                <div class="label">Inference</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="hero-metric glass-card" style="border-radius:12px;">
+                <div class="value">3</div>
+                <div class="label">Classes</div>
+              </div>
+            </div>
+          </div>
+          <div class="p-3" style="background:rgba(0,0,0,0.3);border-radius:12px;">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span style="font-size:.8rem;color:#94a3b8;">Sea Cucumber</span>
+              <span class="badge-status badge-sea_cucumber">🥒 98.2%</span>
+            </div>
+            <div class="ocean-progress mb-3"><div class="ocean-progress-bar" style="width:98.2%;background:linear-gradient(90deg,#00c864,#00d4aa);"></div></div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span style="font-size:.8rem;color:#94a3b8;">Sea Urchin</span>
+              <span class="badge-status badge-sea_urchin">🦔 97.5%</span>
+            </div>
+            <div class="ocean-progress mb-3"><div class="ocean-progress-bar" style="width:97.5%;background:linear-gradient(90deg,#1e90ff,#6ea8fe);"></div></div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span style="font-size:.8rem;color:#94a3b8;">Shell</span>
+              <span class="badge-status badge-shell">🐚 97.6%</span>
+            </div>
+            <div class="ocean-progress"><div class="ocean-progress-bar" style="width:97.6%;background:linear-gradient(90deg,#ff8c42,#ffb347);"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wave-svg" style="z-index:1;">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 40L48 45C96 50 192 60 288 58C384 56 480 42 576 38C672 34 768 40 864 46C960 52 1056 58 1152 56C1248 54 1344 44 1392 39L1440 34V80H0V40Z" fill="#041229"/>
+    </svg>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="py-5" style="background:var(--ocean-dark);">
+  <div class="container py-4">
+    <h2 class="text-center fw-bold mb-2" style="font-family:'Space Grotesk',sans-serif;">Platform Features</h2>
+    <p class="text-center text-ocean mb-5">Everything you need for underwater sea treasure detection</p>
+    <div class="row g-4">
+      {% for feat in features %}
+      <div class="col-md-4">
+        <div class="glass-card p-4 h-100 text-center fade-in-up">
+          <div class="feature-icon" style="background:{{ feat.color }};">{{ feat.icon }}</div>
+          <h5 class="fw-bold mb-2">{{ feat.title }}</h5>
+          <p class="text-ocean mb-0" style="font-size:.9rem;">{{ feat.desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5" style="background:linear-gradient(135deg,rgba(13,110,253,0.1),rgba(0,212,170,0.1));">
+  <div class="container text-center py-4">
+    <h2 class="fw-bold mb-3" style="font-family:'Space Grotesk',sans-serif;">Ready to Detect Sea Treasures?</h2>
+    <p class="text-ocean mb-4">Join researchers and marine scientists using AI-powered detection</p>
+    <a href="{% url 'accounts:register' %}" class="btn-accent btn btn-lg me-3">
+      <i class="bi bi-person-plus me-2"></i>Create Account
+    </a>
+    <a href="{% url 'accounts:login' %}" class="btn-glass btn btn-lg">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+    </a>
+  </div>
+</section>
+
+<footer style="background:var(--ocean-mid);border-top:1px solid var(--card-border);padding:1.5rem 2rem;text-align:center;">
+  <p class="text-ocean mb-0" style="font-size:.85rem;">
+    &copy; 2024 SeaTreasure AI | Built with UPA-YOLO &amp; Django
+    <a href="{% url 'core:about' %}" class="text-accent ms-3">About</a>
+  </p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

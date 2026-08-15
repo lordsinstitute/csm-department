@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% block title %}Detection Result #{{ job.id }} - Sea Treasure{% endblock %}
+{% block page_title %}Detection Result{% endblock %}
+
+{% block content %}
+<!-- Result header -->
+<div class="section-heading mb-4">
+  <div>
+    <h2>
+      <i class="bi bi-check-circle-fill me-2 text-accent"></i>
+      Detection Result
+      <span class="badge-status badge-{{ job.status }} ms-2">
+        {% if job.name %}{{ job.name }}{% else %}#{{ job.id }}{% endif %}
+      </span>
+    </h2>
+    <small class="text-ocean">{{ job.created_at|date:"M d, Y H:i" }} · {{ job.get_job_type_display }}</small>
+  </div>
+  <div class="d-flex gap-2">
+    {% if job.annotated_image %}
+    <a href="{% url 'detection:download' job.id %}" class="btn-accent btn btn-sm">
+      <i class="bi bi-download me-1"></i>Download
+    </a>
+    {% endif %}
+    <a href="{% url 'detection:upload' %}" class="btn-glass btn btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>New Detection
+    </a>
+    <a href="{% url 'detection:history' %}" class="btn-glass btn btn-sm">
+      <i class="bi bi-clock-history me-1"></i>History
+    </a>
+  </div>
+</div>
+
+<!-- Status check -->
+{% if job.status == 'failed' %}
+<div class="alert alert-danger mb-4">
+  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+  Detection failed: {{ job.error_message|default:"Unknown error" }}
+  <a href="{% url 'detection:process' job.id %}" class="btn-glass btn btn-sm ms-3">Retry</a>
+</div>
+{% elif job.status == 'processing' %}
+<div class="alert alert-info mb-4">
+  <span class="spinner-border spinner-border-sm me-2"></span>
+  Processing your image... Please wait.
+  <meta http-equiv="refresh" content="3">
+</div>
+{% endif %}
+
+{% if job.notes %}
+<div class="glass-card p-4 mb-4 border-start border-4 border-accent">
+  <h5 class="fw-bold mb-2"><i class="bi bi-robot me-2 text-accent"></i>AI Analysis Insight</h5>
+  <p class="mb-0 text-ocean" style="font-size: 1.1rem; line-height: 1.6;">
+    {{ job.notes }}
+  </p>
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <!-- Annotated Image -->
+  <div class="col-lg-7">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0"><i class="bi bi-image me-2 text-accent"></i>Annotated Output</h5>
+        {% if job.total_detections > 0 %}
+        <span class="badge bg-success pulse-glow" style="font-size: 0.8rem; padding: 0.5rem 1rem;">
+          <i class="bi bi-stars me-1"></i> Sea Treasure Detected
+        </span>
+        {% endif %}
+      </div>
+      
+      {% if job.annotated_image %}
+      <div class="result-image-wrapper w-100 text-center" style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 10px;">
+        <img src="{{ job.annotated_image.url }}" alt="Detection result"
+             class="img-fluid" style="border-radius:8px; max-height:600px; width: auto;"/>
+      </div>
+
+      {% else %}
+      <div class="text-center py-5 text-ocean">
+        <i class="bi bi-image" style="font-size:3rem;opacity:.3;"></i>
+        <p class="mt-2">No annotated image available</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Stats + Results -->
+  <div class="col-lg-5">
+    <!-- Metrics -->
+    <div class="glass-card p-4 mb-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-speedometer2 me-2 text-accent"></i>Detection Metrics</h5>
+      <div class="row g-3">
+        <div class="col-6">
+          <div class="text-center p-3" style="background:rgba(0,212,170,0.06);border-radius:10px;">
+            <div class="fw-bold" style="font-size:1.8rem;color:var(--accent);">{{ job.total_detections }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Objects Found</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center p-3" style="background:rgba(13,110,253,0.06);border-radius:10px;">
+            <div class="fw-bold" style="font-size:1.8rem;color:var(--primary);">{{ job.inference_time_ms|floatformat:0|default:"—" }}ms</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Inference Time</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center p-3" style="background:rgba(255,107,53,0.06);border-radius:10px;">
+            <div class="fw-bold" style="font-size:1.4rem;color:var(--accent2);">{{ job.confidence_threshold }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">Conf. Threshold</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="text-center p-3" style="background:rgba(255,193,7,0.06);border-radius:10px;">
+            <div class="fw-bold" style="font-size:1.4rem;color:var(--warning);">{{ job.iou_threshold }}</div>
+            <div class="text-ocean" style="font-size:.75rem;text-transform:uppercase;">IoU Threshold</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Species Counts -->
+    {% if species_counts %}
+    <div class="glass-card p-4 mb-4">
+      <h5 class="fw-bold mb-3"><i class="bi bi-list-check me-2 text-accent"></i>Species Detected</h5>
+      {% for species, count in species_counts.items %}
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge-status badge-{{ species }}">
+            {% if species == 'sea_cucumber' %}🥒{% elif species == 'sea_urchin' %}🦔{% else %}🐚{% endif %}
+            {{ species|title|cut:"_" }}
+          </span>
+        </div>
+        <span class="fw-bold" style="color:var(--accent);">{{ count }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Species Chart -->
+    {% if species_counts %}
+    <div class="glass-card p-4">
+      <canvas id="resultChart" height="180"></canvas>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Detections Table -->
+{% if results %}
+<div class="glass-card p-4 mt-4">
+  <h5 class="fw-bold mb-4"><i class="bi bi-table me-2 text-accent"></i>All Detections</h5>
+  <div class="table-responsive">
+    <table class="ocean-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Species</th>
+          <th>Confidence</th>
+          <th>AI Reasoning</th>
+          <th>Bounding Box (X1,Y1 → X2,Y2)</th>
+          <th>Confidence Bar</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>
+            <span class="badge-status badge-{{ r.species }}">
+              {% if r.species == 'sea_cucumber' %}🥒{% elif r.species == 'sea_urchin' %}🦔{% else %}🐚{% endif %}
+              {{ r.species|title }}
+            </span>
+          </td>
+          <td style="color:var(--accent);font-weight:700;">{{ r.confidence|floatformat:4 }}</td>
+          <td class="text-ocean" style="font-size: 0.85rem;">
+            <i class="bi bi-info-circle me-1"></i>{{ r.notes|default:"Complex texture analysis." }}
+          </td>
+          <td style="font-family:monospace;font-size:.82rem;color:var(--text-secondary);">
+            ({{ r.pixel_x1 }}, {{ r.pixel_y1 }}) → ({{ r.pixel_x2 }}, {{ r.pixel_y2 }})
+          </td>
+          <td style="min-width:120px;">
+            <div class="conf-bar-wrap">
+              <div class="conf-bar">
+                <div class="conf-bar-fill" style="width: {% widthratio r.confidence 1 100 %}%;"></div>
+              </div>
+              <span style="font-size:.75rem;color:var(--text-secondary);white-space:nowrap;">{{ r.confidence|floatformat:4 }}</span>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if species_counts %}
+<script>
+const data = {{ species_counts_json|safe }};
+const labels = Object.keys(data).map(k=>k.replace(/_/g,' '));
+const values = Object.values(data);
+new Chart(document.getElementById('resultChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{
+      label: 'Count',
+      data: values,
+      backgroundColor: ['rgba(0,200,100,0.5)','rgba(30,144,255,0.5)','rgba(255,140,66,0.5)'],
+      borderColor: ['#00c864','#1e90ff','#ff8c42'],
+      borderWidth: 2, borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, ticks: { color:'#94a3b8', stepSize: 1 }, grid: { color:'rgba(255,255,255,0.05)' } },
+      x: { ticks: { color:'#94a3b8' }, grid: { display: false } }
+    }
+  }
+});
+</script>
+{% endif %}
+{% endblock %}

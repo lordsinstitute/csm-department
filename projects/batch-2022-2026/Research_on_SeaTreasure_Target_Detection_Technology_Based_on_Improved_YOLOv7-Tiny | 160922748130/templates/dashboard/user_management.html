@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}User Management - Admin{% endblock %}
+{% block page_title %}User Management{% endblock %}
+
+{% block content %}
+<div class="section-heading">
+  <h2><i class="bi bi-people-fill me-2 text-accent"></i>User Management</h2>
+  <span class="badge-status badge-completed">{{ users|length }} Users</span>
+</div>
+
+<div class="glass-card p-4">
+  <div class="table-responsive">
+    <table class="ocean-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="user-avatar-sm" style="width:32px;height:32px;font-size:.85rem;">{{ u.username|first|upper }}</div>
+              <div>
+                <div style="font-weight:600;font-size:.88rem;">{{ u.get_full_name|default:u.username }}</div>
+                <div style="font-size:.75rem;color:var(--text-secondary);">@{{ u.username }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ u.email|default:"—" }}</td>
+          <td>
+            {% if u.profile.role == 'admin' %}
+              <span class="badge-status badge-sea_urchin">👑 Admin</span>
+            {% else %}
+              <span class="badge-status badge-pending">🔬 User</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if u.is_active %}
+              <span class="badge-status badge-completed">Active</span>
+            {% else %}
+              <span class="badge-status badge-failed">Disabled</span>
+            {% endif %}
+          </td>
+          <td>{{ u.date_joined|date:"M d, Y" }}</td>
+          <td>
+            <div class="d-flex gap-2 flex-wrap">
+              <!-- Toggle Status -->
+              {% if u != request.user %}
+              <form method="POST" action="{% url 'dashboard:toggle_user' u.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-glass btn btn-sm" title="{% if u.is_active %}Disable{% else %}Enable{% endif %}">
+                  <i class="bi bi-{% if u.is_active %}person-dash{% else %}person-check{% endif %}"></i>
+                </button>
+              </form>
+              <!-- Change Role -->
+              <form method="POST" action="{% url 'dashboard:change_role' u.id %}" style="display:inline;">
+                {% csrf_token %}
+                <select name="role" onchange="this.form.submit()" class="form-select" style="width:auto;display:inline;padding:.2rem .5rem;font-size:.75rem;">
+                  <option value="user" {% if u.profile.role == 'user' %}selected{% endif %}>User</option>
+                  <option value="admin" {% if u.profile.role == 'admin' %}selected{% endif %}>Admin</option>
+                </select>
+              </form>
+              {% else %}
+              <span class="text-ocean" style="font-size:.8rem;">(You)</span>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-ocean py-4">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Datasets - Sea Treasure{% endblock %}
+{% block page_title %}Underwater Datasets{% endblock %}
+
+{% block content %}
+<div class="glass-card mb-4 p-4 text-center text-md-start position-relative overflow-hidden" style="background:linear-gradient(135deg,rgba(13,110,253,0.1),rgba(0,212,170,0.05));border-color:var(--primary);">
+  <div class="row align-items-center position-relative" style="z-index:2;">
+    <div class="col-md-8">
+      <h3 class="fw-bold mb-2">Sea Treasure Datasets</h3>
+      <p class="text-ocean mb-0">Browse and manage data collections used for training and evaluating our detection models.</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      {% if request.user.profile.role == 'admin' %}
+      <a href="{% url 'datasets:upload' %}" class="btn-accent btn btn-sm">
+        <i class="bi bi-cloud-arrow-up-fill me-2"></i>Upload Dataset
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  {% for dataset in datasets %}
+  <div class="col-md-6 col-xl-4 d-flex">
+    <div class="glass-card p-4 flex-fill d-flex flex-column transition-all" style="transition:transform .2s ease;">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div class="fw-bold fs-5 text-primary-custom">{{ dataset.name }}</div>
+        <span class="badge-status badge-{{ dataset.status }}">{{ dataset.get_status_display }}</span>
+      </div>
+
+      <p class="text-ocean" style="font-size:.85rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex-grow:1;">
+        {{ dataset.description|default:"No description provided." }}
+      </p>
+
+      <div class="mt-4 pt-3" style="border-top:1px solid rgba(255,255,255,0.05);">
+        <div class="row g-2 mb-3">
+          <div class="col-4 text-center">
+            <div class="fw-bold text-accent">{{ dataset.total_images|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.7rem;text-transform:uppercase;">Images</div>
+          </div>
+          <div class="col-4 text-center" style="border-left:1px solid rgba(255,255,255,0.05);border-right:1px solid rgba(255,255,255,0.05);">
+            <div class="fw-bold text-primary">{{ dataset.train_count|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.7rem;text-transform:uppercase;">Train</div>
+          </div>
+          <div class="col-4 text-center">
+            <div class="fw-bold text-warning">{{ dataset.val_count|default:"—" }}</div>
+            <div class="text-ocean" style="font-size:.7rem;text-transform:uppercase;">Val</div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <a href="{% url 'datasets:detail' dataset.id %}" class="btn-glass btn btn-sm w-100">
+            <i class="bi bi-info-circle me-1"></i>Details
+          </a>
+          {% if dataset.source_url %}
+          <a href="{{ dataset.source_url }}" target="_blank" class="btn-glass btn btn-sm w-100">
+            <i class="bi bi-link-45deg me-1"></i>Source Link
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12 text-center py-5">
+    <i class="bi bi-folder-x" style="font-size:4rem;color:var(--text-secondary);opacity:.3;"></i>
+    <p class="text-ocean mt-3 mb-0 fs-5">No datasets available.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
