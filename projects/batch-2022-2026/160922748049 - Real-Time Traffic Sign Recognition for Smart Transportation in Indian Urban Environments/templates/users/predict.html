@@ -1,0 +1,14 @@
+
+
+{% block content %}
+<h1>Prediction Result</h1>
+{% if is_image %}
+    <img src="{{ output_url }}" alt="Prediction Result" style="max-width: 100%;">
+{% else %}
+    <video width="960" controls>
+        <source src="{{ output_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+{% endif %}
+<a href="{% url 'upload_file' %}">Upload another file</a>
+{% endblock %}
