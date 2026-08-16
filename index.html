@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberRange AI — Threat Training Platform</title>
+    <meta name="description"
+        content="AI-Driven Cyber Range Dashboard for realistic threat training, traffic generation, and attack simulation.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+                <div class="logo-text">
+                    <span class="logo-title">CyberRange</span>
+                    <span class="logo-subtitle">AI Platform</span>
+                </div>
+            </div>
+        </div>
+        <div class="nav-section">
+            <span class="nav-label">MAIN</span>
+            <a href="#" class="nav-item active" data-page="dashboard"><i
+                    class="fas fa-grip"></i><span>Dashboard</span></a>
+            <a href="#" class="nav-item" data-page="traffic"><i class="fas fa-network-wired"></i><span>Traffic
+                    Generation</span></a>
+            <a href="#" class="nav-item" data-page="users"><i class="fas fa-users-gear"></i><span>User
+                    Emulation</span></a>
+            <a href="#" class="nav-item" data-page="attacks"><i class="fas fa-crosshairs"></i><span>Attack
+                    Simulation</span></a>
+        </div>
+        <div class="nav-section">
+            <span class="nav-label">MANAGEMENT</span>
+            <a href="#" class="nav-item" data-page="scenarios"><i
+                    class="fas fa-diagram-project"></i><span>Scenarios</span></a>
+            <a href="#" class="nav-item" data-page="analytics"><i
+                    class="fas fa-chart-line"></i><span>Analytics</span></a>
+            <a href="#" class="nav-item" data-page="infrastructure"><i
+                    class="fas fa-server"></i><span>Infrastructure</span></a>
+            <a href="#" class="nav-item" data-page="settings"><i class="fas fa-sliders"></i><span>Settings</span></a>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">AK</div>
+                <div class="user-info">
+                    <span class="user-name">Admin Kurosaki</span>
+                    <span class="user-role">Range Operator</span>
+                </div>
+                <i class="fas fa-ellipsis-vertical"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <div class="breadcrumb"><span id="pageBreadcrumb">Dashboard</span></div>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box"><i class="fas fa-search"></i><input type="text"
+                        placeholder="Search scenarios, attacks..."></div>
+                <div class="topbar-actions">
+                    <button class="action-btn" id="notifBtn"><i class="fas fa-bell"></i><span
+                            class="badge">5</span></button>
+                    <button class="action-btn"><i class="fas fa-terminal"></i></button>
+                    <div class="threat-level"><span class="threat-dot high"></span><span>Threat: HIGH</span></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ========== PAGE: DASHBOARD ========== -->
+        <section id="page-dashboard" class="page active">
+            <div class="page-header">
+                <h1>Command Center</h1>
+                <div class="page-actions">
+                    <span class="live-indicator"><span class="pulse-dot"></span>LIVE</span>
+                    <button class="btn btn-outline"><i class="fas fa-download"></i> Export Report</button>
+                    <button class="btn btn-primary"><i class="fas fa-play"></i> New Exercise</button>
+                </div>
+            </div>
+            <!-- KPI Row -->
+            <div class="grid grid-4">
+                <div class="kpi-card kpi-cyan">
+                    <div class="kpi-icon"><i class="fas fa-clock-rotate-left"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="42">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">MTTR Improvement</span><span
+                            class="kpi-trend up"><i class="fas fa-arrow-up"></i> 8% vs last month</span></div>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon"><i class="fas fa-eye-slash"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="35">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">Dwell Time Increase</span><span
+                            class="kpi-trend up"><i class="fas fa-arrow-up"></i> 12% vs baseline</span></div>
+                </div>
+                <div class="kpi-card kpi-green">
+                    <div class="kpi-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="28">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">Detection Rate</span><span
+                            class="kpi-trend down"><i class="fas fa-arrow-down"></i> 3% harder</span></div>
+                </div>
+                <div class="kpi-card kpi-orange">
+                    <div class="kpi-icon"><i class="fas fa-users"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="147">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Active Trainees</span><span
+                            class="kpi-trend up"><i class="fas fa-arrow-up"></i> 23 new this week</span></div>
+                </div>
+            </div>
+            <!-- Charts Row -->
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Network Traffic Overview</h3>
+                        <div class="card-controls"><button class="chip active">1H</button><button
+                                class="chip">6H</button><button class="chip">24H</button><button
+                                class="chip">7D</button></div>
+                    </div>
+                    <div class="card-body"><canvas id="dashTrafficChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Threat Distribution</h3><span class="card-badge">MITRE ATT&CK</span>
+                    </div>
+                    <div class="card-body"><canvas id="dashThreatChart"></canvas></div>
+                </div>
+            </div>
+            <!-- Active Scenarios & Recent Alerts -->
+            <div class="grid grid-3-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Active Scenarios</h3><button class="btn btn-sm btn-outline">View All</button>
+                    </div>
+                    <div class="card-body" id="activeScenariosList"></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Recent Alerts</h3><span class="card-badge danger">12 Critical</span>
+                    </div>
+                    <div class="card-body" id="recentAlertsList"></div>
+                </div>
+            </div>
+            <!-- System Health -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>System Health Monitor</h3><span class="live-indicator sm"><span
+                            class="pulse-dot"></span>Real-time</span>
+                </div>
+                <div class="card-body">
+                    <div class="health-grid" id="healthGrid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: TRAFFIC GENERATION ========== -->
+        <section id="page-traffic" class="page">
+            <div class="page-header">
+                <h1>Traffic Generation Engine</h1>
+                <div class="page-actions"><span class="status-pill active"><i class="fas fa-circle"></i> GAN Model
+                        Active</span><button class="btn btn-outline"><i class="fas fa-rotate"></i> Retrain
+                        Model</button><button class="btn btn-primary"><i class="fas fa-play"></i> Generate</button>
+                </div>
+            </div>
+            <div class="grid grid-4">
+                <div class="kpi-card kpi-cyan">
+                    <div class="kpi-icon"><i class="fas fa-wave-square"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="2847">0</span><span
+                            class="kpi-unit">Mbps</span><span class="kpi-label">Current Bandwidth</span></div>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon"><i class="fas fa-database"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="1243567">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Packets Generated</span></div>
+                </div>
+                <div class="kpi-card kpi-green">
+                    <div class="kpi-icon"><i class="fas fa-brain"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="97">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">GAN Fidelity Score</span></div>
+                </div>
+                <div class="kpi-card kpi-orange">
+                    <div class="kpi-icon"><i class="fas fa-link"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="512">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Active Connections</span></div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Bandwidth Timeline</h3>
+                        <div class="card-controls"><button class="chip active">Live</button><button
+                                class="chip">1H</button><button class="chip">6H</button></div>
+                    </div>
+                    <div class="card-body"><canvas id="bandwidthChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Protocol Distribution</h3>
+                    </div>
+                    <div class="card-body chart-sm"><canvas id="protocolChart"></canvas></div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>GAN Training Metrics</h3>
+                    </div>
+                    <div class="card-body"><canvas id="ganLossChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Traffic Flow Table</h3><button class="btn btn-sm btn-outline"><i class="fas fa-filter"></i>
+                            Filter</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-wrap">
+                            <table class="data-table" id="trafficTable">
+                                <thead>
+                                    <tr>
+                                        <th>Src IP</th>
+                                        <th>Dst IP</th>
+                                        <th>Protocol</th>
+                                        <th>Port</th>
+                                        <th>Bytes</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Latency & Jitter Map</h3>
+                </div>
+                <div class="card-body"><canvas id="latencyChart"></canvas></div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: USER EMULATION ========== -->
+        <section id="page-users" class="page">
+            <div class="page-header">
+                <h1>User Emulation Engine</h1>
+                <div class="page-actions"><span class="status-pill active"><i class="fas fa-circle"></i> 48 Agents
+                        Active</span><button class="btn btn-primary"><i class="fas fa-user-plus"></i> Deploy
+                        Agent</button></div>
+            </div>
+            <div class="grid grid-4">
+                <div class="kpi-card kpi-cyan">
+                    <div class="kpi-icon"><i class="fas fa-robot"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="48">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Active Agents</span></div>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon"><i class="fas fa-arrows-split-up-and-left"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="12">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Unique Roles</span></div>
+                </div>
+                <div class="kpi-card kpi-green">
+                    <div class="kpi-icon"><i class="fas fa-check-double"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="94">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">Behavior Accuracy</span></div>
+                </div>
+                <div class="kpi-card kpi-orange">
+                    <div class="kpi-icon"><i class="fas fa-timeline"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="1836">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Actions / min</span></div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Behavioral Patterns</h3>
+                    </div>
+                    <div class="card-body chart-sm"><canvas id="behaviorRadar"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Agent Activity Timeline</h3>
+                    </div>
+                    <div class="card-body"><canvas id="agentTimelineChart"></canvas></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Agent Roster</h3>
+                    <div class="card-controls"><input type="text" class="input-sm"
+                            placeholder="Search agents..."><button class="btn btn-sm btn-outline"><i
+                                class="fas fa-filter"></i></button></div>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table class="data-table" id="agentTable">
+                            <thead>
+                                <tr>
+                                    <th>Agent</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                    <th>Session</th>
+                                    <th>Workflow</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: ATTACK SIMULATION ========== -->
+        <section id="page-attacks" class="page">
+            <div class="page-header">
+                <h1>Attack Simulation</h1>
+                <div class="page-actions"><span class="status-pill warning"><i class="fas fa-circle"></i> 3 Campaigns
+                        Running</span><button class="btn btn-danger"><i class="fas fa-skull-crossbones"></i> Launch
+                        Attack</button></div>
+            </div>
+            <div class="grid grid-4">
+                <div class="kpi-card kpi-red">
+                    <div class="kpi-icon"><i class="fas fa-virus"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="3">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Active Campaigns</span></div>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon"><i class="fas fa-chess"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="14">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Tactics Used</span></div>
+                </div>
+                <div class="kpi-card kpi-orange">
+                    <div class="kpi-icon"><i class="fas fa-code-branch"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="67">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Techniques Deployed</span></div>
+                </div>
+                <div class="kpi-card kpi-cyan">
+                    <div class="kpi-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="23">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">Evasion Rate</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>MITRE ATT&CK Matrix</h3><span class="card-badge danger">Enterprise</span>
+                </div>
+                <div class="card-body">
+                    <div class="mitre-matrix" id="mitreMatrix"></div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Kill Chain Progress</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="kill-chain" id="killChain"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Campaign Timeline</h3>
+                    </div>
+                    <div class="card-body"><canvas id="campaignChart"></canvas></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>IOC Feed</h3><span class="live-indicator sm"><span class="pulse-dot"></span>Live</span>
+                </div>
+                <div class="card-body">
+                    <div class="ioc-feed" id="iocFeed"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: SCENARIOS ========== -->
+        <section id="page-scenarios" class="page">
+            <div class="page-header">
+                <h1>Scenario Management</h1>
+                <div class="page-actions"><button class="btn btn-outline"><i class="fas fa-file-import"></i> Import
+                        YAML</button><button class="btn btn-primary"><i class="fas fa-plus"></i> New Scenario</button>
+                </div>
+            </div>
+            <div class="grid grid-3" id="scenarioCards"></div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Network Topology</h3>
+                        <div class="card-controls"><button class="chip active">Graph</button><button
+                                class="chip">Table</button></div>
+                    </div>
+                    <div class="card-body"><canvas id="topologyCanvas" width="600" height="400"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>YAML Configuration</h3><button class="btn btn-sm btn-outline"><i class="fas fa-copy"></i>
+                            Copy</button>
+                    </div>
+                    <div class="card-body">
+                        <pre class="code-block" id="yamlPreview"></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: ANALYTICS ========== -->
+        <section id="page-analytics" class="page">
+            <div class="page-header">
+                <h1>Analytics & Monitoring</h1>
+                <div class="page-actions"><span class="live-indicator"><span class="pulse-dot"></span>ELK Stack
+                        Connected</span><button class="btn btn-outline"><i class="fas fa-download"></i> Export
+                        Logs</button></div>
+            </div>
+            <div class="grid grid-4">
+                <div class="kpi-card kpi-cyan">
+                    <div class="kpi-icon"><i class="fas fa-file-lines"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="284753">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Log Entries</span></div>
+                </div>
+                <div class="kpi-card kpi-red">
+                    <div class="kpi-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="47">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Critical Events</span></div>
+                </div>
+                <div class="kpi-card kpi-green">
+                    <div class="kpi-icon"><i class="fas fa-shield-check"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="99">0</span><span
+                            class="kpi-unit">.7%</span><span class="kpi-label">Uptime</span></div>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon"><i class="fas fa-gauge-high"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="12">0</span><span
+                            class="kpi-unit">ms</span><span class="kpi-label">Avg Response</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Log Viewer</h3>
+                    <div class="card-controls"><select class="select-sm" id="logLevel">
+                            <option value="all">All Levels</option>
+                            <option value="critical">Critical</option>
+                            <option value="error">Error</option>
+                            <option value="warning">Warning</option>
+                            <option value="info">Info</option>
+                            <option value="debug">Debug</option>
+                        </select><input type="text" class="input-sm" placeholder="Filter logs..." id="logFilter"></div>
+                </div>
+                <div class="card-body">
+                    <div class="log-viewer" id="logViewer"></div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Incident Timeline</h3>
+                    </div>
+                    <div class="card-body"><canvas id="incidentChart"></canvas></div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Detection Heatmap</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="heatmap" id="detectionHeatmap"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Performance Gauges</h3>
+                </div>
+                <div class="card-body">
+                    <div class="gauge-grid" id="gaugeGrid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: INFRASTRUCTURE ========== -->
+        <section id="page-infrastructure" class="page">
+            <div class="page-header">
+                <h1>Infrastructure</h1>
+                <div class="page-actions"><button class="btn btn-outline"><i class="fas fa-rotate"></i>
+                        Refresh</button><button class="btn btn-primary"><i class="fas fa-plus"></i> Deploy Node</button>
+                </div>
+            </div>
+            <div class="grid grid-4">
+                <div class="kpi-card kpi-cyan">
+                    <div class="kpi-icon"><i class="fab fa-docker"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="34">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Containers</span></div>
+                </div>
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon"><i class="fas fa-hard-drive"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="8">0</span><span
+                            class="kpi-unit"></span><span class="kpi-label">Virtual Machines</span></div>
+                </div>
+                <div class="kpi-card kpi-green">
+                    <div class="kpi-icon"><i class="fas fa-microchip"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="73">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">CPU Utilization</span></div>
+                </div>
+                <div class="kpi-card kpi-orange">
+                    <div class="kpi-icon"><i class="fas fa-memory"></i></div>
+                    <div class="kpi-body"><span class="kpi-value" data-count="61">0</span><span
+                            class="kpi-unit">%</span><span class="kpi-label">Memory Usage</span></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Resource Utilization</h3>
+                </div>
+                <div class="card-body"><canvas id="resourceChart"></canvas></div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Container Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="infra-list" id="containerList"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>VM Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="infra-list" id="vmList"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Deployment Pipeline</h3>
+                </div>
+                <div class="card-body">
+                    <div class="pipeline" id="deployPipeline"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PAGE: SETTINGS ========== -->
+        <section id="page-settings" class="page">
+            <div class="page-header">
+                <h1>Settings</h1>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>General Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-group">
+                            <div class="setting-row"><label>Platform Name</label><input type="text" class="input"
+                                    value="CyberRange AI v3.2"></div>
+                            <div class="setting-row"><label>Environment Mode</label><select class="input">
+                                    <option>Production</option>
+                                    <option>Staging</option>
+                                    <option>Development</option>
+                                </select></div>
+                            <div class="setting-row"><label>Dark Mode</label><label class="toggle"><input
+                                        type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                            <div class="setting-row"><label>Auto-save Scenarios</label><label class="toggle"><input
+                                        type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                            <div class="setting-row"><label>Max Concurrent Users</label><input type="number"
+                                    class="input" value="100"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Notifications</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-group">
+                            <div class="setting-row"><label>Email Alerts</label><label class="toggle"><input
+                                        type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                            <div class="setting-row"><label>Slack Integration</label><label class="toggle"><input
+                                        type="checkbox"><span class="toggle-slider"></span></label></div>
+                            <div class="setting-row"><label>Alert Threshold</label><select class="input">
+                                    <option>Critical Only</option>
+                                    <option>Error & Above</option>
+                                    <option selected>Warning & Above</option>
+                                    <option>All</option>
+                                </select></div>
+                            <div class="setting-row"><label>Webhook URL</label><input type="text" class="input"
+                                    value="https://hooks.slack.com/services/..."></div>
+                            <div class="setting-row"><label>Digest Frequency</label><select class="input">
+                                    <option>Real-time</option>
+                                    <option selected>Hourly</option>
+                                    <option>Daily</option>
+                                </select></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>API & Integrations</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-group">
+                            <div class="setting-row"><label>ELK Endpoint</label><input type="text" class="input"
+                                    value="https://elk.cyberrange.local:9200"></div>
+                            <div class="setting-row"><label>MITRE ATT&CK API</label><input type="text" class="input"
+                                    value="https://attack.mitre.org/api/v1"></div>
+                            <div class="setting-row"><label>Docker Registry</label><input type="text" class="input"
+                                    value="registry.cyberrange.local:5000"></div>
+                            <div class="setting-row"><label>Kubernetes Cluster</label><input type="text" class="input"
+                                    value="k8s.cyberrange.local:6443"></div>
+                            <div class="setting-row"><label>API Rate Limit</label><input type="number" class="input"
+                                    value="1000"><span class="input-hint">req/min</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Data Management</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-group">
+                            <div class="setting-row"><label>Export Format</label><select class="input">
+                                    <option>JSON</option>
+                                    <option selected>CSV</option>
+                                    <option>PCAP</option>
+                                </select></div>
+                            <div class="setting-row"><label>Log Retention</label><select class="input">
+                                    <option>7 Days</option>
+                                    <option selected>30 Days</option>
+                                    <option>90 Days</option>
+                                    <option>1 Year</option>
+                                </select></div>
+                            <div class="setting-row"><label>Auto-cleanup</label><label class="toggle"><input
+                                        type="checkbox" checked><span class="toggle-slider"></span></label></div>
+                            <div class="setting-row full"><button class="btn btn-outline full-w"><i
+                                        class="fas fa-file-export"></i> Export All Data</button></div>
+                            <div class="setting-row full"><button class="btn btn-danger full-w"><i
+                                        class="fas fa-trash"></i> Purge Old Logs</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Notification Panel -->
+    <div class="notif-panel" id="notifPanel">
+        <div class="notif-header">
+            <h3>Notifications</h3><button class="btn btn-sm btn-outline" id="clearNotifs">Clear All</button>
+        </div>
+        <div class="notif-list" id="notifList"></div>
+    </div>
+
+    <!-- ========== MODAL: ATTACK TERMINAL ========== -->
+    <div class="sim-overlay" id="simAttackTerminal">
+        <div class="sim-modal sim-fullscreen">
+            <div class="sim-header">
+                <div class="sim-title"><i class="fas fa-terminal"></i> Live Attack Terminal</div>
+                <div class="sim-header-right">
+                    <span class="sim-phase-label" id="atkPhaseLabel">Phase: Reconnaissance</span>
+                    <button class="btn btn-sm btn-outline" id="atkPauseBtn"><i class="fas fa-pause"></i> Pause</button>
+                    <button class="btn btn-sm btn-danger sim-close-btn" data-close="simAttackTerminal"><i
+                            class="fas fa-xmark"></i> Abort</button>
+                </div>
+            </div>
+            <div class="sim-body">
+                <div class="sim-terminal" id="atkTerminalOutput"></div>
+                <div class="sim-sidebar-panel">
+                    <h4>Kill Chain Progress</h4>
+                    <div class="sim-kc" id="atkKillChain"></div>
+                    <h4 style="margin-top:16px">Techniques Used</h4>
+                    <div class="sim-tech-list" id="atkTechList"></div>
+                    <h4 style="margin-top:16px">Target Info</h4>
+                    <div class="sim-info-block">
+                        <div><strong>Target:</strong> DC-PRIMARY</div>
+                        <div><strong>IP:</strong> 10.10.1.5</div>
+                        <div><strong>OS:</strong> Windows Server 2022</div>
+                        <div><strong>Domain:</strong> cyberrange.lab</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: GAN TRAINING ========== -->
+    <div class="sim-overlay" id="simGanTraining">
+        <div class="sim-modal sim-fullscreen">
+            <div class="sim-header">
+                <div class="sim-title"><i class="fas fa-brain"></i> GAN Training Visualizer</div>
+                <div class="sim-header-right">
+                    <span class="status-pill active" id="ganStatusPill"><i class="fas fa-circle"></i> Training</span>
+                    <button class="btn btn-sm btn-danger sim-close-btn" data-close="simGanTraining"><i
+                            class="fas fa-xmark"></i> Stop</button>
+                </div>
+            </div>
+            <div class="sim-body sim-body-grid">
+                <div class="sim-panel">
+                    <h4>Training Progress</h4>
+                    <div class="sim-progress-block">
+                        <div class="sim-stat-row"><span>Epoch</span><span id="ganEpoch">0 / 1000</span></div>
+                        <div class="sim-progress-bar">
+                            <div class="sim-progress-fill" id="ganProgressBar" style="width:0%"></div>
+                        </div>
+                        <div class="sim-stat-row"><span>Generator Loss</span><span id="ganGenLoss">—</span></div>
+                        <div class="sim-stat-row"><span>Discriminator Loss</span><span id="ganDiscLoss">—</span></div>
+                        <div class="sim-stat-row"><span>Fidelity Score</span><span id="ganFidelity">—</span></div>
+                        <div class="sim-stat-row"><span>Learning Rate</span><span id="ganLR">0.0002</span></div>
+                        <div class="sim-stat-row"><span>Batch Size</span><span>64</span></div>
+                        <div class="sim-stat-row"><span>GPU Memory</span><span id="ganGPU">—</span></div>
+                    </div>
+                    <h4 style="margin-top:16px">Model Architecture</h4>
+                    <div class="sim-arch-block">
+                        <div class="sim-arch-item gen">Generator<span>Conv2D → BN → ReLU × 5</span></div>
+                        <div class="sim-arch-arrow"><i class="fas fa-arrows-left-right"></i></div>
+                        <div class="sim-arch-item disc">Discriminator<span>Conv2D → LN → LeakyReLU × 5</span></div>
+                    </div>
+                </div>
+                <div class="sim-panel">
+                    <h4>Loss Curves (Live)</h4>
+                    <canvas id="ganLiveLossChart" height="200"></canvas>
+                    <h4 style="margin-top:16px">Traffic Distribution Comparison</h4>
+                    <canvas id="ganDistChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: TRAINING EXERCISE ========== -->
+    <div class="sim-overlay" id="simExercise">
+        <div class="sim-modal sim-fullscreen">
+            <div class="sim-header">
+                <div class="sim-title"><i class="fas fa-graduation-cap"></i> Training Exercise — APT Response</div>
+                <div class="sim-header-right">
+                    <div class="sim-timer" id="exTimer">30:00</div>
+                    <div class="sim-score">Score: <span id="exScore">0</span> / 500</div>
+                    <button class="btn btn-sm btn-danger sim-close-btn" data-close="simExercise"><i
+                            class="fas fa-xmark"></i> End Exercise</button>
+                </div>
+            </div>
+            <div class="sim-body sim-body-grid">
+                <div class="sim-panel">
+                    <h4>Objectives</h4>
+                    <div class="sim-objectives" id="exObjectives"></div>
+                    <h4 style="margin-top:16px">Event Log</h4>
+                    <div class="sim-event-log" id="exEventLog"></div>
+                </div>
+                <div class="sim-panel">
+                    <h4>Incoming Alerts</h4>
+                    <div class="sim-alerts-feed" id="exAlertsFeed"></div>
+                    <h4 style="margin-top:16px">Response Actions</h4>
+                    <div class="sim-actions-grid" id="exActionsGrid">
+                        <button class="sim-action-btn" data-action="isolate"><i class="fas fa-plug-circle-xmark"></i>
+                            Isolate Host</button>
+                        <button class="sim-action-btn" data-action="block"><i class="fas fa-ban"></i> Block IP</button>
+                        <button class="sim-action-btn" data-action="capture"><i class="fas fa-camera"></i> Capture
+                            Memory</button>
+                        <button class="sim-action-btn" data-action="scan"><i class="fas fa-magnifying-glass"></i> Run
+                            Scan</button>
+                        <button class="sim-action-btn" data-action="disable"><i class="fas fa-user-slash"></i> Disable
+                            Account</button>
+                        <button class="sim-action-btn" data-action="escalate"><i class="fas fa-arrow-up-right-dots"></i>
+                            Escalate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: PACKET INSPECTOR ========== -->
+    <div class="sim-overlay" id="simPacketInspector">
+        <div class="sim-modal sim-fullscreen">
+            <div class="sim-header">
+                <div class="sim-title"><i class="fas fa-magnifying-glass-chart"></i> Packet Inspector</div>
+                <div class="sim-header-right">
+                    <span class="live-indicator"><span class="pulse-dot"></span> Capturing</span>
+                    <select class="select-sm" id="pktFilter">
+                        <option value="all">All Protocols</option>
+                        <option value="tcp">TCP</option>
+                        <option value="udp">UDP</option>
+                        <option value="http">HTTP</option>
+                        <option value="dns">DNS</option>
+                        <option value="suspicious">⚠ Suspicious Only</option>
+                    </select>
+                    <button class="btn btn-sm btn-danger sim-close-btn" data-close="simPacketInspector"><i
+                            class="fas fa-xmark"></i> Stop Capture</button>
+                </div>
+            </div>
+            <div class="sim-body sim-body-vert">
+                <div class="sim-pkt-list-wrap">
+                    <table class="data-table sim-pkt-table" id="pktTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Time</th>
+                                <th>Source</th>
+                                <th>Destination</th>
+                                <th>Protocol</th>
+                                <th>Length</th>
+                                <th>Info</th>
+                                <th>Flag</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pktTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="sim-pkt-detail">
+                    <div class="sim-pkt-headers" id="pktHeaders">
+                        <div class="sim-pkt-section-title">Select a packet to inspect</div>
+                    </div>
+                    <div class="sim-pkt-hex" id="pktHex">
+                        <div class="sim-pkt-section-title">Hex Dump</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: LIVE ATTACK MAP ========== -->
+    <div class="sim-overlay" id="simAttackMap">
+        <div class="sim-modal sim-fullscreen">
+            <div class="sim-header">
+                <div class="sim-title"><i class="fas fa-map-location-dot"></i> Live Attack Map</div>
+                <div class="sim-header-right">
+                    <span class="live-indicator"><span class="pulse-dot"></span> Live</span>
+                    <div class="sim-map-legend">
+                        <span class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>
+                            Healthy</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:var(--orange)"></span>
+                            Targeted</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>
+                            Compromised</span>
+                    </div>
+                    <button class="btn btn-sm btn-danger sim-close-btn" data-close="simAttackMap"><i
+                            class="fas fa-xmark"></i> Close</button>
+                </div>
+            </div>
+            <div class="sim-body sim-body-map">
+                <canvas id="attackMapCanvas"></canvas>
+                <div class="sim-map-sidebar">
+                    <h4>Attack Progress</h4>
+                    <div class="sim-map-phases" id="mapPhases"></div>
+                    <h4 style="margin-top:16px">Compromised Nodes</h4>
+                    <div class="sim-map-nodes" id="mapCompromised"></div>
+                    <h4 style="margin-top:16px">Live Activity</h4>
+                    <div class="sim-map-activity" id="mapActivity"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/simulations.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+# CyberRange AI Dashboard — Verification Walkthrough
+
+## ✅ Browser Verification Complete
+
+All 8 pages and 5 simulation features tested in browser — **zero JS errors**.
+
+---
+
+## Dashboard Pages Verified
+
+````carousel
+![Command Center — KPIs (42/35/28/147), live traffic chart, threat distribution donut](C:/Users/abdma/.gemini/antigravity/brain/cc17cfc8-9081-4abf-8cd4-259c449f30c2/screenshot_dashboard.png)
+<!-- slide -->
+![Traffic Generation — 2,847 Mbps bandwidth, protocol distribution, GAN metrics, flow table](C:/Users/abdma/.gemini/antigravity/brain/cc17cfc8-9081-4abf-8cd4-259c449f30c2/screenshot_traffic.png)
+<!-- slide -->
+![Scenario Management — 6 scenario cards with difficulty badges, network topology, YAML config](C:/Users/abdma/.gemini/antigravity/brain/cc17cfc8-9081-4abf-8cd4-259c449f30c2/screenshot_scenarios.png)
+````
+
+## Simulation Features Verified
+
+````carousel
+![GAN Training Visualizer — live loss curves, epoch 97/1000, fidelity 56%, Generator vs Discriminator architecture](C:/Users/abdma/.gemini/antigravity/brain/cc17cfc8-9081-4abf-8cd4-259c449f30c2/screenshot_gan.png)
+<!-- slide -->
+![Live Attack Map — full network topology with attack path from Attacker through Firewall, Reconnaissance phase active](C:/Users/abdma/.gemini/antigravity/brain/cc17cfc8-9081-4abf-8cd4-259c449f30c2/screenshot_attackmap.png)
+````
+
+## How to Trigger Each Simulation
+
+| # | Feature | Trigger |
+|---|---------|---------|
+| 1 | 🖥️ Attack Terminal | Attack Simulation → **Launch Attack** |
+| 2 | 🧠 GAN Training | Traffic Generation → **Retrain Model** |
+| 3 | 🎯 Training Exercise | Dashboard → **New Exercise** |
+| 4 | 📡 Packet Inspector | Traffic Generation → **Generate** |
+| 5 | 🗺️ Attack Map | Scenarios → any **Launch** button |
+
+## Files Modified
+
+| File | Changes |
+|------|---------|
+| [index.html](file:///c:/Users/abdma/Desktop/cyber-range/index.html) | Added 5 simulation modal overlays + script tag |
+| [styles.css](file:///c:/Users/abdma/Desktop/cyber-range/css/styles.css) | Added ~130 lines of simulation component CSS |
+| [simulations.js](file:///c:/Users/abdma/Desktop/cyber-range/js/simulations.js) | New — all 5 simulation controllers (~400 lines) |
+
+## Recording
+
+![Browser testing session showing navigation through all pages and simulations](C:/Users/abdma/.gemini/antigravity/brain/cc17cfc8-9081-4abf-8cd4-259c449f30c2/dashboard_main_test_1773276715100.webp)
