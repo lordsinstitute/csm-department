@@ -1,0 +1,26 @@
+# Secrets — never commit
+.env
+*.env
+!*.env.example
+
+# LLM dev cache (recorded API responses)
+backend/llm_cache/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Flutter/Dart
+mobile/build/
+mobile/.dart_tool/
+mobile/.flutter-plugins*
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/key.properties
+mobile/*.iml
+
+# OS/editor
+.DS_Store
+Thumbs.db
