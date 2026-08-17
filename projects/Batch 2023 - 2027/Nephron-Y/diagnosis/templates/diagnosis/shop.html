@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Medical Shop - Nephron-X</title>
+    <!-- (Keep existing CSS links and styles...) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- (Paste your existing <style> block here from previous step) -->
+    <style>
+        /* ... use the same styles as before ... */
+        /* Just make sure to add this for the cart badge */
+        .badge-cart { position: absolute; top: -5px; right: -5px; background: red; color: white; border-radius: 50%; padding: 3px 6px; font-size: 0.7rem; }
+        
+        /* REST OF STYLES FROM PREVIOUS SHOP.HTML */
+        :root { --bg-body: #ffffff; --text-main: #2d3436; --text-muted: #636e72; --card-bg: #ffffff; --shadow-card: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); --shadow-hover: 0 30px 60px -12px rgba(0,0,0,0.25); --title-color: #fd7e14; --font-heading: 'Montserrat', sans-serif; }
+        [data-theme="dark"] { --bg-body: #121212; --text-main: #dfe6e9; --text-muted: #b2bec3; --card-bg: #1e1e1e; --shadow-card: 0 20px 25px -5px rgba(0,0,0,0.8); --shadow-hover: 0 30px 60px -12px rgba(0,0,0,0.9); }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; padding-bottom: 50px; transition: all 0.4s ease; }
+        .navbar { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        [data-theme="dark"] .navbar { background: rgba(30, 30, 30, 0.95); }
+        .brand-heading { font-family: var(--font-heading); font-weight: 800; }
+        .product-card { background: var(--card-bg); border: none; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card); transition: all 0.3s ease; height: 100%; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); }
+        .product-img-container { height: 200px; overflow: hidden; position: relative; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .product-card:hover .product-img { transform: scale(1.05); }
+        .product-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; font-family: var(--font-heading); }
+        .product-price { color: var(--title-color); font-weight: 800; font-size: 1.2rem; }
+        .badge-strength { background-color: rgba(253, 126, 20, 0.1); color: #fd7e14; font-size: 0.8rem; padding: 5px 10px; border-radius: 10px; }
+        .rating { color: #ffc107; font-size: 0.9rem; margin-bottom: 10px; }
+        .btn-add { margin-top: auto; background-color: var(--title-color); color: white; border: none; border-radius: 10px; padding: 10px; font-weight: 600; width: 100%; transition: background 0.2s; }
+        .btn-add:hover { background-color: #e36a0d; color: white; }
+        .theme-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; z-index: 1000; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-card); border: none; font-size: 1.5rem; background: var(--card-bg); color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-light fixed-top shadow-sm px-4">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 text-primary brand-heading fs-3" style="color: var(--title-color) !important;">Nephron-X <span class="text-secondary small fw-normal" style="font-family: 'Segoe UI'">| Pharmacy</span></span>
+            <div class="d-flex align-items-center">
+                <!-- CART ICON -->
+                <a href="{% url 'cart' %}" class="btn btn-light position-relative me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                    <i class="bi bi-cart-fill fs-5 text-secondary"></i>
+                    {% if cart_count > 0 %}
+                    <span class="badge-cart">{{ cart_count }}</span>
+                    {% endif %}
+                </a>
+                
+                <a href="{% url 'choice' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold">Back to Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 100px;">
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2 class="brand-heading mb-2">Renal Care Essentials</h2>
+                <p class="text-muted">Verified emergency medicines and supplements for kidney health.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% for item in products %}
+            <div class="col-md-6 col-lg-4 col-xl-3">
+                <div class="product-card">
+                    <div class="product-img-container">
+                        <img src="{{ item.image }}" class="product-img" alt="{{ item.name }}">
+                    </div>
+                    <div class="product-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge-strength">{{ item.strength }}</span>
+                            <div class="rating">
+                                <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-fill"></i> <i class="bi bi-star-half"></i>
+                            </div>
+                        </div>
+                        <h5 class="product-title">{{ item.name }}</h5>
+                        <p class="small text-muted mb-3">{{ item.desc }}</p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="product-price">${{ item.price }}</span>
+                            
+                            <!-- ADD TO CART FORM -->
+                            <form action="{% url 'add_to_cart' %}" method="POST" style="flex-grow: 1; margin-left: 15px;">
+                                {% csrf_token %}
+                                <input type="hidden" name="name" value="{{ item.name }}">
+                                <input type="hidden" name="price" value="{{ item.price }}">
+                                <input type="hidden" name="image" value="{{ item.image }}">
+                                <button type="submit" class="btn-add">Add +</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-btn" id="themeToggle"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+
+    <script>
+        // Keep your existing theme JS here
+        const toggleBtn = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+        if(localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); icon.classList.replace('bi-moon-fill', 'bi-sun-fill'); }
+        toggleBtn.addEventListener('click', () => {
+            if(html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+            } else {
+                html.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+            }
+        });
+    </script>
+</body>
+</html>
