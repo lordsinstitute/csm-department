@@ -1,0 +1,53 @@
+{% extends 'users/userbase.html' %}
+
+{% block content %}
+<div style="text-align: center; color: orange;">
+    <h2>View Dataset</h2>
+    <table border="1" style="margin: 0 auto; background-color: black;">
+        <thead>
+            <tr>
+                {% for column in dataset.columns %}
+                    <th class="column-name">{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in dataset.values %}
+                <tr>
+                    {% for cell in row %}
+                        <td class="{% if forloop.last %}last-column{% else %}normal-column{% endif %}">{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%; /* Adjust the width as needed */
+        background-color: black;
+    }
+
+    th.column-name {
+        padding: 8px;
+        text-align: left;
+        color: blue; /* Text color for column names */
+        border-bottom: 1px solid orange; /* Add lines after each column */
+    }
+
+    td.last-column {
+        padding: 8px;
+        text-align: left;
+        color: pink; /* Text color for the last column's data */
+        border-bottom: 1px solid orange; /* Add lines after the last column */
+    }
+
+    th, .normal-column {
+        padding: 8px;
+        text-align: left;
+        color: orange; /* Text color for normal columns */
+        border-bottom: 1px solid orange; /* Add lines after each column */
+    }
+</style>
+{% endblock %}

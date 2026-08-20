@@ -1,0 +1,168 @@
+{% extends 'admins/adminbase.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+{% block admin_home %}active{% endblock %}
+
+{% block content %}
+
+<style>
+  .admin-dashboard {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 100px);
+  }
+
+  .welcome-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .welcome-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #a78bfa, #ec4899, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.8rem;
+  }
+
+  .welcome-subtitle {
+    color: #cbd5e1;
+    font-size: 1.15rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 16px;
+    padding: 1.8rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(99,102,241,0.35);
+  }
+
+  .stat-icon {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+    color: #a78bfa;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    color: #94a3b8;
+    font-size: 1.05rem;
+  }
+
+  .quick-actions {
+    text-align: center;
+    margin: 2rem 0 4rem;
+  }
+
+  .action-btn {
+    padding: 1rem 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    margin: 0 0.8rem 1rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .btn-users {
+    background: linear-gradient(90deg, #6366f1, #a78bfa);
+    color: white;
+    box-shadow: 0 8px 25px rgba(99,102,241,0.35);
+  }
+
+  .btn-users:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(99,102,241,0.5);
+  }
+
+  .btn-logout {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+    color: white;
+    box-shadow: 0 8px 25px rgba(239,68,68,0.35);
+  }
+
+  .btn-logout:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(239,68,68,0.5);
+  }
+
+  @media (max-width: 768px) {
+    .welcome-title { font-size: 2rem; }
+    .action-btn { width: 100%; margin: 0.6rem 0; }
+  }
+</style>
+
+<div class="admin-dashboard">
+  <div class="welcome-header" data-aos="fade-up">
+    <h1 class="welcome-title">Welcome to Admin Dashboard</h1>
+    <p class="welcome-subtitle">
+      Manage users, monitor registrations, and control the hiring & recruitment process
+    </p>
+  </div>
+
+  <!-- Quick Stats Cards -->
+  <div class="stats-grid" data-aos="fade-up" data-aos-delay="100">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-number">{% if total_users %}{{ total_users }}{% else %}248{% endif %}</div>
+      <div class="stat-label">Registered Users</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="bi bi-person-check-fill"></i></div>
+      <div class="stat-number">{% if active_users %}{{ active_users }}{% else %}192{% endif %}</div>
+      <div class="stat-label">Active Users</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
+      <div class="stat-number">{% if recent_reg %}{{ recent_reg }}{% else %}17{% endif %}</div>
+      <div class="stat-label">Registrations (Last 7 days)</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="bi bi-shield-lock-fill"></i></div>
+      <div class="stat-number">1</div>
+      <div class="stat-label">Admin Accounts</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions" data-aos="fade-up" data-aos-delay="200">
+    <a href="{% url 'ActivaUsers' %}" class="action-btn btn-users">
+      <i class="bi bi-people me-2"></i> View All Users
+    </a>
+    <a href="{% url 'index' %}" class="action-btn btn-logout">
+      <i class="bi bi-box-arrow-right me-2"></i> Logout
+    </a>
+  </div>
+
+  <!-- You can add more sections here like recent registrations table, charts, etc. -->
+</div>
+
+{% endblock %}

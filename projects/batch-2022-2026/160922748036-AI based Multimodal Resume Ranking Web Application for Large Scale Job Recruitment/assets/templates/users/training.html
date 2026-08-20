@@ -1,0 +1,169 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Training Statistics{% endblock %}
+
+{% block content %}
+
+<style>
+  .training-wrapper {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 90px);
+  }
+
+  .training-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .training-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #a78bfa, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.8rem;
+  }
+
+  .chart-card {
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .no-data-message {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #94a3b8;
+    font-size: 1.3rem;
+  }
+
+  .no-data-message i {
+    font-size: 4rem;
+    opacity: 0.5;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .training-title { font-size: 2rem; }
+    .chart-container { height: 320px; }
+  }
+</style>
+
+<div class="training-wrapper">
+  <div class="training-header">
+    <h2 class="training-title">Training & Processing Statistics</h2>
+  </div>
+
+  <div class="chart-card">
+    {% if graph_data and graph_data.labels and graph_data.values %}
+      <div class="chart-container">
+        <canvas id="trainingChart"></canvas>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const ctx = document.getElementById('trainingChart').getContext('2d');
+          const data = {{ graph_data|safe }};
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: data.labels,
+              datasets: [{
+                label: 'Count',
+                data: data.values,
+                backgroundColor: [
+                  'rgba(99, 102, 241, 0.75)',   // indigo
+                  'rgba(236, 72, 153, 0.75)',   // magenta
+                  'rgba(59, 130, 246, 0.75)',   // blue
+                  'rgba(167, 139, 250, 0.75)',  // purple
+                  'rgba(34, 197, 94, 0.75)'     // green
+                ],
+                borderColor: [
+                  'rgba(99, 102, 241, 1)',
+                  'rgba(236, 72, 153, 1)',
+                  'rgba(59, 130, 246, 1)',
+                  'rgba(167, 139, 250, 1)',
+                  'rgba(34, 197, 94, 1)'
+                ],
+                borderWidth: 1,
+                borderRadius: 6,
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    stepSize: 1,
+                    color: '#cbd5e1'
+                  },
+                  grid: {
+                    color: 'rgba(167,139,250,0.08)'
+                  }
+                },
+                x: {
+                  ticks: {
+                    color: '#cbd5e1'
+                  },
+                  grid: {
+                    display: false
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                },
+                title: {
+                  display: true,
+                  text: 'Resume Processing & Training Overview',
+                  color: '#e2e8f0',
+                  font: { size: 18, weight: '600' },
+                  padding: { top: 10, bottom: 20 }
+                },
+                tooltip: {
+                  backgroundColor: 'rgba(30,41,59,0.9)',
+                  titleColor: '#e2e8f0',
+                  bodyColor: '#cbd5e1',
+                  borderColor: 'rgba(167,139,250,0.3)',
+                  borderWidth: 1,
+                  cornerRadius: 8
+                }
+              }
+            }
+          });
+        });
+      </script>
+    {% else %}
+    <div class="no-data-message">
+      <i class="bi bi-graph-up-slash"></i><br><br>
+      No training or processing data available yet.<br>
+      Start uploading resumes or completing training modules.
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

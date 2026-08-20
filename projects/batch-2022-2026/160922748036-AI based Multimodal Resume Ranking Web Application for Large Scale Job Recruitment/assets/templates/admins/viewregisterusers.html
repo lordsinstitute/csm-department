@@ -1,0 +1,198 @@
+{% extends 'admins/adminbase.html' %}
+{% load static %}
+
+{% block title %}User List{% endblock %}
+{% block user_list %}active{% endblock %}
+
+{% block content %}
+
+<style>
+  .user-list-wrapper {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 100px);
+  }
+
+  .list-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .list-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #a78bfa, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+
+  .user-table-card {
+    background: rgba(30, 41, 59, 0.78);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .table {
+    margin-bottom: 0;
+    color: #e2e8f0;
+  }
+
+  .table thead th {
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    padding: 1.2rem 1rem;
+    font-size: 1.1rem;
+  }
+
+  .table tbody tr {
+    background: rgba(15, 23, 42, 0.4);
+    transition: all 0.25s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(99, 102, 241, 0.12);
+    transform: scale(1.01);
+  }
+
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 1.1rem 0.9rem;
+    border-top: 1px solid rgba(99,102,241,0.08);
+  }
+
+  .status-waiting {
+    color: #fbbf24;
+    font-weight: 600;
+  }
+
+  .status-activated {
+    color: #34d399;
+    font-weight: 600;
+  }
+
+  .btn-activate {
+    padding: 0.55rem 1.3rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+  }
+
+  .btn-activate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16,185,129,0.5);
+    color: white;
+  }
+
+  .no-users {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #94a3b8;
+    font-size: 1.3rem;
+  }
+
+  @media (max-width: 992px) {
+    .table-responsive {
+      overflow-x: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .list-title { font-size: 2rem; }
+    .table thead { display: none; }
+    .table tbody tr {
+      display: block;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 12px;
+    }
+    .table td {
+      display: flex;
+      justify-content: space-between;
+      text-align: right;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid rgba(99,102,241,0.1);
+    }
+    .table td:before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #a78bfa;
+      text-align: left;
+      flex: 1;
+    }
+  }
+</style>
+
+<div class="user-list-wrapper">
+  <div class="list-header" data-aos="fade-up">
+    <h1 class="list-title">Registered Users</h1>
+  </div>
+
+  <div class="user-table-card">
+    {% if data %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Login ID</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in data %}
+          <tr>
+            <td data-label="S.No">{{ forloop.counter }}</td>
+            <td data-label="Name">{{ user.name }}</td>
+            <td data-label="Login ID">{{ user.loginid }}</td>
+            <td data-label="Mobile">{{ user.mobile }}</td>
+            <td data-label="Email">{{ user.email }}</td>
+            <td data-label="Status" class="{% if user.status == 'waiting' %}status-waiting{% else %}status-activated{% endif %}">
+              {{ user.status|capfirst }}
+            </td>
+            <td data-label="Action">
+              {% if user.status == 'waiting' %}
+                <a href="/ActivaUsers/?uid={{ user.id }}" class="btn-activate">
+                  Activate
+                </a>
+              {% else %}
+                <span class="status-activated">Activated</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="no-users">
+      <i class="bi bi-people-slash" style="font-size: 3.5rem; opacity: 0.5;"></i><br><br>
+      No registered users found at the moment.
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

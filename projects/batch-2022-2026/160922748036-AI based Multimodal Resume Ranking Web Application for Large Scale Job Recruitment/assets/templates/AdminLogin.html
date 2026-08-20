@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Login{% endblock %}
+{% block admin_login %}active{% endblock %}   <!-- assuming you have this block in base.html -->
+
+{% block content %}
+
+<style>
+    .admin-login-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .admin-login-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 70% 20%, rgba(251,191,36,0.06) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .admin-card {
+        background: rgba(30, 41, 59, 0.78);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(251,191,36,0.18);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 460px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        animation: cardEnter 0.8s ease-out;
+    }
+
+    @keyframes cardEnter {
+        from { opacity: 0; transform: translateY(40px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .admin-title {
+        font-size: 2.1rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2.2rem;
+        background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .form-floating {
+        position: relative;
+        margin-bottom: 1.6rem;
+    }
+
+    .form-floating input {
+        width: 100%;
+        padding: 1.25rem 1rem 0.5rem 2.8rem;
+        font-size: 1.05rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(251,191,36,0.25);
+        border-radius: 10px;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .form-floating input:focus {
+        border-color: #fbbf24;
+        box-shadow: 0 0 0 0.25rem rgba(251,191,36,0.25);
+        outline: none;
+    }
+
+    .form-floating label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1rem 0.75rem 0 2.8rem;
+        pointer-events: none;
+        color: #94a3b8;
+        transition: all 0.3s ease;
+    }
+
+    .form-floating input:focus ~ label,
+    .form-floating input:not(:placeholder-shown) ~ label {
+        transform: translateY(-1.8rem) scale(0.85);
+        color: #fbbf24;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.3rem;
+        transition: color 0.3s;
+        pointer-events: none;
+    }
+
+    .form-floating input:focus ~ .input-icon {
+        color: #fbbf24;
+    }
+
+    .btn-admin-login {
+        width: 100%;
+        padding: 0.9rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        color: #0f172a;
+        transition: all 0.4s;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(251,191,36,0.35);
+    }
+
+    .btn-admin-login:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(251,191,36,0.55);
+        color: white;
+    }
+
+    .btn-admin-login::after {
+        content: "";
+        position: absolute;
+        top: -50%; left: -100%;
+        width: 50%; height: 200%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+        transition: left 0.7s;
+    }
+
+    .btn-admin-login:hover::after {
+        left: 200%;
+    }
+
+    .message {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 1.05rem;
+        padding: 0.8rem;
+        border-radius: 10px;
+    }
+
+    .message.success { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+    .message.error   { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+    @media (max-width: 576px) {
+        .admin-card { padding: 2rem 1.5rem; }
+        .admin-title { font-size: 1.9rem; }
+    }
+</style>
+
+<div class="admin-login-wrapper">
+    <div class="admin-card">
+        <h2 class="admin-title">Admin Login</h2>
+
+        <form action="{% url 'AdminLoginCheck' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-floating">
+                <input type="text" name="loginid" id="loginid" placeholder=" " required>
+                <label for="loginid">Admin ID / Username</label>
+                <i class="bi bi-shield-lock-fill input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" name="pswd" id="pswd" placeholder=" " required>
+                <label for="pswd">Password</label>
+                <i class="bi bi-lock-fill input-icon"></i>
+            </div>
+
+            <button type="submit" class="btn-admin-login mt-3">
+                Sign In as Admin
+            </button>
+
+            {% if messages %}
+                <div class="message {% if messages.0.tags == 'success' %}success{% else %}error{% endif %}">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}
