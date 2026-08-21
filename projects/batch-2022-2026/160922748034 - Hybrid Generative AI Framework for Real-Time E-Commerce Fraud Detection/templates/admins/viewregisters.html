@@ -1,0 +1,165 @@
+{% extends 'admins/Adminbase.html' %}
+
+{% block content %}
+<style>
+    .page-title {
+        color: var(--accent);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .table th {
+        background: rgba(0, 212, 255, 0.15);
+        color: var(--accent);
+        padding: 1rem;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .table td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        vertical-align: middle;
+    }
+
+    .table tbody tr {
+        transition: background 0.3s;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(0, 212, 255, 0.06);
+    }
+
+    .badge {
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .badge-waiting {
+        background: rgba(243, 156, 18, 0.2);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+    }
+
+    .badge-activated {
+        background: rgba(46, 204, 113, 0.2);
+        color: var(--success);
+        border: 1px solid var(--success);
+    }
+
+    .badge-deactivated {
+        background: rgba(176, 196, 222, 0.2);
+        color: var(--text-mut);
+        border: 1px solid var(--text-mut);
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        border-radius: 4px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: #fff;
+    }
+
+    .btn-verify { background: var(--success); }
+    .btn-verify:hover { background: #27ae60; }
+    
+    .btn-suspend { background: var(--accent-dim); }
+    .btn-suspend:hover { background: #007693; }
+    
+    .btn-delete { background: var(--danger); }
+    .btn-delete:hover { background: #c0392b; }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-mut);
+    }
+</style>
+
+<div class="dark-card">
+    <h2 class="page-title"><i class="fa-solid fa-users"></i> Registered Users</h2>
+
+    {% if obj %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Name</th>
+                    <th>Login ID</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Locality</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in obj %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ i.name }}</td>
+                    <td>{{ i.loginid }}</td>
+                    <td>{{ i.mobile }}</td>
+                    <td>{{ i.email }}</td>
+                    <td>{{ i.locality }}</td>
+                    <td>
+                        {% if i.status == "waiting" %}
+                            <span class="badge badge-waiting">Pending</span>
+                        {% elif i.status == "activated" %}
+                            <span class="badge badge-activated">Verified</span>
+                        {% elif i.status == "deactivated" %}
+                            <span class="badge badge-deactivated">Suspended</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            {% if i.status == "waiting" or i.status == "deactivated" %}
+                            <a href="{% url 'ActivaUsers' %}?uid={{ i.id }}" class="btn-sm btn-verify" title="Verify">✓</a>
+                            {% endif %}
+                            
+                            {% if i.status == 'activated' %}
+                            <a href="{% url 'deactivate_user' %}?uid={{ i.id }}" class="btn-sm btn-suspend" title="Suspend">⏸</a>
+                            {% endif %}
+
+                            <a href="{% url 'delete_user' %}?uid={{ i.id }}" class="btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this user?');" title="Delete">🗑</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fa-solid fa-inbox fa-3x" style="margin-bottom: 1rem; opacity: 0.5;"></i>
+        <h3>No users registered yet</h3>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

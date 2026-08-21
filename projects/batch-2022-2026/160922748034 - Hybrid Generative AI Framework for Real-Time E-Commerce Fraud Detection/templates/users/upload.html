@@ -1,0 +1,129 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .page-header h2 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+    
+    .page-header p {
+        color: var(--text-mut);
+    }
+
+    .info-box {
+        background: rgba(0, 212, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 1.5rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 2.5rem;
+    }
+    
+    .info-box pre {
+        background: rgba(0,0,0,0.3);
+        padding: 1rem;
+        border-radius: 6px;
+        color: var(--success);
+        font-family: monospace;
+        overflow-x: auto;
+    }
+
+    .upload-area {
+        display: block;
+        border: 2px dashed rgba(0, 212, 255, 0.4);
+        border-radius: 16px;
+        padding: 4rem 2rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.02);
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .upload-area:hover {
+        background: rgba(0, 212, 255, 0.05);
+        border-color: var(--accent);
+    }
+
+    .upload-icon {
+        font-size: 3rem;
+        color: var(--accent-dim);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(0, 212, 255, 0.1);
+        margin: 0 auto 1.5rem auto;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        display: none;
+    }
+
+    .btn-choose {
+        display: inline-block;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        padding: 0.6rem 1.5rem;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+    }
+
+    .btn-choose:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    #file-name {
+        display: block;
+        color: var(--text-mut);
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    .upload-actions {
+        text-align: center;
+    }
+</style>
+
+<div class="dark-card" style="max-width: 800px; margin: 0 auto;">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-folder-open"></i> Upload Transaction Dataset</h2>
+        <p>Upload a CSV file containing transactions mapping: amount, payment_method, location, ip, is_fraud</p>
+    </div>
+
+    <div class="info-box">
+        <h4><i class="fa-solid fa-circle-info"></i> Required CSV Format</h4>
+        <p>Your dataset must include exactly these 5 columns to be processed properly. Example row:</p>
+        <pre>amount,payment_method,location,ip,is_fraud
+250.50,Credit Card,US,192.168.1.1,0</pre>
+    </div>
+
+    <form action="{% url 'upload_dataset' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label class="upload-area" for="dataset">
+            <div class="upload-icon">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <div class="file-input-wrapper">
+                <span class="btn-choose">Choose CSV File</span>
+                <input type="file" name="dataset" id="dataset" accept=".csv" required onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : 'No file chosen'">
+            </div>
+            <span id="file-name">No file chosen</span>
+            <div class="upload-actions">
+                <button type="submit" class="btn-primary">Upload Dataset</button>
+            </div>
+        </label>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .page-header h2 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .info-box {
+        background: rgba(0, 212, 255, 0.05);
+        border-left: 4px solid var(--accent);
+        padding: 1.5rem;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+    
+    .info-box h4 {
+        margin-top: 0;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .action-area {
+        text-align: center;
+        padding: 3rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px dashed rgba(0, 212, 255, 0.3);
+        border-radius: 12px;
+        margin-bottom: 2rem;
+    }
+
+    /* Stats Row for Generator Result */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(0,212,255,0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-mut);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .val-red { color: var(--danger); }
+    .val-green { color: var(--success); }
+    .val-amber { color: var(--warning); }
+    .val-cyan { color: var(--accent); }
+</style>
+
+<div class="dark-card" style="max-width: 900px; margin: 0 auto;">
+    <div class="page-header">
+        <h2><i class="fa-solid fa-repeat"></i> Synthetic Fraud Data Generation</h2>
+        <p>GAN-based data augmentation for balanced model training</p>
+    </div>
+
+    <div class="info-box">
+        <h4><i class="fa-solid fa-circle-lightbulb"></i> Why generate synthetic data?</h4>
+        <p>In standard e-commerce datasets, fraudulent transactions typically make up less than 5% of all transactions. This massive class imbalance forces AI models to become heavily biased towards predicting "Not Fraud."</p>
+        <p>By using an adversarial process (Generative Adversarial Network or GAN), we can synthesize highly realistic new fraud transaction samples to balance the dataset, leading to significantly higher predictive recall.</p>
+    </div>
+
+    <div class="action-area">
+        <form action="{% url 'generate_data' %}" method="POST" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="btn-primary" style="font-size: 1.1rem; padding: 1rem 2.5rem; border:none; cursor:pointer;">
+                <i class="fa-solid fa-bolt"></i> Generate Synthetic Fraud Samples
+            </button>
+        </form>
+    </div>
+
+    {% if generated %}
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-value val-red">{{ original_fraud }}</div>
+            <div class="stat-label">Original Fraud</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value val-green">{{ original_normal }}</div>
+            <div class="stat-label">Normal Trans.</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value val-amber">+{{ synthetic_added }}</div>
+            <div class="stat-label">Synthetic Added</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value val-cyan">{{ new_total }}</div>
+            <div class="stat-label">New Total Dataset</div>
+        </div>
+    </div>
+    
+    <div class="info-box" style="border-left-color: var(--success); text-align: center;">
+        <p style="margin: 0;">Dataset is now balanced! <a href="{% url 'train_models' %}" style="color: var(--success); font-weight: 600; text-decoration: none;">Proceed to Train Models →</a></p>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
