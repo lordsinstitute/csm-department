@@ -1,0 +1,13 @@
+name: iot-botnet-detection
+type: code-module
+domain: ["AI / ML / GenAI", "Security / Identity"]
+version: 1.0.0
+license: MIT
+maintainer: sy-omer
+tested_on: "Python 3.10, Django"
+maturity: bronze
+description: >
+  Django-based IoT botnet detection dashboard with CSV upload support.
+dependencies:
+  - python
+  - django

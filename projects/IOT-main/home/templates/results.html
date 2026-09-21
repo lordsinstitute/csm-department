@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detection Results</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Detection Results</h1>
+
+        {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Src IP</th>
+                    <th>Dst IP</th>
+                    <th>Protocol</th>
+                    <th>Src Bytes</th>
+                    <th>Dst Bytes</th>
+                    <th>Duration</th>
+                    <th>Flag</th>
+                    <th>Prediction</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in results %}
+                <tr class="{{ r.prediction|lower }}">
+                    <td>{{ r.src_ip }}</td>
+                    <td>{{ r.dst_ip }}</td>
+                    <td>{{ r.protocol }}</td>
+                    <td>{{ r.src_bytes }}</td>
+                    <td>{{ r.dst_bytes }}</td>
+                    <td>{{ r.flow_duration|floatformat:2 }}</td>
+                    <td>{{ r.flag }}</td>
+                    <td class="pred">{{ r.prediction }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="chart-container">
+            <canvas id="resultChart"></canvas>
+        </div>
+
+        <script>
+            // Option 2: editor-safe JS
+            const normalCount = parseInt("{{ normal_count|default:'0' }}");
+            const botnetCount = parseInt("{{ botnet_count|default:'0' }}");
+
+            const ctx = document.getElementById('resultChart').getContext('2d');
+            const data = {
+                labels: ['Normal', 'Botnet'],
+                datasets: [{
+                    label: 'Number of Flows',
+                    data: [normalCount, botnetCount],
+                    backgroundColor: ['#2ecc71', '#e74c3c']
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: { display: true, text: 'Detection Summary' }
+                    }
+                }
+            });
+        </script>
+
+        {% else %}
+        <p>No results to display.</p>
+        {% endif %}
+
+        <a href="/" class="btn">⬅ Back</a>
+    </div>
+</body>
+</html>

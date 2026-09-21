@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Botnet Detection Dashboard</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Botnet Attack Detection</h1>
+        <p>Upload IoT/SDN traffic CSV file for Detection</p>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="csv_file" accept=".csv" class="file-input">
+            <button type="submit" class="btn">Upload & Detect</button>
+        </form>
+        <p>OR</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn">Generate & Detect Random Data</button>
+        </form>
+    </div>
+</body>
+</html>

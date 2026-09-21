@@ -1,0 +1,80 @@
+/* === Global === */
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+    font-family:"Poppins", sans-serif;
+    background:#eef2f7;
+    color:#333;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding:50px 20px;
+}
+
+/* === Container === */
+.container {
+    background:#fff;
+    border-radius:25px;
+    padding:40px 50px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.1);
+    text-align:center;
+    width:100%;
+    max-width:1000px;
+    margin-bottom:50px;
+}
+
+/* === Headings === */
+h1 { margin-bottom:15px; color:#007bff; font-size:2.2rem; }
+p { color:#555; margin-bottom:30px; font-size:1rem; }
+
+/* === Buttons === */
+.btn {
+    background:#007bff;
+    color:#fff;
+    border:none;
+    padding:12px 30px;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:1rem;
+    margin-top:10px;
+    display:inline-block;
+    text-decoration:none;
+    transition:0.3s;
+}
+.btn:hover { background:#0056b3; transform:translateY(-2px); }
+
+/* === File input === */
+.file-input {
+    padding:8px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    margin-bottom:15px;
+    width:60%;
+}
+
+/* === Table === */
+table { width:100%; margin-top:20px; border-collapse:collapse; border-radius:15px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.05); }
+th, td { padding:12px; text-align:center; }
+th { background:#007bff; color:#fff; font-weight:600; }
+tr:nth-child(even) { background:#f9f9f9; }
+tr:hover { background:#e9f1ff; }
+.pred { font-weight:600; }
+tr.botnet td.pred { color:#e74c3c; }
+tr.normal td.pred { color:#2ecc71; }
+
+/* === Chart === */
+.chart-container {
+    margin-top:40px;
+    width:100%;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+/* === Responsive === */
+@media (max-width:768px){
+    .container { padding:30px 20px; }
+    table th, table td { padding:8px; font-size:0.85rem; }
+    h1 { font-size:1.8rem; }
+    .file-input { width:100%; }
+}
