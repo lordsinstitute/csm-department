@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Select Role - Nephron-X</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #ffffff;
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+            --card-bg: #ffffff;
+            
+            /* Deep Depth Effects */
+            --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.1); 
+            --shadow-card: 0 25px 50px -12px rgba(0,0,0,0.15);
+            --shadow-hover: 0 35px 70px -15px rgba(0,0,0,0.25);
+            
+            --title-color: #0d6efd;
+            --font-heading: 'Montserrat', sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --text-main: #dfe6e9;
+            --text-muted: #b2bec3;
+            --card-bg: #1e1e1e;
+            --shadow-soft: 0 20px 40px -10px rgba(0,0,0,0.6);
+            --shadow-card: 0 25px 50px -12px rgba(0,0,0,0.7);
+            --shadow-hover: 0 35px 70px -15px rgba(0,0,0,0.9);
+            --title-color: #6ea8fe;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+
+        .brand-heading {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .role-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 40px 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            border: none;
+            cursor: pointer;
+            height: 100%;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-card);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .role-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Border accents */
+        .card-patient { border-bottom: 8px solid #0d6efd; }
+        .card-doctor { border-bottom: 8px solid #198754; }
+        .card-shop { border-bottom: 8px solid #fd7e14; } /* New Orange Border */
+        .card-sos { border-bottom: 8px solid #dc3545; }
+
+        /* Icons */
+        .icon-circle {
+            width: 80px; height: 80px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 25px; font-size: 2rem;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+        }
+        .patient-icon { background-color: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+        .doctor-icon { background-color: rgba(25, 135, 84, 0.1); color: #198754; }
+        .shop-icon { background-color: rgba(253, 126, 20, 0.1); color: #fd7e14; } /* New Orange Icon */
+        .sos-icon { background-color: rgba(220, 53, 69, 0.1); color: #dc3545; }
+
+        .role-title { font-weight: 700; font-size: 1.4rem; margin-bottom: 15px; font-family: var(--font-heading); }
+        .role-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+        .theme-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            border-radius: 50%; z-index: 1000; display: flex; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-soft); border: none; font-size: 1.5rem;
+            background: var(--card-bg); color: var(--text-main);
+            transition: transform 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center w-100" style="max-width: 1400px;">
+        <h1 class="display-3 mb-4 brand-heading" style="color: var(--title-color)">Welcome to Nephron-X</h1>
+        <p class="lead mb-5 fs-4" style="color: var(--text-muted)">Select your portal to continue</p>
+
+        <div class="row justify-content-center g-4">
+            <!-- 1. Patient -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/dashboard/" class="card role-card card-patient">
+                    <div class="icon-circle patient-icon"><i class="bi bi-person-fill"></i></div>
+                    <div class="role-title">Patient / User</div>
+                    <div class="role-desc">Upload reports, check risk analysis, and view medical history.</div>
+                </a>
+            </div>
+            
+            <!-- 2. Doctor -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/doctor/" class="card role-card card-doctor">
+                    <div class="icon-circle doctor-icon"><i class="bi bi-file-medical-fill"></i></div>
+                    <div class="role-title">Doctor Specialist</div>
+                    <div class="role-desc">Clinical Decision Support System (CDSS) for treatment planning.</div>
+                </a>
+            </div>
+
+            <!-- 3. Shop (New Option) -->
+            <div class="col-md-6 col-lg-3">
+                <a href="/shop/" class="card role-card card-shop">
+                    <div class="icon-circle shop-icon"><i class="bi bi-bag-check-fill"></i></div>
+                    <div class="role-title" style="color: #fd7e14;">Medical Shop</div>
+                    <div class="role-desc">Purchase verified medicines and renal-friendly products.</div>
+                </a>
+            </div>
+
+            <!-- 4. SOS -->
+            <div class="col-md-6 col-lg-3">
+                <a href="{% url 'emergency_sos' %}" onclick="return confirm('Initiate Automated Emergency Alert to Dr. Samad?')" class="card role-card card-sos">
+                    <div class="icon-circle sos-icon"><i class="bi bi-telephone-fill"></i></div>
+                    <div class="role-title text-danger">Emergency SOS</div>
+                    <div class="role-desc">Immediate assistance for critical renal failure or emergencies.</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <a href="/logout/" class="text-decoration-none small fw-bold p-3" style="color: var(--text-muted)">← Logout</a>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-btn" id="themeToggle"><i class="bi bi-moon-fill" id="themeIcon"></i></button>
+
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+
+        if(localStorage.getItem('theme') === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if(html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+            }
+        });
+    </script>
+</body>
+</html>

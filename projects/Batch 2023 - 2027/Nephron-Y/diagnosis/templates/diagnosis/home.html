@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nephron-X | Patient Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #f4f7f6; --text-main: #2d3436; --card-bg: #ffffff;
+            --input-bg: #f8f9fa; --input-border: #dfe6e9; --navbar-bg: #0d6efd; 
+            --shadow-card: 0 15px 35px rgba(0,0,0,0.05);
+        }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg-body); color: var(--text-main); }
+        .navbar { background: var(--navbar-bg) !important; border-bottom: 3px solid #0a58ca; }
+        .main-card { border: none; border-radius: 20px; box-shadow: var(--shadow-card); background-color: var(--card-bg); margin-bottom: 30px; overflow: hidden; }
+        .card-header-pat { padding: 20px 30px; background: #fff; border-bottom: 1px solid #eee; color: #0d6efd; font-family: 'Montserrat', sans-serif; }
+        
+        .plan-text { font-size: 1.1rem; line-height: 1.8; color: #2d3436; font-weight: 500; white-space: pre-wrap; }
+        .label-clinical { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #636e72; margin-bottom: 5px; display: block; }
+        .form-control { background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 12px; }
+
+        /* Liquid Kidney Visual */
+        .kidney-container {
+            width: 140px; height: 180px; margin: 15px auto; position: relative;
+            background: #e9ecef;
+            clip-path: path('M100,30 C130,60 110,110 100,130 C80,160 30,150 15,120 C0,90 10,40 40,15 C65,-5 80,10 100,30');
+        }
+        .liquid-fill {
+            position: absolute; bottom: 0; width: 100%;
+            background: linear-gradient(to top, #ff4757, #ffa502, #2ed573);
+            transition: height 2s ease-in-out;
+        }
+        .percentage-overlay {
+            position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%);
+            font-weight: 800; font-size: 1.6rem; color: #2d3436; z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark shadow-sm px-4 fixed-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 fw-bold"><i class="bi bi-person-heart"></i> Nephron-X <span class="fw-light">| Patient Portal</span></span>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3 small fw-bold">Welcome, {{ user.username }}</span>
+                <a href="{% url 'choice' %}" class="btn btn-outline-light btn-sm rounded-pill px-3">Exit Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 100px;">
+        
+        <div class="main-card">
+            <div class="card-header-pat"><h4><i class="bi bi-file-earmark-arrow-up"></i> Upload New Lab Results</h4></div>
+            <div class="card-body p-4 p-md-5">
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-4 align-items-end border-bottom pb-4">
+                        <div class="col-md-9">
+                            <label class="label-clinical text-primary">Upload Digital Lab Report (.CSV)</label>
+                            <input type="file" name="csv_file" class="form-control" accept=".csv" required>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" name="upload_csv" class="btn btn-dark w-100 fw-bold py-2">Process Lab File</button>
+                        </div>
+                    </div>
+                </form>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-3"><label class="label-clinical">Age</label><input type="number" name="age" class="form-control" required></div>
+                        <div class="col-md-3"><label class="label-clinical">Blood Pressure</label><input type="number" name="blood_pressure" class="form-control" required></div>
+                        <div class="col-md-3"><label class="label-clinical">Creatinine (mg/dL)</label><input type="number" step="0.01" name="serum_creatinine" class="form-control" required></div>
+                        <div class="col-md-3"><label class="label-clinical">Glucose (Sugar)</label><input type="number" name="sugar" class="form-control" required></div>
+                        <div class="col-md-4"><label class="label-clinical">Albumin</label><input type="number" name="albumin" class="form-control" required></div>
+                        <div class="col-md-4"><label class="label-clinical">Hemoglobin</label><input type="number" step="0.1" name="hemoglobin" class="form-control" required></div>
+                        <div class="col-md-4"><label class="label-clinical">Spec. Gravity</label><input type="number" step="0.001" name="specific_gravity" class="form-control" required></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 mt-4 rounded-pill fw-bold">RUN AI HEALTH CHECK</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <div class="card-header-pat d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">My Clinical History</h5>
+                <a href="{% url 'analytics_view' %}" class="btn btn-sm btn-outline-primary rounded-pill fw-bold px-3">
+                    <i class="bi bi-graph-up"></i> View Trend Analytics
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Date of Test</th>
+                                <th>AI Risk Status</th>
+                                <th class="text-center">Organ Scan</th>
+                                <th class="text-end pe-4">Detailed Report</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in recent_patients %}
+                            <tr>
+                                <td class="ps-4 py-4">
+                                    <div class="fw-bold text-dark">{{ patient.created_at|date:"M d, Y" }}</div>
+                                    <div class="text-muted small">BP: {{ patient.blood_pressure }} | Cr: {{ patient.serum_creatinine }}</div>
+                                </td>
+                                <td><span class="badge {% if patient.risk_level == 'High Risk' %}bg-danger{% else %}bg-success{% endif %} rounded-pill px-3 py-2">{{ patient.risk_level }}</span></td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#kidneyModal{{ patient.id }}">View Scan</button>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <button class="btn btn-sm btn-primary rounded-pill fw-bold" data-bs-toggle="collapse" data-bs-target="#report{{ patient.id }}">Read AI Report</button>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td colspan="4" class="p-0 border-0">
+                                    <div class="collapse" id="report{{ patient.id }}">
+                                        <div class="card card-body m-3 bg-light border-0 shadow-sm" style="border-radius: 15px;">
+                                            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-robot"></i> Personalized Health Analysis</h5>
+                                            <div class="plan-text p-3 bg-white rounded border">{{ patient.prediction_result }}</div>
+                                            {% if patient.routing_status == "URGENT: Routed to Specialist" %}
+                                                <div class="alert alert-danger mt-3 fw-bold border-0">
+                                                    <i class="bi bi-exclamation-triangle-fill"></i> Your results have been securely routed to the Nephrology Critical Care unit for immediate doctor review.
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <div class="modal fade" id="kidneyModal{{ patient.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0" style="border-radius: 25px;">
+                                        <div class="modal-body p-5 text-center">
+                                            <h4 class="fw-bold text-primary">Your Organ Health</h4>
+                                            <p class="text-muted small">Based on your latest lab results</p>
+                                            <div class="kidney-container shadow-sm">
+                                                <div class="percentage-overlay">{% if patient.health_score %}{{ patient.health_score }}{% else %}75{% endif %}%</div>
+                                                <div class="liquid-fill" style="height: {% if patient.health_score %}{{ patient.health_score }}{% else %}75{% endif %}%;"></div>
+                                            </div>
+                                            <div class="row g-2 mt-4">
+                                                <div class="col-6"><div class="p-3 bg-light rounded-4 border small fw-bold">eGFR: {{ patient.egfr|default:"85.2"|floatformat:1 }}</div></div>
+                                                <div class="col-6"><div class="p-3 bg-light rounded-4 border small fw-bold text-danger">Cr: {{ patient.serum_creatinine }}</div></div>
+                                            </div>
+                                            <button class="btn btn-secondary w-100 rounded-pill mt-4" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">You have no clinical history recorded. Upload your first lab report above.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

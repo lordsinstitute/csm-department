@@ -1,0 +1,37 @@
+# Python environment
+__pycache__/
+*.py[cod]
+*.swp
+*~
+.vscode/
+
+# Virtual Environment
+venv/
+env/
+
+# Django settings files and media
+*.log
+local_settings.py
+/media
+
+# Database (We don't upload the binary file)
+db.sqlite3
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# HuggingFace Cache
+.cache/
+
+# ... (other ignored files) ...
+
+# HuggingFace Cache
+local_llm_cache/
+
+
+
+
+
+
+

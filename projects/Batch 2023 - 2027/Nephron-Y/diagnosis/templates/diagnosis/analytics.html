@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Nephron-X | Comprehensive Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-body: #ffffff;
+            --text-main: #2d3436;
+            --card-bg: #ffffff;
+            --shadow-card: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --title-color: #0d6efd;
+            --font-heading: 'Montserrat', sans-serif;
+        }
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --text-main: #dfe6e9;
+            --card-bg: #1e1e1e;
+            --shadow-card: 0 20px 25px -5px rgba(0,0,0,0.8);
+            --title-color: #6ea8fe;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 40px;
+        }
+
+        .metric-title { color: var(--title-color); font-weight: 700; border-bottom: 2px solid rgba(0,0,0,0.1); padding-bottom: 15px; margin-bottom: 25px; font-family: var(--font-heading); font-size: 1.4rem; }
+        .info-text { color: var(--text-main); font-size: 0.95rem; opacity: 0.8; line-height: 1.6; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white shadow-sm mb-5" style="background-color: var(--card-bg) !important;">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1 fw-bold" style="font-family: 'Montserrat', sans-serif; color: var(--title-color)">Nephron-X AI Forecaster</span>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Back to Dashboard</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold" style="font-family: 'Montserrat', sans-serif; color: var(--text-main)">Predictive Population Trends</h2>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <h5 class="metric-title">Blood Pressure Forecast</h5>
+                    <canvas id="bpChart"></canvas>
+                    <p class="info-text">
+                        Forecasts blood pressure variability over time. Persistent spikes above 140/90 mmHg damage the delicate filtering units (glomeruli) within the kidneys.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <h5 class="metric-title">Kidney Filtration (Creatinine) Forecast</h5>
+                    <canvas id="scChart"></canvas>
+                    <p class="info-text">
+                        Forecasts serum creatinine load. An upward trajectory indicates imminent kidney filtration failure, visualizing potential long-term kidney decline.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <h5 class="metric-title">eGFR Trajectory</h5>
+                    <canvas id="egfrChart"></canvas>
+                    <p class="info-text">
+                        Forecasts Estimated Glomerular Filtration Rate (eGFR). A downward trend indicates disease progression. A drop below 15 indicates kidney failure.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="chart-card">
+                    <h5 class="metric-title">Specific Gravity</h5>
+                    <canvas id="sgChart"></canvas>
+                    <p class="info-text">
+                        Forecasts the kidney's ability to concentrate urine. Drifting towards 1.010 (isosthenuria) suggests the tubules have lost the ability to reabsorb water.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 1. Load Historical Data
+        const historicalDates = {{ dates|safe }};
+        const historicalBP = {{ bp_data|safe }};
+        const historicalSC = {{ sc_data|safe }};
+        const historicalEGFR = {{ egfr_data|safe }};
+        const historicalSG = {{ sg_data|safe }};
+        
+        // 2. Load ML Forecast Data (from upgraded views.py)
+        const forecastBP = {{ bp_forecast|safe }};
+        const forecastSC = {{ sc_forecast|safe }};
+        const forecastEGFR = {{ egfr_forecast|safe }};
+        const forecastSG = {{ sg_forecast|safe }};
+        
+        // Combine Dates for X-Axis
+        const forecastDates = {{ forecast_dates|safe }};
+        const combinedDates = historicalDates.concat(forecastDates);
+
+        // --- MASTER PREDICTION CHART FUNCTION ---
+        function createMasterPredictionChart(ctxId, label, historicalData, forecastData, primaryColor) {
+            
+            // Seamless connection logic: Pad with nulls, but push the last historical point
+            const forecastPadding = new Array(historicalData.length - 1).fill(null);
+            if (historicalData.length > 0) {
+                forecastPadding.push(historicalData[historicalData.length - 1]);
+            }
+            const predictionData = forecastPadding.concat(forecastData);
+
+            new Chart(document.getElementById(ctxId), {
+                type: 'line',
+                data: {
+                    labels: combinedDates,
+                    datasets: [
+                        {
+                            label: 'Historical ' + label,
+                            data: historicalData,
+                            borderColor: primaryColor, 
+                            backgroundColor: primaryColor + '20',
+                            borderWidth: 3,
+                            tension: 0.3,
+                            fill: false,
+                        },
+                        {
+                            label: 'Predicted ' + label + ' (Forecast)',
+                            data: predictionData,
+                            borderColor: '#dc3545', /* Danger Red for AI forecasts */
+                            backgroundColor: 'transparent',
+                            borderWidth: 2,
+                            borderDash: [5, 5], /* Dashed line */
+                            pointRadius: 4,
+                            tension: 0.4,
+                            fill: false,
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true, 
+                    interaction: { mode: 'index', intersect: false },
+                    scales: { 
+                        y: { grid: { color: 'rgba(0,0,0,0.05)' } }, 
+                        x: { grid: { display: false } } 
+                    }
+                }
+            });
+        }
+
+        // --- RENDER ALL 4 PREDICTIVE CHARTS ---
+        // Calling the master function for each metric with a unique primary color
+        createMasterPredictionChart('bpChart', 'Blood Pressure', historicalBP, forecastBP, '#0d6efd'); // Blue
+        createMasterPredictionChart('scChart', 'Creatinine', historicalSC, forecastSC, '#fd7e14'); // Orange
+        createMasterPredictionChart('egfrChart', 'eGFR', historicalEGFR, forecastEGFR, '#198754'); // Green
+        createMasterPredictionChart('sgChart', 'Spec. Gravity', historicalSG, forecastSG, '#6f42c1'); // Purple
+        
+        // Dark Mode Theme Fix
+        const html = document.documentElement;
+        if(localStorage.getItem('theme') === 'dark') { html.setAttribute('data-theme', 'dark'); }
+    </script>
+</body>
+</html>
