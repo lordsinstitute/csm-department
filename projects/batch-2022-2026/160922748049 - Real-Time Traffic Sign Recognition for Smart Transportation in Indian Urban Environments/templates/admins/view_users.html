@@ -1,0 +1,131 @@
+{% extends 'admins/adminbase.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        margin: auto;
+        width: 90%;
+        max-width: 1100px;
+    }
+
+    h2 {
+        text-align: center;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 10px;
+    }
+
+    .table {
+        border: 1px solid #dee2e6;
+    }
+
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+        border: 1px solid #dee2e6;
+        padding: 12px;
+    }
+
+    .table th {
+        background-color: #343a40;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    a.action-link {
+        color: #17a2b8;
+        font-weight: 500;
+    }
+
+    a.action-link:hover {
+        text-decoration: underline;
+    }
+
+    a.delete-link {
+        color: #dc3545;
+        font-weight: 500;
+    }
+
+    a.delete-link:hover {
+        text-decoration: underline;
+    }
+
+    .btn-confirm {
+        background-color: #007bff;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-confirm:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<br><br><br>
+<div class="container mt-4">
+    <h2>Registered Users</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phone_number }}</td>
+                        <td>{{ user.address }}</td>
+                        <td>{{ user.status }}</td>
+                        <td>
+                            {% if user.status == 'active' %}
+                                <a href="{% url 'block_user' user.id %}" class="action-link">Block</a>
+                            {% else %}
+                                <a href="{% url 'activate_user' user.id %}" class="action-link">Activate</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_user' user.id %}" class="delete-link" onclick="return confirmDelete();">Delete</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No users registered.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this user?");
+    }
+</script>
+
+{% endblock %}

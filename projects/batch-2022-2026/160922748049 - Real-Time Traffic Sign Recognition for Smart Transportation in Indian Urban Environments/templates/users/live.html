@@ -1,0 +1,48 @@
+{% extends 'users/userbase.html' %}
+{% block content %}
+<br><br><br>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live Traffic Sign Detection</title>
+    <style>
+        body {
+            background: #111;
+            color: white;
+            text-align: center;
+            font-family: sans-serif;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            background-color: #e74c3c;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚦 Live Traffic Sign Detection</h1>
+
+    <img id="videoFeed" src="{% url 'live_feed' %}" width="800" style="border: 5px solid white;"/>
+
+    <br>
+    <button onclick="stopStream()">🛑 Stop Stream</button>
+
+    <script>
+        function stopStream() {
+            const video = document.getElementById('videoFeed');
+            video.src = "";  // Stops MJPEG stream
+            video.alt = "Stream stopped.";
+            alert("Video stream has been stopped.");
+        }
+    </script>
+</body>
+</html>
+{%  endblock %}
