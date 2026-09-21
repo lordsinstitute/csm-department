@@ -1,0 +1,5 @@
+{
+  "name": "Intelligent Document Summarizer",
+  "description": "An intelligent assistant for advanced summarization of Legal and Financial documents. Features extractive, abstractive, and key point summaries, plus an integrated chatbot.",
+  "requestFramePermissions": []
+}
