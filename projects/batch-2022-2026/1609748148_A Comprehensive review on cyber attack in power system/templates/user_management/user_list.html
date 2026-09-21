@@ -1,0 +1,74 @@
+{% extends "partials/base.html" %}
+{% block title %}User Management{% endblock %}
+{% block page_title %}<i class="bi bi-people-fill me-2"></i>User Management{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 style="font-weight:700; color:#1a3a5c; margin:0;">
+                All Users <span class="badge bg-primary rounded-pill ms-2">{{ users.count }}</span>
+            </h6>
+            <a href="{% url 'user_management:create' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-person-plus-fill me-1"></i>Add User
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th><th>User</th><th>Role</th><th>Department</th>
+                        <th>Last Login</th><th>Status</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td style="color:#aaa; font-size:12px;">{{ forloop.counter }}</td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <div style="width:36px; height:36px; background:linear-gradient(135deg,#0d47a1,#00bcd4); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:13px; flex-shrink:0;">
+                                    {{ u.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div style="font-weight:600; font-size:13.5px;">{{ u.get_full_name|default:u.username }}</div>
+                                    <div style="font-size:11px; color:#aaa;">{{ u.email|default:"No email" }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill px-3" style="background:{% if u.role == 'admin' %}#0d47a1{% elif u.role == 'analyst' %}#7b1fa2{% elif u.role == 'operator' %}#00796b{% else %}#546e7a{% endif %}; color:white;">
+                                {{ u.get_role_display }}
+                            </span>
+                        </td>
+                        <td style="font-size:13px; color:#555;">{{ u.department|default:"—" }}</td>
+                        <td style="font-size:12px; color:#888;">{{ u.last_login|date:"M d, Y"|default:"Never" }}</td>
+                        <td>
+                            {% if u.is_active %}
+                            <span class="badge bg-success rounded-pill px-3">Active</span>
+                            {% else %}
+                            <span class="badge bg-danger rounded-pill px-3">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'user_management:edit' u.pk %}" class="btn btn-sm btn-outline-primary" style="border-radius:6px;" title="Edit">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                                <a href="{% url 'user_management:toggle' u.pk %}" class="btn btn-sm {% if u.is_active %}btn-outline-warning{% else %}btn-outline-success{% endif %}" style="border-radius:6px;" title="{% if u.is_active %}Deactivate{% else %}Activate{% endif %}" onclick="return confirm('Are you sure?')">
+                                    {% if u.is_active %}<i class="bi bi-person-dash-fill"></i>{% else %}<i class="bi bi-person-check-fill"></i>{% endif %}
+                                </a>
+                                {% if u != request.user %}
+                                <a href="{% url 'user_management:delete' u.pk %}" class="btn btn-sm btn-outline-danger" style="border-radius:6px;" title="Delete" onclick="return confirm('Delete {{ u.username }}? This cannot be undone.')">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

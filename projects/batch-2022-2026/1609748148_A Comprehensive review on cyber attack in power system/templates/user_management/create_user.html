@@ -1,0 +1,28 @@
+{% extends "partials/base.html" %}
+{% block title %}Create User{% endblock %}
+{% block page_title %}<i class="bi bi-person-plus-fill me-2"></i>Create User{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 style="font-weight:700; color:#1a3a5c;" class="mb-4">Add New User</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-600 text-muted" style="font-size:13px; font-weight:600;">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div class="text-danger" style="font-size:12px;">{{ field.errors }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-person-check-fill me-2"></i>Create User</button>
+                        <a href="{% url 'user_management:list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

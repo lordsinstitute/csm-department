@@ -1,0 +1,61 @@
+{% extends "partials/base.html" %}
+{% block title %}Edit User{% endblock %}
+{% block page_title %}<i class="bi bi-person-gear me-2"></i>Edit User{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div style="width:48px; height:48px; background:linear-gradient(135deg,#0d47a1,#00bcd4); border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:18px;">
+                        {{ edit_user.username|first|upper }}
+                    </div>
+                    <div>
+                        <h5 style="font-weight:700; color:#1a3a5c; margin:0;">Edit: {{ edit_user.username }}</h5>
+                        <small class="text-muted">Update role, department and access permissions</small>
+                    </div>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Email</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Role</label>
+                            {{ form.role }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Department</label>
+                            {{ form.department }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Phone</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" style="font-size:13px; font-weight:600; color:#555;">Account Active</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-2"></i>Save Changes</button>
+                        <a href="{% url 'user_management:list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

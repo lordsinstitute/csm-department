@@ -1,0 +1,81 @@
+{% extends "partials/base.html" %}
+{% block title %}{{ action }} Allocation{% endblock %}
+{% block page_title %}<i class="bi bi-diagram-3-fill me-2"></i>{{ action }} Resource Allocation{% endblock %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body p-4">
+                <h5 style="font-weight:700; color:#1a3a5c;" class="mb-4">{{ action }} Resource Allocation</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Allocation Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Target Asset</label>
+                            {{ form.asset }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Priority Level</label>
+                            {{ form.priority }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Budget Allocated ($)</label>
+                            {{ form.budget_allocated }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Personnel Assigned</label>
+                            {{ form.personnel_assigned }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Assign Security Controls</label>
+                            <div style="background:#f8fbff; border-radius:10px; padding:14px; border:1.5px solid #e0e7ef; max-height:200px; overflow-y:auto;">
+                                {% for control in form.assigned_controls %}
+                                <div class="form-check" style="margin-bottom:6px;">
+                                    {{ control.tag }}
+                                    <label class="form-check-label" style="font-size:13px;" for="{{ control.id_for_label }}">
+                                        {{ control.choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" style="font-size:13px; font-weight:600; color:#555;">Notes</label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-check-lg me-2"></i>{{ action }} Allocation</button>
+                        <a href="{% url 'resource_allocation:list' %}" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if assets_with_risk %}
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3"><i class="bi bi-info-circle me-2 text-primary"></i>Asset Risk Reference</h6>
+                {% for item in assets_with_risk %}
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #f0f4f8; font-size:12px;">
+                    <span style="color:#333; font-weight:500;">{{ item.asset.name|truncatechars:20 }}</span>
+                    {% if item.latest %}
+                    <span style="font-weight:700; color:{% if item.latest.risk_level == 'critical' %}#d32f2f{% elif item.latest.risk_level == 'high' %}#f57c00{% else %}#388e3c{% endif %};">
+                        {{ item.latest.overall_risk_score }}
+                    </span>
+                    {% else %}
+                    <span style="color:#aaa;">No assessment</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

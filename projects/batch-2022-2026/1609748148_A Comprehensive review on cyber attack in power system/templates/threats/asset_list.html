@@ -1,0 +1,29 @@
+{% extends "partials/base.html" %}
+{% block title %}Plant Assets{% endblock %}
+{% block page_title %}<i class="bi bi-hdd-network-fill me-2"></i>Plant Assets{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-body p-4">
+        <h6 style="font-weight:700; color:#1a3a5c;" class="mb-3">All Plant Assets</h6>
+        <div class="row g-3">
+            {% for asset in assets %}
+            <div class="col-lg-4 col-md-6">
+                <div style="background:#f8fbff; border-radius:12px; padding:18px; border-left:4px solid {% if asset.criticality == 'critical' %}#d32f2f{% elif asset.criticality == 'high' %}#f57c00{% elif asset.criticality == 'medium' %}#fbc02d{% else %}#388e3c{% endif %};">
+                    <div style="font-weight:700; font-size:14px; color:#1a3a5c; margin-bottom:6px;">{{ asset.name }}</div>
+                    <div style="font-size:12px; color:#888; margin-bottom:8px;"><i class="bi bi-geo-alt me-1"></i>{{ asset.location }}</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary rounded-pill" style="font-size:11px;">{{ asset.get_asset_type_display }}</span>
+                        <span class="badge badge-{{ asset.criticality }} rounded-pill" style="font-size:11px;">{{ asset.criticality|upper }}</span>
+                    </div>
+                    {% if asset.ip_address %}
+                    <div style="margin-top:8px; font-size:11px; color:#aaa;"><i class="bi bi-ethernet me-1"></i>{{ asset.ip_address }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted py-5">No assets found</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
