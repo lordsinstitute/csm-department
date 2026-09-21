@@ -1,0 +1,18 @@
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('dashboard.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('dashboard/', include('dashboard.urls')),
+    path('monitoring/', include('monitoring.urls')),
+    path('threat-detection/', include('threat_detection.urls')),
+    path('reports/', include('reports.urls')),
+    path('simulation/', include('simulation.urls')),
+    path('alerts/', include('alerts.urls')),
+    path('vulnerability/', include('vulnerability.urls')),
+    path('defense/', include('defense.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
