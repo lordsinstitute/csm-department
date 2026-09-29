@@ -1,0 +1,15 @@
+asyncpg>=0.29.0
+beautifulsoup4
+fastapi
+httpx
+lxml
+langchain-openai
+numpy
+openai
+pgvector>=0.3.0
+pydantic
+python-dotenv
+python-multipart
+scikit-learn
+sentence-transformers
+uvicorn
