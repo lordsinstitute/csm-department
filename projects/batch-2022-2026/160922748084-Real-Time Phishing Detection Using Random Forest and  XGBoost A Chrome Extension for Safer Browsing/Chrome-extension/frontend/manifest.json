@@ -1,0 +1,27 @@
+{
+  "name": "PhishCatcher",
+  "version": "1.0",
+  "description": "Plugin",
+
+  "permissions": ["activeTab","declarativeContent", "storage", "webNavigation"],
+
+  "background": {
+    "scripts": [
+      "js/jquery.js",
+      "js/randomforest.js",
+      "js/background.js"
+    ],
+    "persistent": true
+  },
+  "browser_action":
+ {
+ "default_icon": "icon.png",  "default_popup": "plugin_ui.html"
+  },
+  "content_scripts":[
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "js": ["js/jquery.js","js/features.js"]
+    }
+  ],
+  "manifest_version": 2
+}
