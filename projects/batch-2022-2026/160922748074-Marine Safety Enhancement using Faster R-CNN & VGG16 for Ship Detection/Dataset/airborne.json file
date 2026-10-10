@@ -1,0 +1,9 @@
+## 📦 Dataset Download
+
+The models in this project are trained and tested on authentic airborne flight radar signals containing 4,000 ship records. 
+
+**Important:** The compiled dataset (`airborne.json`) is **327 MB**, which exceeds GitHub's repository limits. To run this project locally, you must download the data separately.
+
+1. Download the dataset from Google Drive: **[https://drive.google.com/file/d/1yqEkje4mYKumShyHZZSW7iVfAFPF8X9h/view?usp=sharing]**
+2. Move `airborne.json` into the root directory of your cloned repository.
+3. Run the application GUI and click **Upload Airborne Dataset** to load the file.
