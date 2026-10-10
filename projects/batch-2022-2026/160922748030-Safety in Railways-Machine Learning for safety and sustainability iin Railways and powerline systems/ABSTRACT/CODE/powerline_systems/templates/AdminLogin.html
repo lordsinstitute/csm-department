@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block contents %}
+<section class="d-flex align-items-center justify-content-center" 
+         style="min-height: 100vh; 
+                background-image: url('https://www.voestalpine.com/railway-systems/static/sites/railway-systems/.images/CU_Signaling_07_22.png_551917905.png'); 
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                width: 100%;
+                height: 100vh;">
+    <div class="container text-center text-white">
+        <div class="row justify-content-center py-5">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 p-4" style="background-color: rgba(255, 255, 255, 0.85); border-radius: 8px;">
+                    <h2 class="h4 text-center text-teal" style="color: teal; font-weight: bold;">Admin Login Form</h2>
+                    <form action="{% url 'AdminLoginCheck' %}" method="POST" class="text-primary mt-3">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <input type="text" class="form-control" name="loginid" required placeholder="Enter Login Id">
+                        </div>
+                        <div class="form-group mb-3">
+                            <input type="password" class="form-control" name="pswd" required placeholder="Enter Password">
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-primary text-white px-4" type="submit">Login</button>
+                            <button class="btn btn-secondary text-white px-4" type="reset">Reset</button>
+                        </div>
+                        {% if messages %}
+                            <div class="text-success mt-3">
+                                {% for message in messages %}
+                                    <p>{{ message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

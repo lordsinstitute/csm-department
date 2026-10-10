@@ -1,0 +1,127 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block contents %}
+<style>
+    .custom-header {
+        background-color: #e37f46;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+</style>
+<section class="prediction-section full-screen d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f0f0f0;">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-12">
+                <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                    <div class="card-header text-white text-center py-3" style="background-color: transparent;">
+                        <h3 class="mb-0 custom-header">Fault Type Prediction</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if error %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                        {% if predicted_class %}
+                            <div class="alert alert-info text-center mb-4">
+                                <h4>Prediction Result</h4>
+                                <p><strong>Predicted Fault Type:</strong> {{ predicted_class }}</p>
+                                <p><strong>Input Values:</strong></p>
+                                <ul class="list-unstyled">
+                                    <li>Voltage: {{ voltage }}</li>
+                                    <li>Current: {{ current }}</li>
+                                    <li>Temperature: {{ temperature }}</li>
+                                    <li>Vibration: {{ vibration }}</li>
+                                    <li>Load: {{ load }}</li>
+                                    <li>Speed: {{ speed }}</li>
+                                    <li> probability: {{probability}}</li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <h5 class="text-center mb-4" style="color: #333;">Enter Data For Prediction</h5>
+                        <form method="POST" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="voltage">Voltage (V)</label>
+                                        <input type="number" class="form-control" id="voltage" name="voltage" step="0.1" required>
+                                        <div class="invalid-feedback">Please provide a valid voltage.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="current">Current (A)</label>
+                                        <input type="number" class="form-control" id="current" name="current" step="0.1" required>
+                                        <div class="invalid-feedback">Please provide a valid current.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="temperature">Temperature (°C)</label>
+                                        <input type="number" class="form-control" id="temperature" name="temperature" step="0.1" required>
+                                        <div class="invalid-feedback">Please provide a valid temperature.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="vibration">Vibration (mm/s)</label>
+                                        <input type="number" class="form-control" id="vibration" name="vibration" step="0.1" required>
+                                        <div class="invalid-feedback">Please provide a valid vibration value.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="load">Load (units)</label>
+                                        <input type="number" class="form-control" id="load" name="load" step="0.1" required>
+                                        <div class="invalid-feedback">Please provide a valid load value.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="speed">Speed (km/h)</label>
+                                        <input type="number" class="form-control" id="speed" name="speed" step="0.1" required>
+                                        <div class="invalid-feedback">Please provide a valid speed value.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary">Predict</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Bootstrap form validation
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
+{% endblock %}
