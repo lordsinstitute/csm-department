@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Fraud Detection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-deep: #050b14;
+            --surface: rgba(13, 27, 42, 0.7);
+            --surface-light: rgba(27, 38, 59, 0.8);
+            --accent: #00e5ff;
+            --accent-dim: #0099bb;
+            --accent-glow: rgba(0, 229, 255, 0.4);
+            --text-pri: #ffffff;
+            --text-mut: #a0aec0;
+            --success: #00e676;
+            --danger: #ff1744;
+            --warning: #ffcf33;
+            --info: #2979ff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-pri);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Glowing Orbs Background */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            z-index: -2;
+            filter: blur(120px);
+            opacity: 0.5;
+            animation: float 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        body::before {
+            background: radial-gradient(circle, rgba(0,229,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            left: -100px;
+        }
+
+        body::after {
+            background: radial-gradient(circle, rgba(41,121,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(50px, 30px); }
+            100% { transform: translate(-30px, 60px); }
+        }
+
+        /* Circuit Board Pattern Overlay */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/circuit-board.png');
+            opacity: 0.04;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Modular Loading Animations */
+        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        .slide-up { animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; transform: translateY(30px); }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphic Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 3rem;
+            background: rgba(5, 11, 20, 0.6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-pri);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-brand i { 
+            color: var(--accent); 
+            filter: drop-shadow(0 0 8px var(--accent-glow));
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-mut);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .nav-links a:hover {
+            color: var(--text-pri);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Strip */
+        .hero-strip {
+            text-align: center;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--accent);
+            background: linear-gradient(90deg, transparent, rgba(0,229,255,0.05), transparent);
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+            min-height: calc(100vh - 200px);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glass Card */
+        .dark-card {
+            background: var(--surface-light);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .dark-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+            border-color: rgba(0, 229, 255, 0.2);
+        }
+
+        /* Fancy Primary Buttons */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--info));
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.05rem;
+            border-radius: 12px;
+            padding: 0.9rem 2.2rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0, 229, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--info), var(--accent));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0, 229, 255, 0.5);
+            color: #fff;
+        }
+
+        .btn-primary:hover::before { opacity: 1; }
+
+        /* Secondary Outline Buttons */
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.03);
+            color: var(--text-pri);
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 0.9rem 2.2rem;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Inputs */
+        .form-control {
+            width: 100%;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: var(--text-pri);
+            padding: 1rem 1.2rem;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow), inset 0 2px 4px rgba(0,0,0,0.1);
+            background: rgba(0,0,0,0.4);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: var(--text-mut);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* Alerts */
+        .messages { margin-bottom: 2rem; }
+        .alert {
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: slideUp 0.5s ease forwards;
+        }
+        .alert-success { background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.3); color: var(--success); }
+        .alert-error, .alert-danger { background: rgba(255, 23, 68, 0.1); border: 1px solid rgba(255, 23, 68, 0.3); color: var(--danger); }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-mut);
+            font-size: 0.9rem;
+            background: rgba(5, 11, 20, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 3rem;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="{% url 'index' %}" class="navbar-brand">
+            <i class="fa-solid fa-shield-halved"></i> GenAI Fraud Detection
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'UserLogin' %}">User Login</a>
+            <a href="{% url 'register' %}">Register</a>
+            <a href="{% url 'AdminLogin' %}">Admin</a>
+        </div>
+    </nav>
+
+    <!-- Hero Strip -->
+    <div class="hero-strip">
+        Generative AI · Real-Time E-Commerce Fraud Detection · GAN · VAE · Hybrid
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        © 2026 GenAI Fraud Detection · Dept. of CSM, Lords Institute of Engineering and Technology
+    </footer>
+
+</body>
+</html>

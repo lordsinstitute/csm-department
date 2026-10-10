@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hero-section {
+        text-align: center;
+        padding: 5rem 0 4rem 0;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .hero-headline {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 1.2rem;
+        background: linear-gradient(135deg, #ffffff 0%, var(--accent) 50%, #ffffff 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShine 4s linear infinite;
+        text-shadow: 0 0 40px rgba(0, 229, 255, 0.2);
+    }
+
+    @keyframes textShine {
+        to { background-position: 200% center; }
+    }
+
+    .hero-subheading {
+        font-size: 1.15rem;
+        color: var(--text-mut);
+        max-width: 750px;
+        margin: 0 auto 3rem auto;
+        line-height: 1.8;
+    }
+
+    .cta-buttons {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+    }
+
+    /* Stats Row */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .stat-card {
+        background: var(--surface-light);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        backdrop-filter: blur(10px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-8px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 15px 40px rgba(0,0,0,0.5), 0 0 20px rgba(0,229,255,0.15);
+        border-color: rgba(0,229,255,0.3);
+    }
+
+    .stat-value {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-mut);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+    }
+
+    /* Section Title */
+    .section-title {
+        text-align: center;
+        margin-bottom: 3.5rem;
+        font-size: 2.2rem;
+        color: var(--text-pri);
+        font-weight: 700;
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: var(--accent);
+        margin: 1rem auto 0 auto;
+        border-radius: 2px;
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* How It Works */
+    .steps-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .step-card {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(0,229,255,0.15);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .step-card:hover {
+        background: rgba(255,255,255,0.05);
+        transform: translateY(-5px);
+        border-color: var(--accent);
+    }
+
+    .step-number {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--bg-deep), #0d1b2a);
+        color: var(--accent);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .step-icon {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-pri);
+        text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    .step-title {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--text-pri);
+    }
+
+    /* Feature Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .feature-item {
+        background: rgba(27, 38, 59, 0.4);
+        border-left: 4px solid var(--accent);
+        padding: 2rem;
+        border-radius: 0 16px 16px 0;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+    }
+    
+    .feature-item:hover {
+        background: rgba(27, 38, 59, 0.8);
+        transform: translateX(10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+    
+    .feature-item i {
+        color: var(--accent);
+        font-size: 1.8rem;
+        filter: drop-shadow(0 0 5px var(--accent-glow));
+    }
+    
+    .feature-item span {
+        font-size: 1.05rem;
+        font-weight: 500;
+    }
+
+    /* Bottom CTA */
+    .bottom-cta {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, rgba(27,38,59,0.3), rgba(0,229,255,0.05));
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.05);
+        backdrop-filter: blur(10px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .bottom-cta h3 {
+        margin-bottom: 2rem;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+</style>
+
+<div class="hero-section fade-in">
+    <h1 class="hero-headline">Detect Fraud Before It Happens</h1>
+    <p class="hero-subheading">
+        Powered by Generative Adversarial Networks, Variational Autoencoders, and Hybrid AI — built for real-time e-commerce security.
+    </p>
+    <div class="cta-buttons">
+        <a href="{% url 'register' %}" class="btn-primary">Get Started <i class="fa-solid fa-arrow-right"></i></a>
+        <a href="#features" class="btn-secondary">Learn More</a>
+    </div>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card slide-up delay-1">
+        <div class="stat-value">92%</div>
+        <div class="stat-label">Hybrid Model Accuracy</div>
+    </div>
+    <div class="stat-card slide-up delay-2">
+        <div class="stat-value">3 Models</div>
+        <div class="stat-label">GAN · VAE · Hybrid</div>
+    </div>
+    <div class="stat-card slide-up delay-3">
+        <div class="stat-value">Real-Time</div>
+        <div class="stat-label">Fraud Prediction</div>
+    </div>
+</div>
+
+<h2 class="section-title slide-up delay-1">How It Works</h2>
+<div class="steps-row">
+    <div class="step-card slide-up delay-2">
+        <div class="step-number">1</div>
+        <div class="step-icon"><i class="fa-solid fa-folder-open"></i></div>
+        <div class="step-title">Upload Dataset</div>
+    </div>
+    <div class="step-card slide-up delay-3">
+        <div class="step-number">2</div>
+        <div class="step-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="step-title">Train AI Models</div>
+    </div>
+    <div class="step-card slide-up delay-4">
+        <div class="step-number">3</div>
+        <div class="step-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <div class="step-title">Predict Fraud</div>
+    </div>
+</div>
+
+<h2 class="section-title slide-up delay-1" id="features">Key Features</h2>
+<div class="features-grid">
+    <div class="feature-item slide-up delay-1">
+        <i class="fa-solid fa-server"></i>
+        <span>GAN-based synthetic fraud data generation</span>
+    </div>
+    <div class="feature-item slide-up delay-2">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+        <span>VAE anomaly detection for hidden patterns</span>
+    </div>
+    <div class="feature-item slide-up delay-3">
+        <i class="fa-solid fa-microchip"></i>
+        <span>Hybrid model outperforms individual models</span>
+    </div>
+    <div class="feature-item slide-up delay-4">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Gemini AI insights for dataset analysis</span>
+    </div>
+    <div class="feature-item slide-up delay-1">
+        <i class="fa-solid fa-bolt"></i>
+        <span>Real-time fraud prediction with confidence score</span>
+    </div>
+    <div class="feature-item slide-up delay-2">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Ethical AI — bias analysis and privacy compliance</span>
+    </div>
+</div>
+
+<div class="bottom-cta slide-up delay-2">
+    <h3>Ready to protect your platform?</h3>
+    <div class="cta-buttons">
+        <a href="{% url 'register' %}" class="btn-primary">Register Now <i class="fa-solid fa-user-plus"></i></a>
+        <a href="{% url 'UserLogin' %}" class="btn-secondary">User Login <i class="fa-solid fa-right-to-bracket"></i></a>
+    </div>
+</div>
+
+{% endblock %}

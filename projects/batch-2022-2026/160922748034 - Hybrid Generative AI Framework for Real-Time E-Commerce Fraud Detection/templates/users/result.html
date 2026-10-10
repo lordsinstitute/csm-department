@@ -1,0 +1,14 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<script>
+    // Just heavily simple redirect as asked to send to predict.html instead of brain tumor output
+    window.location.href = "{% url 'predict_fraud' %}";
+</script>
+<noscript>
+    <div style="text-align:center; padding: 4rem;">
+        <h2>Redirecting...</h2>
+        <p>If you are not redirected, <a href="{% url 'predict_fraud' %}" style="color:var(--accent);">click here</a>.</p>
+    </div>
+</noscript>
+{% endblock %}

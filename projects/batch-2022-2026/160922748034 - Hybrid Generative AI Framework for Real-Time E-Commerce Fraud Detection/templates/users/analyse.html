@@ -1,0 +1,211 @@
+{% extends 'users/Userbase.html' %}
+
+{% block content %}
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Stats */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-mut);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .val-red {
+        color: var(--danger);
+    }
+
+    .val-green {
+        color: var(--success);
+    }
+
+    /* Charts Grid */
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .chart-container {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .chart-container img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    /* Summary Table */
+    .summary-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .summary-section h3 {
+        color: var(--text-pri);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 0.5rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .table {
+        width: 100%;
+        color: var(--text-pri);
+        font-size: 0.85rem;
+    }
+
+    .table th {
+        color: var(--accent);
+        font-weight: 600;
+        text-align: left;
+        padding: 0.5rem;
+        border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .table td {
+        padding: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Gemini Insight */
+    .gemini-card {
+        background: linear-gradient(135deg, rgba(13, 27, 42, 0.9), rgba(52, 152, 219, 0.15));
+        border: 1px solid var(--info);
+        border-radius: 12px;
+        padding: 2rem;
+        position: relative;
+    }
+
+    .gemini-badge {
+        position: absolute;
+        top: -12px;
+        left: 20px;
+        background: var(--info);
+        color: #fff;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .gemini-content {
+        white-space: pre-wrap;
+        font-family: inherit;
+        line-height: 1.6;
+        color: #e0e0e0;
+        margin: 0;
+        padding-top: 0.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 12px;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+</style>
+
+<div class="page-header">
+    <h2><i class="fa-solid fa-chart-line"></i> Dataset Analysis</h2>
+</div>
+
+{% if shape %}
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-value">{{ shape.0 }}</div>
+        <div class="stat-label">Total Transactions</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ shape.1 }}</div>
+        <div class="stat-label">Features</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value val-red">{{ fraud_count }}</div>
+        <div class="stat-label">Fraud Cases</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value val-green">{{ normal_count }}</div>
+        <div class="stat-label">Normal Cases</div>
+    </div>
+</div>
+
+<div class="charts-grid">
+    <div class="chart-container">
+        <img src="data:image/png;base64,{{ heatmap }}" alt="Correlation Heatmap">
+    </div>
+    <div class="chart-container">
+        <img src="data:image/png;base64,{{ dist_chart }}" alt="Distribution Chart">
+    </div>
+</div>
+
+<div class="summary-section">
+    <h3><i class="fa-solid fa-table"></i> Statistical Summary</h3>
+    <div class="table-responsive">
+        {{ describe_html|safe }}
+    </div>
+</div>
+
+<div class="gemini-card">
+    <div class="gemini-badge">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Insights
+    </div>
+    <div class="gemini-content">{{ ai_insight }}</div>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <i class="fa-solid fa-box-open fa-3x" style="margin-bottom: 1rem; color: var(--text-mut);"></i>
+    <h3>No dataset uploaded</h3>
+    <p style="color: var(--text-mut); margin-bottom: 2rem;">Upload a CSV transaction file to view analysis and insights.
+    </p>
+    <a href="{% url 'upload_dataset' %}" class="btn-primary">Go to Upload</a>
+</div>
+{% endif %}
+
+{% endblock %}

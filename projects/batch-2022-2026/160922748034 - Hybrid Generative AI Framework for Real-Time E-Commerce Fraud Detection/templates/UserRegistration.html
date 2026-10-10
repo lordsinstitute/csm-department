@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 0;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .register-header h2 {
+        color: var(--accent);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 1rem;
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+
+    .btn-full {
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .login-link a {
+        color: var(--accent);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .login-link a:hover {
+        color: var(--accent-dim);
+        text-decoration: underline;
+    }
+
+    /* Style the django form fields to match the dark theme */
+    .register-card input, 
+    .register-card select, 
+    .register-card textarea {
+        width: 100%;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(0,212,255,0.25);
+        border-radius: 8px;
+        color: var(--text-pri);
+        padding: 0.8rem 1rem;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        margin-bottom: 1rem;
+        transition: all 0.3s;
+    }
+
+    .register-card input:focus, 
+    .register-card select:focus, 
+    .register-card textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 10px rgba(0,212,255,0.3);
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .register-card label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-mut);
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="register-container">
+    <div class="dark-card register-card">
+        <div class="register-header">
+            <h2><i class="fa-solid fa-user-plus"></i> Create Account</h2>
+        </div>
+        
+        <form action="{% url 'register' %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+                <!-- Assuming Django form rendering replaces these with right labels/inputs.
+                     We use the rendered 'form' via context but style it dynamically or wrap in raw HTML.
+                     To strictly follow "2-column grid layout" requested. -->
+                
+                <div class="form-group">
+                    <label for="id_name">Name</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-group">
+                    <label for="id_loginid">Login ID</label>
+                    {{ form.loginid }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password">Password</label>
+                    <input type="password" name="password" id="id_password" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_mobile">Mobile</label>
+                    {{ form.mobile }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    {{ form.email }}
+                </div>
+                <div class="form-group">
+                    <label for="id_locality">Locality</label>
+                    {{ form.locality }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_city">City</label>
+                    {{ form.city }}
+                </div>
+                <div class="form-group">
+                    <label for="id_state">State</label>
+                    {{ form.state }}
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="id_address">Address</label>
+                    {{ form.address }}
+                </div>
+            </div>
+
+            <!-- hidden status -->
+            <input type="hidden" name="status" value="waiting">
+
+            <button type="submit" class="btn-primary btn-full">Register</button>
+        </form>
+
+        <div class="login-link">
+            Already registered? <a href="{% url 'UserLogin' %}">Login →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
