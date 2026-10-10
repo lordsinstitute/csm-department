@@ -1,0 +1,27 @@
+{% extends "partials/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block page_title %}<i class="bi bi-person-circle me-2"></i>My Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body p-4 text-center">
+                <div style="width:80px; height:80px; background:linear-gradient(135deg,#0d47a1,#00bcd4); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:white; font-size:32px; font-weight:700; margin-bottom:16px;">
+                    {{ user.username|first|upper }}
+                </div>
+                <h5 style="font-weight:700;">{{ user.get_full_name|default:user.username }}</h5>
+                <span class="badge bg-primary rounded-pill px-4 py-2">{{ user.get_role_display }}</span>
+                <hr>
+                <div style="text-align:left; font-size:14px; line-height:2.2;">
+                    <div><strong>Username:</strong> {{ user.username }}</div>
+                    <div><strong>Email:</strong> {{ user.email|default:"Not set" }}</div>
+                    <div><strong>Department:</strong> {{ user.department|default:"Not set" }}</div>
+                    <div><strong>Phone:</strong> {{ user.phone|default:"Not set" }}</div>
+                    <div><strong>Last Login:</strong> {{ user.last_login|date:"M d, Y H:i"|default:"N/A" }}</div>
+                    <div><strong>Member Since:</strong> {{ user.created_at|date:"M d, Y" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

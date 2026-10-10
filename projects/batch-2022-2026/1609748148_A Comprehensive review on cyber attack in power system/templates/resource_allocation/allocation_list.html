@@ -1,0 +1,89 @@
+{% extends "partials/base.html" %}
+{% block title %}Resource Allocation{% endblock %}
+{% block page_title %}<i class="bi bi-diagram-3-fill me-2"></i>Resource Allocation{% endblock %}
+{% block content %}
+
+<!-- High Risk Priority Panel -->
+<div class="card mb-4" style="border-left: 4px solid #d32f2f;">
+    <div class="card-body p-4">
+        <h6 style="font-weight:700; color:#d32f2f; margin-bottom:16px;">
+            <i class="bi bi-fire me-2"></i>High-Risk Assets Requiring Priority Allocation
+        </h6>
+        <div class="row g-3">
+            {% for a in high_risk_assessments %}
+            <div class="col-lg-3 col-md-4 col-6">
+                <div style="background:{% if a.risk_level == 'critical' %}#fff0f0{% else %}#fff8f0{% endif %}; border-radius:10px; padding:12px; border:1px solid {% if a.risk_level == 'critical' %}#ffcdd2{% else %}#ffe0b2{% endif %};">
+                    <div style="font-weight:600; font-size:12px; color:#333; margin-bottom:4px;">{{ a.asset.name|truncatechars:22 }}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:20px; font-weight:800; color:{% if a.risk_level == 'critical' %}#d32f2f{% else %}#f57c00{% endif %};">{{ a.overall_risk_score }}</span>
+                        <div class="d-flex gap-1">
+                            <span class="badge badge-{{ a.risk_level }}" style="font-size:10px;">{{ a.risk_level|upper }}</span>
+                        </div>
+                    </div>
+                    {% if user.role == 'admin' %}
+                    <a href="{% url 'resource_allocation:create' %}?asset={{ a.asset.pk }}" class="btn btn-sm btn-outline-danger w-100 mt-2" style="font-size:11px; border-radius:6px;">
+                        <i class="bi bi-plus-circle me-1"></i>Allocate Resources
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-muted" style="font-size:13px;">No high-risk assessments found. Run TAM evaluations first.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 style="font-weight:700; color:#1a3a5c; margin:0;">
+                All Resource Allocations
+                <span class="badge bg-danger rounded-pill ms-2">{{ critical_count }} Critical</span>
+                <span class="badge bg-warning text-dark rounded-pill ms-1">{{ high_count }} High</span>
+            </h6>
+            {% if user.role == 'admin' %}
+            <a href="{% url 'resource_allocation:create' %}" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-circle me-1"></i>New Allocation
+            </a>
+            {% endif %}
+        </div>
+
+        {% if allocations %}
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr><th>Asset</th><th>Title</th><th>Priority</th><th>Budget</th><th>Personnel</th><th>Controls</th><th>Allocated By</th>{% if user.role == 'admin' %}<th>Actions</th>{% endif %}</tr>
+                </thead>
+                <tbody>
+                    {% for alloc in allocations %}
+                    <tr>
+                        <td style="font-weight:600; font-size:13px;">{{ alloc.asset.name }}</td>
+                        <td style="font-size:13px;">{{ alloc.title }}</td>
+                        <td><span class="badge badge-{{ alloc.priority }} rounded-pill px-3">{{ alloc.priority|upper }}</span></td>
+                        <td style="font-size:13px; font-weight:600; color:#388e3c;">${{ alloc.budget_allocated|floatformat:0 }}</td>
+                        <td style="font-size:13px;"><i class="bi bi-person-fill me-1 text-primary"></i>{{ alloc.personnel_assigned }}</td>
+                        <td style="font-size:12px; color:#888;">{{ alloc.assigned_controls.count }} controls</td>
+                        <td style="font-size:12px; color:#888;">{{ alloc.allocated_by }}</td>
+                        {% if user.role == 'admin' %}
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'resource_allocation:edit' alloc.pk %}" class="btn btn-sm btn-outline-primary" style="border-radius:6px;"><i class="bi bi-pencil-fill"></i></a>
+                                <a href="{% url 'resource_allocation:delete' alloc.pk %}" class="btn btn-sm btn-outline-danger" style="border-radius:6px;" onclick="return confirm('Delete this allocation?')"><i class="bi bi-trash-fill"></i></a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-diagram-3" style="font-size:48px; opacity:0.2;"></i>
+            <p style="margin-top:12px;">No allocations yet. Start by allocating resources to high-risk assets above.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

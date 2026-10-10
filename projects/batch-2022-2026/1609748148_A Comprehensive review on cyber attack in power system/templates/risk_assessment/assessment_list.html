@@ -1,0 +1,48 @@
+{% extends "partials/base.html" %}
+{% block title %}Risk Assessments{% endblock %}
+{% block page_title %}<i class="bi bi-graph-up-arrow me-2"></i>TAM Risk Assessments{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="stat-card bg-gradient-red"><div class="stat-icon mb-1"><i class="bi bi-fire"></i></div><div class="stat-number">{{ critical_count }}</div><div class="stat-label">Critical Risk</div></div></div>
+    <div class="col-md-3"><div class="stat-card bg-gradient-orange"><div class="stat-icon mb-1"><i class="bi bi-exclamation-triangle"></i></div><div class="stat-number">{{ high_count }}</div><div class="stat-label">High Risk</div></div></div>
+    <div class="col-md-3"><div class="stat-card bg-gradient-blue"><div class="stat-icon mb-1"><i class="bi bi-dash-circle"></i></div><div class="stat-number">{{ medium_count }}</div><div class="stat-label">Medium Risk</div></div></div>
+    <div class="col-md-3"><div class="stat-card bg-gradient-green"><div class="stat-icon mb-1"><i class="bi bi-check-circle"></i></div><div class="stat-number">{{ low_count }}</div><div class="stat-label">Low Risk</div></div></div>
+</div>
+<div class="card">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 style="font-weight:700; color:#1a3a5c; margin:0;">Assessment Results</h6>
+            {% if user.role == 'admin' or user.role == 'analyst' %}
+            <a href="{% url 'risk_assessment:run' %}" class="btn btn-primary btn-sm"><i class="bi bi-play-fill me-1"></i>Run New TAM</a>
+            {% endif %}
+        </div>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead><tr><th>#</th><th>Asset</th><th>Risk Level</th><th>Overall Score</th><th>Assessed By</th><th>Date</th><th>Action</th></tr></thead>
+                <tbody>
+                    {% for a in assessments %}
+                    <tr>
+                        <td style="color:#aaa; font-size:12px;">{{ forloop.counter }}</td>
+                        <td style="font-weight:500;">{{ a.asset.name }}</td>
+                        <td><span class="badge badge-{{ a.risk_level }} rounded-pill px-3">{{ a.risk_level|upper }}</span></td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-weight:700; color:{% if a.risk_level == 'critical' %}#d32f2f{% elif a.risk_level == 'high' %}#f57c00{% elif a.risk_level == 'medium' %}#fbc02d{% else %}#388e3c{% endif %}; font-size:16px;">{{ a.overall_risk_score }}</span>
+                                <div class="progress flex-grow-1" style="height:6px;">
+                                    <div class="progress-bar" style="width:{{ a.overall_risk_score|floatformat:0 }}0%; background:{% if a.risk_level == 'critical' %}#d32f2f{% elif a.risk_level == 'high' %}#f57c00{% else %}#388e3c{% endif %};"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-size:13px;">{{ a.assessed_by }}</td>
+                        <td style="font-size:12px; color:#888;">{{ a.assessment_date|date:"M d, Y" }}</td>
+                        <td><a href="{% url 'risk_assessment:detail' a.pk %}" class="btn btn-sm btn-outline-primary" style="border-radius:6px;"><i class="bi bi-eye-fill"></i></a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-center text-muted py-5">No assessments yet. <a href="{% url 'risk_assessment:run' %}">Run a TAM assessment.</a></td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

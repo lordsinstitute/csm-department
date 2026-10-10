@@ -1,0 +1,58 @@
+{% extends "partials/base.html" %}
+{% block title %}Threat Detail{% endblock %}
+{% block page_title %}<i class="bi bi-exclamation-triangle-fill me-2"></i>Threat Detail{% endblock %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h5 style="font-weight:700; color:#1a3a5c;">{{ threat.title }}</h5>
+                    <span class="badge badge-{{ threat.severity }} px-3 py-2">{{ threat.severity|upper }}</span>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Attack Vector</label>
+                        <p style="font-weight:500;">{{ threat.attack_vector }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Status</label>
+                        <p><span class="badge bg-secondary">{{ threat.status|upper }}</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Likelihood Score</label>
+                        <p style="font-weight:700; color:#1976d2;">{{ threat.likelihood_score }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Impact Score</label>
+                        <p style="font-weight:700; color:#d32f2f;">{{ threat.impact_score }}</p>
+                    </div>
+                </div>
+                <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Description</label>
+                <p>{{ threat.description }}</p>
+                <label style="font-size:11px; font-weight:600; color:#aaa; text-transform:uppercase;">Potential Impact</label>
+                <p>{{ threat.potential_impact }}</p>
+                <div class="mt-3">
+                    <a href="{% url 'threats:list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700;">Risk Score</h6>
+                <div style="font-size:48px; font-weight:800; color:{% if threat.risk_score >= 7 %}#d32f2f{% elif threat.risk_score >= 4 %}#f57c00{% else %}#388e3c{% endif %}; text-align:center; padding:20px 0;">
+                    {{ threat.risk_score }}<small style="font-size:18px; color:#aaa;">/100</small>
+                </div>
+                <h6 style="font-weight:700; margin-top:16px;">Affected Assets</h6>
+                {% for asset in threat.affected_assets.all %}
+                <div style="background:#f8fbff; border-radius:8px; padding:8px 12px; margin-bottom:6px; font-size:13px;">
+                    <i class="bi bi-hdd-network me-2 text-primary"></i>{{ asset.name }}
+                </div>
+                {% empty %}<p class="text-muted" style="font-size:13px;">No assets linked</p>{% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
