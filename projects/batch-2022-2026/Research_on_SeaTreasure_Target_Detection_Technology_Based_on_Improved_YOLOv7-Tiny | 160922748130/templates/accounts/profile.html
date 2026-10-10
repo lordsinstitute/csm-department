@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - Sea Treasure{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="section-heading">
+  <h2><i class="bi bi-person-circle me-2 text-accent"></i>My Profile</h2>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="glass-card p-4 text-center">
+      <!-- Avatar -->
+      <div class="user-avatar-sm mx-auto mb-3" style="width:80px;height:80px;font-size:2rem;border-radius:50%;">
+        {{ request.user.username|first|upper }}
+      </div>
+      <h4 class="fw-bold mb-1">{{ request.user.get_full_name|default:request.user.username }}</h4>
+      <p class="text-ocean mb-2" style="font-size:.85rem;">{{ request.user.email }}</p>
+      <span class="badge-status badge-completed">
+        {% if profile.role == 'admin' %}👑 Admin{% else %}🔬 Researcher{% endif %}
+      </span>
+      <div class="divider"></div>
+      <div class="text-start">
+        {% if profile.organization %}
+        <div class="d-flex align-items-center gap-2 mb-2 text-ocean" style="font-size:.88rem;">
+          <i class="bi bi-building"></i> {{ profile.organization }}
+        </div>
+        {% endif %}
+        {% if profile.phone %}
+        <div class="d-flex align-items-center gap-2 mb-2 text-ocean" style="font-size:.88rem;">
+          <i class="bi bi-telephone"></i> {{ profile.phone }}
+        </div>
+        {% endif %}
+        <div class="d-flex align-items-center gap-2 text-ocean" style="font-size:.88rem;">
+          <i class="bi bi-calendar3"></i> Joined {{ request.user.date_joined|date:"M d, Y" }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="glass-card p-4">
+      <h5 class="fw-bold mb-4"><i class="bi bi-pencil-fill me-2 text-accent"></i>Edit Profile</h5>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">First Name</label>
+            {{ form.first_name }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Last Name</label>
+            {{ form.last_name }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">Email</label>
+            {{ form.email }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone</label>
+            {{ form.phone }}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Organization</label>
+            {{ form.organization }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">Bio</label>
+            {{ form.bio }}
+          </div>
+          <div class="col-12">
+            <label class="form-label">Profile Picture</label>
+            {{ form.profile_picture }}
+          </div>
+          <div class="col-12 mt-2">
+            <button type="submit" class="btn-ocean btn">
+              <i class="bi bi-save me-2"></i>Save Changes
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

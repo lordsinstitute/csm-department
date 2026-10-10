@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Dataset Details - Sea Treasure{% endblock %}
+{% block page_title %}Dataset: {{ dataset.name }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h4 class="fw-bold mb-1">{{ dataset.name }}</h4>
+          <div class="text-ocean" style="font-size:.85rem;">
+            Uploaded by {{ dataset.uploaded_by.username }} on {{ dataset.created_at|date:"M d, Y" }}
+          </div>
+        </div>
+        <span class="badge-status badge-{{ dataset.status }} px-3 py-2 fs-6">{{ dataset.get_status_display }}</span>
+      </div>
+
+      <h6 class="fw-bold border-bottom border-secondary pb-2 mb-3"><i class="bi bi-card-text me-2 text-primary"></i>Description</h6>
+      <p class="text-ocean" style="line-height:1.7;white-space:pre-wrap;">{{ dataset.description }}</p>
+
+      {% if dataset.source_url %}
+      <div class="mt-4 p-3 rounded" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
+        <h6 class="fw-bold mb-2"><i class="bi bi-link-45deg me-1 text-accent"></i>Source URL</h6>
+        <a href="{{ dataset.source_url }}" target="_blank" class="text-primary text-break" style="text-decoration:none;">{{ dataset.source_url }}</a>
+      </div>
+      {% endif %}
+
+      <div class="mt-4 d-flex gap-2">
+        <a href="{% url 'datasets:list' %}" class="btn-ocean btn"><i class="bi bi-arrow-left me-1"></i>Back to Datasets</a>
+        {% if request.user.profile.role == 'admin' %}
+        <form action="{% url 'datasets:delete' dataset.id %}" method="POST" onsubmit="return confirm('Delete this dataset?');" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn-glass btn text-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="glass-card p-4">
+      <h6 class="fw-bold mb-4"><i class="bi bi-bar-chart-fill me-2 text-accent"></i>Data Split Statistics</h6>
+      <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-secondary">
+        <span class="text-ocean">Total Images</span>
+        <span class="fw-bold fs-5">{{ dataset.total_images }}</span>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-ocean d-flex align-items-center"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary);margin-right:8px;"></span>Training Set</span>
+        <span class="fw-bold">{{ dataset.train_count }}</span>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-ocean d-flex align-items-center"><span style="width:10px;height:10px;border-radius:50%;background:var(--warning);margin-right:8px;"></span>Validation Set</span>
+        <span class="fw-bold">{{ dataset.val_count }}</span>
+      </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-ocean d-flex align-items-center"><span style="width:10px;height:10px;border-radius:50%;background:var(--danger);margin-right:8px;"></span>Testing Set</span>
+        <span class="fw-bold">{{ dataset.test_count }}</span>
+      </div>
+
+      <div class="ocean-progress mt-4" style="height:12px;">
+        <div class="ocean-progress-bar bg-primary" style="width:{% widthratio dataset.train_count dataset.total_images|default:1 100 %}%;"></div>
+        <div class="ocean-progress-bar bg-warning" style="width:{% widthratio dataset.val_count dataset.total_images|default:1 100 %}%;"></div>
+        <div class="ocean-progress-bar bg-danger"  style="width:{% widthratio dataset.test_count dataset.total_images|default:1 100 %}%;"></div>
+      </div>
+    </div>
+
+    {% if dataset.file %}
+    <div class="glass-card p-4 mt-4 text-center">
+      <i class="bi bi-file-earmark-zip" style="font-size:3rem;color:var(--accent);"></i>
+      <h6 class="fw-bold mt-2 mb-3">Dataset Archive File</h6>
+      <a href="{{ dataset.file.url }}" class="btn-accent btn btn-sm w-100"><i class="bi bi-download me-2"></i>Download File</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

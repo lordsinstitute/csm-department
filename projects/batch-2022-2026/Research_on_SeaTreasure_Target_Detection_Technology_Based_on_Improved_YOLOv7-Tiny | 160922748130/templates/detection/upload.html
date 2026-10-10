@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Upload for Detection - Sea Treasure{% endblock %}
+{% block page_title %}Upload & Detect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="glass-card p-4 mb-4">
+      <h4 class="fw-bold mb-1"><i class="bi bi-cloud-upload-fill me-2 text-accent"></i>Upload Underwater Image</h4>
+      <p class="text-ocean mb-4" style="font-size:.88rem;">Upload an image containing sea cucumbers, sea urchins, or shells. The UPA-YOLO model will detect and annotate them.</p>
+
+      <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+
+        <!-- Drop zone -->
+        <div class="upload-zone mb-4" id="dropZone" onclick="document.getElementById('id_input_file').click()">
+          <span class="upload-icon">🌊</span>
+          <h5 class="fw-bold mb-2">Drag & Drop or Click to Upload</h5>
+          <p class="text-ocean mb-3" style="font-size:.85rem;">Supports: JPG, PNG, JPEG, BMP | Max 100 MB</p>
+          <div id="filePreview" class="d-none mt-3">
+            <img id="previewImg" src="" alt="Preview" style="max-height:200px;border-radius:10px;border:2px solid var(--card-border);"/>
+            <p id="fileName" class="text-accent mt-2 mb-0" style="font-size:.85rem;"></p>
+          </div>
+          {{ form.input_file }}
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Job Name <span class="text-ocean" style="font-size:.75rem;">(optional)</span></label>
+            {{ form.name }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Confidence Threshold</label>
+            {{ form.confidence_threshold }}
+            <small class="text-ocean">Min detection confidence (0.1–0.95)</small>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">IoU Threshold</label>
+            {{ form.iou_threshold }}
+            <small class="text-ocean">Non-max suppression threshold</small>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Notes <span class="text-ocean" style="font-size:.75rem;">(optional)</span></label>
+            {{ form.notes }}
+          </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger mt-3">
+          {% for field in form %}{% for error in field.errors %}{{ error }}{% endfor %}{% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="d-flex gap-3 mt-4">
+          <button type="submit" class="btn-accent btn" id="submitBtn">
+            <i class="bi bi-search me-2"></i>Start Detection
+          </button>
+          <a href="{% url 'detection:history' %}" class="btn-glass btn">
+            <i class="bi bi-clock-history me-2"></i>View History
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="glass-card p-3 text-center">
+          <div style="font-size:2rem;">🥒</div>
+          <div class="fw-bold" style="font-size:.9rem;margin-top:.5rem;">Sea Cucumber</div>
+          <div class="text-ocean" style="font-size:.78rem;">Holothuroidea species</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="glass-card p-3 text-center">
+          <div style="font-size:2rem;">🦔</div>
+          <div class="fw-bold" style="font-size:.9rem;margin-top:.5rem;">Sea Urchin</div>
+          <div class="text-ocean" style="font-size:.78rem;">Echinoidea species</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="glass-card p-3 text-center">
+          <div style="font-size:2rem;">🐚</div>
+          <div class="fw-bold" style="font-size:.9rem;margin-top:.5rem;">Shell</div>
+          <div class="text-ocean" style="font-size:.78rem;">Marine mollusca</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// File input hidden
+document.getElementById('id_input_file').style.display = 'none';
+
+// File preview
+document.getElementById('id_input_file').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  document.getElementById('fileName').textContent = `📁 ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('filePreview').classList.remove('d-none');
+    };
+    reader.readAsDataURL(file);
+  } else {
+    document.getElementById('filePreview').classList.remove('d-none');
+    document.getElementById('previewImg').style.display = 'none';
+  }
+});
+
+// Drag & Drop
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById('id_input_file').files = dt.files;
+    document.getElementById('id_input_file').dispatchEvent(new Event('change'));
+  }
+});
+
+// Submit loading state
+document.getElementById('uploadForm').addEventListener('submit', function() {
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+  btn.disabled = true;
+});
+</script>
+{% endblock %}
