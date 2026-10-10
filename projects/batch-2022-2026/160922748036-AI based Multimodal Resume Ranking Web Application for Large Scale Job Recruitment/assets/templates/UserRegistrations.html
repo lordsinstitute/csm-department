@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Registration{% endblock %}
+
+{% block content %}
+
+<style>
+    .register-page-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem 4rem;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .register-page-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 20% 30%, rgba(99,102,241,0.07) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .register-card {
+        background: rgba(30, 41, 59, 0.78);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(167,139,250,0.18);
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        width: 100%;
+        max-width: 520px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+        animation: cardEnter 0.9s ease-out;
+    }
+
+    @keyframes cardEnter {
+        from { opacity: 0; transform: translateY(50px) scale(0.94); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .register-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2.2rem;
+        background: linear-gradient(90deg, #a78bfa, #ec4899, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .form-floating {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-floating input,
+    .form-floating select {
+        width: 100%;
+        padding: 1.3rem 1rem 0.5rem 2.8rem;
+        font-size: 1.05rem;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(165,180,252,0.22);
+        border-radius: 10px;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .form-floating input:focus,
+    .form-floating select:focus {
+        border-color: #a78bfa;
+        box-shadow: 0 0 0 0.25rem rgba(167,139,250,0.22);
+        outline: none;
+    }
+
+    .form-floating label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1.25rem 0.75rem 0 2.8rem;
+        pointer-events: none;
+        color: #94a3b8;
+        transition: all 0.3s ease;
+    }
+
+    .form-floating input:focus ~ label,
+    .form-floating input:not(:placeholder-shown) ~ label,
+    .form-floating select:focus ~ label,
+    .form-floating select:not(:placeholder-shown) ~ label {
+        transform: translateY(-1.9rem) scale(0.85);
+        color: #a78bfa;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.35rem;
+        pointer-events: none;
+        transition: color 0.3s;
+    }
+
+    .form-floating input:focus ~ .input-icon,
+    .form-floating select:focus ~ .input-icon {
+        color: #a78bfa;
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 0.95rem;
+        font-size: 1.15rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(90deg, #7c3aed, #c084fc, #ec4899);
+        color: white;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(124,58,237,0.4);
+    }
+
+    .btn-register:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 45px rgba(124,58,237,0.55);
+    }
+
+    .btn-register::after {
+        content: "";
+        position: absolute;
+        top: -50%; left: -100%;
+        width: 50%; height: 200%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+        transition: left 0.7s;
+    }
+
+    .btn-register:hover::after {
+        left: 200%;
+    }
+
+    .message {
+        text-align: center;
+        margin-top: 1.8rem;
+        font-size: 1.1rem;
+        padding: 0.8rem;
+        border-radius: 10px;
+    }
+
+    .message.success { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+    .message.error   { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+    @media (max-width: 576px) {
+        .register-card { padding: 2rem 1.5rem; }
+        .register-title { font-size: 1.95rem; }
+    }
+</style>
+
+<div class="register-page-wrapper">
+    <div class="register-card">
+        <h2 class="register-title">Create Your Account</h2>
+
+        <form action="{% url 'UserRegisterActions' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-floating">
+                <input type="text" name="name" id="name" placeholder=" " required>
+                <label for="name">Full Name</label>
+                <i class="bi bi-person-fill input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="text" name="loginid" id="loginid" placeholder=" " required>
+                <label for="loginid">Login ID / Username</label>
+                <i class="bi bi-at input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" name="password" id="password" placeholder=" " required>
+                <label for="password">Password</label>
+                <i class="bi bi-lock-fill input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="tel" name="mobile" id="mobile" placeholder=" " required>
+                <label for="mobile">Mobile Number</label>
+                <i class="bi bi-telephone-fill input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="email" name="email" id="email" placeholder=" " required>
+                <label for="email">Email Address</label>
+                <i class="bi bi-envelope-fill input-icon"></i>
+            </div>
+
+            <div class="form-floating">
+                <input type="text" name="state" id="state" placeholder=" " required>
+                <label for="state">State</label>
+                <i class="bi bi-geo-alt-fill input-icon"></i>
+            </div>
+
+            <!-- Hidden status field (assuming it's set by backend) -->
+            {{ form.status }}
+
+            <button type="submit" class="btn-register mt-4">
+                Register Now
+            </button>
+
+            {% if messages %}
+                <div class="message {% if messages.0.tags == 'success' %}success{% else %}error{% endif %}">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

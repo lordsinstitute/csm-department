@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Hiring & Recruitment Automation</title>
+  <meta content="AI-powered resume screening and candidate ranking system" name="description">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/aos/aos.css' %}" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #6366f1;        /* indigo */
+      --primary-dark: #4f46e5;
+      --secondary: #ec4899;      /* pink accent */
+      --dark: #0f172a;
+      --dark-800: #1e293b;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: var(--light);
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+
+    /* Overlay to improve text readability */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      z-index: -2;
+    }
+
+    /* Header */
+    #header {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.18);
+      padding: 1.2rem 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s;
+    }
+
+    .container-fluid {
+      max-width: 1400px;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #c084fc, #ec4899, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0;
+    }
+
+    .navbar ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 1.5rem;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.05rem;
+      padding: 0.6rem 1.3rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .navbar a:hover {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(99,102,241,0.35);
+      color: white;
+    }
+
+    /* Hero / Main content area */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    .hero-title {
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #c084fc, #ec4899, #a78bfa, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.35rem;
+      color: #cbd5e1;
+      margin-bottom: 3rem;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      padding: 1rem 2.4rem;
+      font-size: 1.18rem;
+      font-weight: 600;
+      border-radius: 50px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      transition: all 0.4s ease;
+      box-shadow: 0 10px 25px rgba(99,102,241,0.35);
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(99,102,241,0.5);
+    }
+
+    .btn-outline {
+      padding: 1rem 2.4rem;
+      font-size: 1.18rem;
+      font-weight: 600;
+      border-radius: 50px;
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      transition: all 0.4s ease;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-4px);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 3.2rem; }
+      .hero-subtitle { font-size: 1.15rem; }
+      .btn-group { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container-fluid d-flex justify-content-between align-items-center px-4 px-lg-5">
+      <h1>Hiring & Recruitment AI</h1>
+
+      <nav class="navbar">
+        <ul>
+          <li><a href="{% url 'index' %}">HOME</a></li>
+          <li><a href="{% url 'UserLogin' %}">LOGIN</a></li>
+          <li><a href="{% url 'AdminLogin' %}">ADMIN</a></li>
+          <li><a href="{% url 'UserRegister' %}">REGISTER</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+      <h1 class="hero-title">
+        AI-Powered Resume Screening<br>& Recruitment Automation
+      </h1>
+      <p class="hero-subtitle">
+        Upload resumes • Match with job description • Rank candidates automatically • Generate offer letters • Save 80% of manual screening time
+      </p>
+
+      <div class="btn-group">
+        <a href="{% url 'UserLogin' %}" class="btn-primary">Get Started →</a>
+        <a href="{% url 'UserRegister' %}" class="btn-outline">Create Free Account</a>
+      </div>
+    </div>
+  </section><!-- End Hero -->
+
+  {% block content %}
+  {% endblock %}
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" style="padding: 3rem 0; background: rgba(15,23,42,0.6); border-top: 1px solid rgba(99,102,241,0.15); color: #94a3b8; font-size: 0.95rem; text-align: center;">
+    <div class="container">
+      <p>© {{ year|default:"2025" }} Hiring and Recruitment Automation System • Built with Django & Machine Learning</p>
+    </div>
+  </footer>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendor/aos/aos.js' %}"></script>
+
+  <!-- AOS Initialize -->
+  <script>
+    AOS.init({
+      duration: 800,
+      once: true,
+      mirror: false
+    });
+  </script>
+
+</body>
+</html>

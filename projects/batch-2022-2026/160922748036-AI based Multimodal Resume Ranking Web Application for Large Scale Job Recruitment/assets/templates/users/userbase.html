@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Hiring & Recruitment | Dashboard</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'img/favicon.png' %}" rel="icon">
+  <link href="{% static 'img/favicon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #6366f1;       /* indigo */
+      --primary-dark: #4f46e5;
+      --accent: #ec4899;        /* magenta / pink */
+      --dark: #0f172a;
+      --dark-800: #1e293b;
+      --light: #f8fafc;
+      --gray: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--dark-800) 100%);
+      color: var(--light);
+      min-height: 100vh;
+      background-attachment: fixed;
+      margin: 0;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.68);
+      z-index: -2;
+    }
+
+    /* Header */
+    #header {
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.18);
+      padding: 1.1rem 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s;
+    }
+
+    .logo a {
+      font-size: 1.95rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ec4899, #a78bfa, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    #navbar ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 1.4rem;
+      align-items: center;
+    }
+
+    #navbar a {
+      color: #ec4899;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.05rem;
+      padding: 0.6rem 1.3rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      background: rgba(236, 72, 153, 0.05);
+      border: 1px solid rgba(236, 72, 153, 0.12);
+    }
+
+    #navbar a:hover,
+    #navbar a.active {
+      background: linear-gradient(90deg, #ec4899, #a78bfa);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(236,72,153,0.35);
+    }
+
+    .mobile-nav-toggle {
+      color: #ec4899;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    /* Main content padding after fixed header */
+    main {
+      padding-top: 90px;
+    }
+
+    @media (max-width: 991px) {
+      .mobile-nav-toggle { display: block; }
+      #navbar ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.96);
+        padding: 1.5rem;
+        border-top: 1px solid rgba(236,72,153,0.2);
+      }
+      #navbar ul.show { display: flex; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container-fluid d-flex justify-content-between align-items-center px-4 px-lg-5">
+      <h1 class="logo"><a href="{% url 'UserHome' %}">Hiring & Recruitment</a></h1>
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+<ul>
+  <li>
+    <a class="{% if request.resolver_match.url_name == 'UserHome' %}active{% endif %}" 
+       href="{% url 'UserHome' %}">
+       🏠 Dashboard
+    </a>
+  </li>
+
+  <li>
+    <a class="{% if request.resolver_match.url_name == 'application' %}active{% endif %}" 
+       href="{% url 'application' %}">
+       📄 Active Applications
+    </a>
+  </li>
+
+  <li>
+    <a class="{% if request.resolver_match.url_name == 'past_applications' %}active{% endif %}" 
+       href="{% url 'past_applications' %}">
+       📁 Processed Applications
+    </a>
+  </li>
+
+  <li>
+    <a class="{% if request.resolver_match.url_name == 'training' %}active{% endif %}" 
+       href="{% url 'training' %}">
+       📊 Analytics & Reports
+    </a>
+  </li>
+
+  <li>
+    <a class="{% if request.resolver_match.url_name == 'upload_resumes' %}active{% endif %}" 
+       href="{% url 'upload_resumes' %}">
+       📤 Resume Screening
+    </a>
+  </li>
+
+  <li>
+    <a href="{% url 'index' %}">
+       🚪 Logout
+    </a>
+  </li>
+</ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav>
+    </div>
+  </header><!-- End Header -->
+
+  <!-- Main content area -->
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- ======= Hero / Background Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <!-- Your child template content goes here -->
+  </section>
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <!-- Mobile nav toggle script -->
+  <script>
+    document.querySelector('.mobile-nav-toggle').addEventListener('click', function() {
+      document.querySelector('#navbar ul').classList.toggle('show');
+      this.classList.toggle('bi-list');
+      this.classList.toggle('bi-x');
+    });
+  </script>
+
+</body>
+</html>

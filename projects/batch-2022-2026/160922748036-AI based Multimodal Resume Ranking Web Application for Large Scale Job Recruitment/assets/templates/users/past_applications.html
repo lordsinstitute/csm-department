@@ -1,0 +1,177 @@
+{% extends 'users/userbase.html' %}
+{% load static %}
+
+{% block title %}Past Applications{% endblock %}
+
+{% block content %}
+
+<style>
+  .past-applications-wrapper {
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 90px);
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.6rem;
+  }
+
+  .applications-card {
+    background: rgba(30, 41, 59, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(167, 139, 250, 0.18);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .table {
+    margin-bottom: 0;
+    color: #e2e8f0;
+  }
+
+  .table thead th {
+    background: linear-gradient(90deg, #7c3aed, #c084fc);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    padding: 1.1rem 1rem;
+    font-size: 1.05rem;
+  }
+
+  .table tbody tr {
+    background: rgba(15, 23, 42, 0.35);
+    transition: all 0.25s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(167, 139, 250, 0.12);
+    transform: scale(1.005);
+  }
+
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 1rem 0.9rem;
+    border-top: 1px solid rgba(167,139,250,0.08);
+  }
+
+  .badge-selected {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    color: white;
+    font-weight: 500;
+    padding: 0.55rem 1.1rem;
+    border-radius: 50px;
+  }
+
+  .no-data {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #94a3b8;
+    font-size: 1.25rem;
+  }
+
+  .no-data i {
+    font-size: 3.5rem;
+    opacity: 0.6;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 992px) {
+    .table-responsive {
+      overflow-x: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-title { font-size: 1.9rem; }
+    .table thead { display: none; }
+    .table tbody tr {
+      display: block;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(167,139,250,0.2);
+      border-radius: 12px;
+    }
+    .table td {
+      display: flex;
+      justify-content: space-between;
+      text-align: right;
+      border: none;
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid rgba(167,139,250,0.1);
+    }
+    .table td:before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #c084fc;
+      text-align: left;
+      flex: 1;
+    }
+  }
+</style>
+
+<div class="past-applications-wrapper">
+  <div class="page-header">
+    <h1 class="page-title">Past Applications (Offer Letters Sent)</h1>
+  </div>
+
+  <div class="applications-card">
+    {% if results %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Similarity Score (%)</th>
+            <th>Status</th>
+            <th>Date Sent</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+          <tr>
+            <td data-label="Name">{{ result.name }}</td>
+            <td data-label="Email">{{ result.email }}</td>
+            <td data-label="Similarity Score">
+              {{ result.similarity_score|floatformat:2 }}%
+            </td>
+            <td data-label="Status">
+              <span class="badge-selected">Selected</span>
+            </td>
+            <td data-label="Date Sent">
+              {{ result.created_at|date:"M d, Y" }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="no-data">
+      <i class="bi bi-envelope-slash"></i><br><br>
+      No past applications found.<br>
+      You haven't received any offer letters yet.
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
