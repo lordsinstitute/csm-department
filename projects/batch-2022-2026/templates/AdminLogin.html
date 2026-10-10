@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #0f172a, #1e293b);
+    }
+
+    .login-wrapper {
+        max-width: 450px;
+        margin: 4rem auto;
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(14px);
+        padding: 2rem 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        color: #e2e8f0;
+        animation: zoomFade 0.8s ease-in-out;
+    }
+
+    .login-form h1 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .login-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #e2e8f0;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 0.7rem;
+        margin-bottom: 1.25rem;
+        border: none;
+        border-radius: 12px;
+        background-color: #f1f5f9;
+        font-size: 1rem;
+        color: #1e293b;
+    }
+
+    .login-form button {
+        width: 100%;
+        padding: 0.8rem;
+        background: linear-gradient(to right, #22c55e, #16a34a);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .login-form button:hover {
+        background: linear-gradient(to right, #16a34a, #15803d);
+        transform: scale(1.02);
+    }
+
+    .text-danger {
+        color: #f87171;
+        text-align: center;
+        margin-top: 1rem;
+        font-weight: 600;
+    }
+
+    @keyframes zoomFade {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @media screen and (max-width: 600px) {
+        .login-wrapper {
+            margin: 2rem 1rem;
+            padding: 1.5rem;
+        }
+
+        .login-form h1 {
+            font-size: 1.6rem;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+    <form method="POST" action="{% url 'AdminLoginCheck' %}" class="login-form">
+        <h1>🔐 Admin Login</h1>
+        {% csrf_token %}
+
+        <label for="loginid">🆔 Admin ID</label>
+        <input type="text" name="loginid" id="loginid" placeholder="Enter Admin ID" required>
+
+        <label for="password">🔑 Password</label>
+        <input type="password" name="password" id="password" placeholder="Enter Password" required>
+
+        <button type="submit">🚪 Login</button>
+
+        {% if messages %}
+        <div class="text-danger">
+            {% for message in messages %}
+                {{ message }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}
