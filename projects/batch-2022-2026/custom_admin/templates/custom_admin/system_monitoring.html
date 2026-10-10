@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}System Monitoring - RetinaDetect{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>System Monitoring</h2>
+            <small class="text-muted">Last updated: {{ server_time|date:"M d, Y H:i:s" }}</small>
+        </div>
+    </div>
+</div>
+
+<!-- System Resources -->
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">CPU Usage</h6>
+                        <h3>{{ cpu_percent }}%</h3>
+                    </div>
+                    <i class="fas fa-microchip fa-2x text-info"></i>
+                </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar {% if cpu_percent >= 80 %}bg-danger{% elif cpu_percent >= 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                         role="progressbar" style="width: {{ cpu_percent }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if memory %}
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">Memory Usage</h6>
+                        <h3>{{ memory.percent }}%</h3>
+                        <small>{{ memory.used|filesizeformat }} / {{ memory.total|filesizeformat }}</small>
+                    </div>
+                    <i class="fas fa-memory fa-2x text-success"></i>
+                </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar {% if memory.percent >= 80 %}bg-danger{% elif memory.percent >= 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                         role="progressbar" style="width: {{ memory.percent }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">Disk Usage</h6>
+                        <h3>{{ disk.percent }}%</h3>
+                        <small>{{ disk.used|filesizeformat }} / {{ disk.total|filesizeformat }}</small>
+                    </div>
+                    <i class="fas fa-hdd fa-2x text-warning"></i>
+                </div>
+                <div class="progress mt-3" style="height: 5px;">
+                    <div class="progress-bar {% if disk.percent >= 80 %}bg-danger{% elif disk.percent >= 50 %}bg-warning{% else %}bg-success{% endif %}" 
+                         role="progressbar" style="width: {{ disk.percent }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="col-md-6 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-title text-muted">Database Status</h6>
+                        <h3><span class="badge bg-success">Connected</span></h3>
+                    </div>
+                    <i class="fas fa-database fa-2x text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Database Statistics -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Database Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3>{{ db_users }}</h3>
+                            <p class="text-muted">Total Users</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3>{{ db_patients }}</h3>
+                            <p class="text-muted">Total Patients</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3>{{ db_images }}</h3>
+                            <p class="text-muted">Total Images</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h3>{{ db_detections }}</h3>
+                            <p class="text-muted">Total Detections</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- System Logs -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">System Logs (Last 24 Hours)</h5>
+                <small class="text-muted">
+                    <span class="badge bg-info">{{ log_levels.INFO }} Info</span>
+                    <span class="badge bg-warning">{{ log_levels.WARNING }} Warnings</span>
+                    <span class="badge bg-danger">{{ log_levels.ERROR }} Errors</span>
+                    <span class="badge bg-dark">{{ log_levels.CRITICAL }} Critical</span>
+                </small>
+            </div>
+            <div class="card-body">
+                {% if recent_logs %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Level</th>
+                                <th>Module</th>
+                                <th>Message</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in recent_logs %}
+                            <tr>
+                                <td><small>{{ log.timestamp|date:"M d H:i:s" }}</small></td>
+                                <td>
+                                    <span class="badge 
+                                        {% if log.level == 'CRITICAL' %}bg-dark
+                                        {% elif log.level == 'ERROR' %}bg-danger
+                                        {% elif log.level == 'WARNING' %}bg-warning
+                                        {% else %}bg-info{% endif %}">
+                                        {{ log.level }}
+                                    </span>
+                                </td>
+                                <td><code class="text-muted">{{ log.module }}</code></td>
+                                <td><small>{{ log.message|truncatewords:15 }}</small></td>
+                                <td>
+                                    {% if log.user %}
+                                        <small>{{ log.user.username }}</small>
+                                    {% else %}
+                                        <small class="text-muted">System</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h5>No System Logs</h5>
+                    <p class="text-muted">System is running smoothly!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

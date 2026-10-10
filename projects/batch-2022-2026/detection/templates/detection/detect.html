@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Detect Microaneurysms - RetinaDetect{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Detect Microaneurysms</h2>
+            <a href="{% url 'images:image_detail' image.pk %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to Image
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-search me-2"></i>Detection Preview
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <img src="{{ image.original_image.url }}" 
+                         alt="Retina Image" 
+                         class="img-fluid rounded shadow"
+                         style="max-height: 400px;">
+                    <p class="text-muted mt-2">Original retina image - Patient: {{ image.patient }}</p>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-flask me-2"></i>
+                    <strong>Development Mode:</strong> Currently using simulated detection for demonstration purposes. 
+                    In production, this would use advanced computer vision algorithms for accurate microaneurysm detection.
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>About Microaneurysm Detection:</strong> This process will analyze the retina image to identify 
+                    microaneurysms using computer vision algorithms. The detection typically takes a few seconds to complete.
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-play me-2"></i>Start Detection
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

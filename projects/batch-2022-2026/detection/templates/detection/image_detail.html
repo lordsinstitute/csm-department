@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Detection - {{ image.name }}</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .image-section {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .image-container {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        
+        .detection-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .results-container {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            display: none;
+        }
+        
+        .results-container.show {
+            display: block;
+        }
+        
+        .detection-item {
+            padding: 10px;
+            margin: 10px 0;
+            background: #e9ecef;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Detection: {{ image.name }}</h1>
+        
+        <!-- Image Display -->
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ image.image_file.url }}" alt="{{ image.name }}">
+            </div>
+        </div>
+        
+        <!-- Detection Controls -->
+        <div class="detection-section">
+            <h2>Object Detection</h2>
+            
+            {% if detection_performed %}
+                <div class="alert alert-info">
+                    ✅ Detection already performed on this image.
+                </div>
+                
+                <button onclick="viewDetectionResults()" class="btn btn-primary">
+                    View Detection Results
+                </button>
+                
+                <button onclick="runDetection()" class="btn btn-success">
+                    Run Detection Again
+                </button>
+                
+            {% else %}
+                <button onclick="runDetection()" class="btn btn-success">
+                    Run Detection
+                </button>
+            {% endif %}
+            
+            <!-- Loading Spinner -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Processing detection... Please wait.</p>
+            </div>
+            
+            <!-- Results Container -->
+            <div id="results-container" class="results-container">
+                <h3>Detection Results</h3>
+                <div id="results-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CSRF token helper for Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        function runDetection() {
+            const loadingElement = document.getElementById('loading');
+            const resultsContainer = document.getElementById('results-container');
+            const resultsContent = document.getElementById('results-content');
+            
+            // Show loading
+            loadingElement.style.display = 'block';
+            resultsContainer.classList.remove('show');
+            
+            // Get image ID from URL or set dynamically
+            const imageId = {{ image.id }};
+            
+            fetch(`/magex/run-detection/${imageId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingElement.style.display = 'none';
+                
+                if (data.success) {
+                    // Show success message and reload page to update state
+                    alert('Detection completed successfully!');
+                    location.reload();
+                } else {
+                    showError('Detection failed: ' + data.error);
+                }
+            })
+            .catch(error => {
+                loadingElement.style.display = 'none';
+                showError('Network error: ' + error.message);
+            });
+        }
+        
+        function viewDetectionResults() {
+            const resultsContainer = document.getElementById('results-container');
+            const resultsContent = document.getElementById('results-content');
+            const loadingElement = document.getElementById('loading');
+            
+            // Show loading
+            loadingElement.style.display = 'block';
+            
+            // Get image ID
+            const imageId = {{ image.id }};
+            
+            fetch(`/magex/get-results/${imageId}/`)
+            .then(response => response.json())
+            .then(data => {
+                loadingElement.style.display = 'none';
+                
+                if (data.success) {
+                    displayResults(data.results);
+                    resultsContainer.classList.add('show');
+                } else {
+                    showError('Failed to load results');
+                }
+            })
+            .catch(error => {
+                loadingElement.style.display = 'none';
+                showError('Network error: ' + error.message);
+            });
+        }
+        
+        function displayResults(results) {
+            const resultsContent = document.getElementById('results-content');
+            
+            let html = '';
+            
+            if (results.detections && results.detections.length > 0) {
+                html += `<p><strong>Objects Detected:</strong> ${results.objects_detected || results.detections.length}</p>`;
+                html += `<p><strong>Overall Confidence:</strong> ${(results.confidence * 100).toFixed(2)}%</p>`;
+                
+                if (results.processing_time) {
+                    html += `<p><strong>Processing Time:</strong> ${results.processing_time}</p>`;
+                }
+                
+                html += '<h4>Detected Objects:</h4>';
+                
+                results.detections.forEach((detection, index) => {
+                    html += `
+                    <div class="detection-item">
+                        <strong>Object ${index + 1}:</strong> ${detection.class}<br>
+                        <strong>Confidence:</strong> ${(detection.confidence * 100).toFixed(2)}%<br>
+                        <strong>Bounding Box:</strong> [${detection.bbox.join(', ')}]
+                    </div>
+                    `;
+                });
+            } else {
+                html = '<p>No objects detected in this image.</p>';
+            }
+            
+            resultsContent.innerHTML = html;
+        }
+        
+        function showError(message) {
+            const resultsContent = document.getElementById('results-content');
+            resultsContent.innerHTML = `<div class="alert alert-error">${message}</div>`;
+            document.getElementById('results-container').classList.add('show');
+        }
+        
+        // Auto-show results if detection was already performed
+        document.addEventListener('DOMContentLoaded', function() {
+            {% if detection_performed %}
+                // Auto-load results after page load
+                setTimeout(viewDetectionResults, 500);
+            {% endif %}
+        });
+    </script>
+</body>
+</html>
