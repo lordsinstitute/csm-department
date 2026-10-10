@@ -1,0 +1,9 @@
+install python 3.7.2 and while installing in first screen click check box of add to path
+install all packages from requirements.txt file just by copying and pasting in command prompt and press enter key
+
+install nltk software by clicking on 'download_nltk.bat' and in window click on Download button to 
+install all nltk packages and after downloading all packages window colour chnage to green and then
+close window and install below package and then run code
+
+after that follow screen shots to upload dataset to hadoop and run code
+to run code go inside 'spark' folder and then double click on 'run.bat' to run code
