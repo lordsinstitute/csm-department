@@ -1,0 +1,1588 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Exam Scheduling AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0 0 8px 0;
+            font-size: 30px;
+        }
+
+        header p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .status {
+            background: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            font-weight: bold;
+        }
+
+        .status.loading {
+            color: #b45309;
+        }
+
+        .status.success {
+            color: #15803d;
+        }
+
+        .status.error {
+            color: #dc2626;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .card.full {
+            grid-column: 1 / -1;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .card p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .table-container {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 11px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        .notification-section {
+            margin-top: 25px;
+        }
+
+        .notification-section h3 {
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .count {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 30px;
+            color: #6b7280;
+        }
+
+        @media (max-width: 900px) {
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card.full {
+                grid-column: auto;
+            }
+
+        }
+
+    
+/* =================================================
+   CLEAN PORTAL LAYOUT
+================================================= */
+
+.portal-header {
+    margin-bottom: 20px;
+}
+
+.portal-header h2 {
+    margin-top: 0;
+    color: #1e3a8a;
+}
+
+.portal-header p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.standalone-portal {
+    width: 100%;
+    margin-top: 30px;
+    box-sizing: border-box;
+}
+
+/* =====================================================
+   FINAL PORTAL LAYOUT
+===================================================== */
+
+.admin-header {
+    grid-column: 1 / -1;
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    box-sizing: border-box;
+}
+
+.admin-header h2 {
+    margin: 0 0 8px 0;
+    color: #1e3a8a;
+}
+
+.admin-header p {
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.standalone-portal {
+    width: 100%;
+    margin-top: 30px;
+    box-sizing: border-box;
+}
+
+.standalone-portal h2 {
+    margin-top: 0;
+    color: #1e3a8a;
+}
+
+@media (max-width: 900px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-header {
+        grid-column: 1;
+    }
+}
+</style>
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>Smart Exam Scheduling AI</h1>
+
+    <p>
+        AI-Based University Examination Scheduling
+        and Resource Allocation System
+    </p>
+
+</header>
+
+
+<div class="container">
+
+
+    <div id="status"
+         class="status">
+
+        System Status:
+        <span>Backend Ready</span>
+
+    </div>
+
+
+    <div class="dashboard-grid">
+
+<div class="admin-header">
+    <h2>🛠️ Admin Portal</h2>
+    <p>
+        Manage examination scheduling, rooms,
+        invigilators, notifications and timetable.
+    </p>
+</div>
+
+
+
+        <!-- =================================================
+             NOTIFICATIONS
+        ================================================== -->
+
+        <section class="card full">
+
+            <h2> 🔔 Notifications</h2>
+
+            <p>
+                View examination schedule and
+                invigilation notifications.
+            </p>
+
+            <button
+                id="notificationButton"
+                onclick="loadNotifications()">
+
+                View Notifications
+
+            </button>
+
+
+            <div id="notificationResults"
+                 class="hidden">
+
+
+                <!-- EXAM NOTIFICATIONS -->
+
+                <div class="notification-section">
+
+                    <h3>
+                        ðŸ“… Exam Notifications
+
+                        <span id="examNotificationCount"
+                              class="count">
+
+                            0
+
+                        </span>
+
+                    </h3>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Slot</th>
+                                    <th>Message</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="examNotificationTable">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- INVIGILATOR NOTIFICATIONS -->
+
+                <div class="notification-section">
+
+                    <h3>
+                        👨‍🏫 Invigilator Notifications
+
+                        <span id="invigilatorNotificationCount"
+                              class="count">
+
+                            0
+
+                        </span>
+
+                    </h3>
+
+                    <div class="table-container">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Faculty</th>
+                                    <th>Subject</th>
+                                    <th>Room</th>
+                                    <th>Slot</th>
+                                    <th>Message</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody
+                                id="invigilatorNotificationTable">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EXAM SCHEDULE
+        ================================================== -->
+
+        <section class="card">
+
+            <h2> 📅 Exam Schedule</h2>
+
+            <p>
+                Generate an optimized examination
+                schedule using the Hybrid Genetic
+                Algorithm and Local Search.
+            </p>
+
+            <button
+                id="scheduleButton"
+                onclick="generateSchedule()">
+
+                Generate AI Schedule
+
+            </button>
+
+
+            <div id="scheduleResults"
+                 class="hidden">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Subject</th>
+                                <th>Slot</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="scheduleTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ROOM ALLOCATION
+        ================================================== -->
+
+        <section class="card">
+
+            <h2> 🏫 Room Allocation</h2>
+
+            <p>
+                Automatically assign examination
+                rooms and seats to students while
+                checking capacity and conflicts.
+            </p>
+
+            <button
+                id="roomButton"
+                onclick="allocateRooms()">
+
+                Allocate Rooms
+
+            </button>
+
+
+            <div id="roomResults"
+                 class="hidden">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Slot</th>
+                                <th>Room</th>
+                                <th>Seat</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="roomTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             INVIGILATOR
+        ================================================== -->
+
+        <section class="card">
+
+            <h2> 👨‍🏫 Invigilator Allocation</h2>
+
+            <p>
+                Assign available faculty members
+                to examination rooms while balancing
+                workload.
+            </p>
+
+            <button
+                id="facultyButton"
+                onclick="allocateInvigilators()">
+
+                Assign Invigilators
+
+            </button>
+
+
+            <div id="invigilatorResults"
+                 class="hidden">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Faculty</th>
+                                <th>Subject</th>
+                                <th>Slot</th>
+                                <th>Room</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="facultyTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TIMETABLE
+        ================================================== -->
+
+        <section class="card">
+
+            <h2> 📅 Exam Timetable</h2>
+
+            <p>
+                View the complete examination timetable
+                generated by the Hybrid AI system.
+            </p>
+
+            <button
+                id="timetableButton"
+                onclick="loadTimetable()">
+
+                View Exam Timetable
+
+            </button>
+
+
+            <div id="timetableResults"
+                 class="hidden">
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Exam ID</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Session</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Duration</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody
+                            id="timetableTable">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+</div>
+
+
+
+<section class="card standalone-portal">
+
+    <h2>🎓 Student Portal</h2>
+
+    <p>
+        View your personal examination timetable,
+        room and seat information.
+    </p>
+
+    <div class="student-search">
+
+        <input
+            type="text"
+            id="studentIdInput"
+            placeholder="Enter Student ID"
+            value="CSE6A001"
+        >
+
+        <button
+            onclick="loadStudentView()"
+            id="studentButton"
+        >
+            View My Exams
+        </button>
+
+    </div>
+
+    <div
+        id="studentResults"
+        class="hidden"
+    >
+
+        <h3>Student Information</h3>
+
+        <p>
+            <strong>Name:</strong>
+            <span id="studentName"></span>
+        </p>
+
+        <p>
+            <strong>Student ID:</strong>
+            <span id="studentId"></span>
+        </p>
+
+        <p>
+            <strong>Department:</strong>
+            <span id="studentDepartment"></span>
+        </p>
+
+        <p>
+            <strong>Semester:</strong>
+            <span id="studentSemester"></span>
+        </p>
+
+        <p>
+            <strong>Section:</strong>
+            <span id="studentSection"></span>
+        </p>
+
+        <h3>My Examination Timetable</h3>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Session</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Room</th>
+                        <th>Seat</th>
+                    </tr>
+                </thead>
+
+                <tbody id="studentExamTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="card standalone-portal">
+
+    <h2>👩‍🏫 Faculty Portal</h2>
+
+    <p>
+        View your personal invigilation duties,
+        examination rooms and assigned subjects.
+    </p>
+
+    <div class="student-search">
+
+        <input
+            type="text"
+            id="facultyIdInput"
+            placeholder="Enter Faculty ID"
+            value="F001"
+        >
+
+        <button
+            onclick="loadFacultyView()"
+            id="facultyPortalButton"
+        >
+            View My Duties
+        </button>
+
+    </div>
+
+    <div
+        id="facultyResults"
+        class="hidden"
+    >
+
+        <h3>Faculty Information</h3>
+
+        <p>
+            <strong>Name:</strong>
+            <span id="facultyName"></span>
+        </p>
+
+        <p>
+            <strong>Faculty ID:</strong>
+            <span id="facultyId"></span>
+        </p>
+
+        <h3>My Invigilation Duties</h3>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Session</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Room</th>
+                    </tr>
+                </thead>
+
+                <tbody id="facultyDutyTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    Smart Exam Scheduling AI Â© 2026
+
+</footer>
+
+
+<script>
+
+const API = "http://127.0.0.1:5000";
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function setStatus(message, className) {
+
+    const status =
+        document.getElementById("status");
+
+    status.textContent = message;
+
+    status.className =
+        "status " + className;
+
+}
+
+
+/* =====================================================
+   EXAM SCHEDULE
+===================================================== */
+
+async function generateSchedule() {
+
+    const button =
+        document.getElementById("scheduleButton");
+
+    button.disabled = true;
+
+    button.textContent = "Generating...";
+
+    setStatus(
+        "Generating Hybrid AI schedule...",
+        "loading"
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/generate-schedule"
+            );
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error || "Schedule generation failed"
+            );
+
+        }
+
+        const table =
+            document.getElementById(
+                "scheduleTable"
+            );
+
+        table.innerHTML = "";
+
+        data.schedule.forEach(item => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.subject_id}</td>
+                <td>${item.slot_id}</td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document
+            .getElementById("scheduleResults")
+            .classList.remove("hidden");
+
+        setStatus(
+            "Hybrid AI schedule generated successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Generate AI Schedule";
+
+    }
+
+}
+
+
+/* =====================================================
+   ROOM ALLOCATION
+===================================================== */
+
+async function allocateRooms() {
+
+    const button =
+        document.getElementById("roomButton");
+
+    button.disabled = true;
+
+    button.textContent = "Allocating...";
+
+    setStatus(
+        "Allocating rooms and seats...",
+        "loading"
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/allocate-rooms"
+            );
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error || "Room allocation failed"
+            );
+
+        }
+
+        const table =
+            document.getElementById(
+                "roomTable"
+            );
+
+        table.innerHTML = "";
+
+        data.room_allocation.forEach(item => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.student_id}</td>
+                <td>${item.subject_id}</td>
+                <td>${item.slot_id}</td>
+                <td>${item.room_id}</td>
+                <td>${item.seat_number}</td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document
+            .getElementById("roomResults")
+            .classList.remove("hidden");
+
+        setStatus(
+            "Rooms and seats allocated successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Allocate Rooms";
+
+    }
+
+}
+
+
+/* =====================================================
+   INVIGILATOR ALLOCATION
+===================================================== */
+
+async function allocateInvigilators() {
+
+    const button =
+        document.getElementById(
+            "facultyButton"
+        );
+
+    button.disabled = true;
+
+    button.textContent = "Assigning...";
+
+    setStatus(
+        "Assigning invigilators...",
+        "loading"
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/allocate-invigilators"
+            );
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error || "Invigilator allocation failed"
+            );
+
+        }
+
+        const table =
+            document.getElementById(
+                "facultyTable"
+            );
+
+        table.innerHTML = "";
+
+        data.invigilator_duties.forEach(item => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.faculty_id}</td>
+                <td>${item.subject_id}</td>
+                <td>${item.slot_id}</td>
+                <td>${item.room_id}</td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document
+            .getElementById("invigilatorResults")
+            .classList.remove("hidden");
+
+        setStatus(
+            "Invigilators assigned successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Assign Invigilators";
+
+    }
+
+}
+
+
+/* =====================================================
+   EXAM TIMETABLE
+===================================================== */
+
+async function loadTimetable() {
+
+    const button =
+        document.getElementById(
+            "timetableButton"
+        );
+
+    button.disabled = true;
+
+    button.textContent = "Loading...";
+
+    setStatus(
+        "Loading examination timetable...",
+        "loading"
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/timetable"
+            );
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error || "Timetable loading failed"
+            );
+
+        }
+
+        const table =
+            document.getElementById(
+                "timetableTable"
+            );
+
+        table.innerHTML = "";
+
+        data.timetable.forEach(item => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.exam_id}</td>
+                <td>${item.subject_id}</td>
+                <td>${item.exam_date}</td>
+                <td>${item.slot_name}</td>
+                <td>${item.start_time}</td>
+                <td>${item.end_time}</td>
+                <td>${item.duration_minutes} min</td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document
+            .getElementById("timetableResults")
+            .classList.remove("hidden");
+
+        setStatus(
+            "Exam timetable loaded successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "View Exam Timetable";
+
+    }
+
+}
+
+
+/* =====================================================
+   NOTIFICATIONS
+===================================================== */
+
+async function loadNotifications() {
+
+    const button =
+        document.getElementById(
+            "notificationButton"
+        );
+
+    button.disabled = true;
+
+    button.textContent = "Loading...";
+
+    setStatus(
+        "Loading notifications...",
+        "loading"
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/api/notifications"
+            );
+
+        const data =
+            await response.json();
+
+        if (!data.success) {
+
+            throw new Error(
+                data.error || "Notification loading failed"
+            );
+
+        }
+
+
+        const examTable =
+            document.getElementById(
+                "examNotificationTable"
+            );
+
+        const invigilatorTable =
+            document.getElementById(
+                "invigilatorNotificationTable"
+            );
+
+
+        examTable.innerHTML = "";
+
+        invigilatorTable.innerHTML = "";
+
+
+        let examCount = 0;
+
+        let invigilatorCount = 0;
+
+
+        data.notifications.forEach(item => {
+
+
+            /* EXAM NOTIFICATION */
+
+            if (item.type === "exam") {
+
+                examCount++;
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${item.subject_id || "-"}</td>
+                    <td>${item.exam_date || "-"}</td>
+                    <td>${item.slot_id || "-"}</td>
+                    <td>${item.message || "-"}</td>
+                `;
+
+                examTable.appendChild(row);
+
+            }
+
+
+            /* INVIGILATOR NOTIFICATION */
+
+            else if (
+                item.type === "invigilator"
+            ) {
+
+                invigilatorCount++;
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${item.faculty_id || "-"}</td>
+                    <td>${item.subject_id || "-"}</td>
+                    <td>${item.room_id || "-"}</td>
+                    <td>${item.slot_id || "-"}</td>
+                    <td>${item.message || "-"}</td>
+                `;
+
+                invigilatorTable.appendChild(row);
+
+            }
+
+        });
+
+
+        document
+            .getElementById(
+                "examNotificationCount"
+            )
+            .textContent = examCount;
+
+
+        document
+            .getElementById(
+                "invigilatorNotificationCount"
+            )
+            .textContent = invigilatorCount;
+
+
+        document
+            .getElementById(
+                "notificationResults"
+            )
+            .classList.remove("hidden");
+
+
+        setStatus(
+            "Notifications loaded successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "View Notifications";
+
+    }
+
+}
+
+
+async function loadStudentView() {
+
+    const studentId =
+        document.getElementById("studentIdInput").value.trim();
+
+    const button =
+        document.getElementById("studentButton");
+
+    if (!studentId) {
+        alert("Please enter Student ID");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Loading...";
+
+    try {
+
+        const response = await fetch(
+            API + "/api/student/" + encodeURIComponent(studentId)
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.error || "Student not found"
+            );
+        }
+
+        const student = data.student;
+
+        document.getElementById("studentName").textContent =
+            student.student_name;
+
+        document.getElementById("studentId").textContent =
+            student.student_id;
+
+        document.getElementById("studentDepartment").textContent =
+            student.department;
+
+        document.getElementById("studentSemester").textContent =
+            student.semester;
+
+        document.getElementById("studentSection").textContent =
+            student.section;
+
+        const table =
+            document.getElementById("studentExamTable");
+
+        table.innerHTML = "";
+
+        data.exams.forEach(item => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.subject_id}</td>
+                <td>${item.exam_date}</td>
+                <td>${item.slot_name}</td>
+                <td>${item.start_time}</td>
+                <td>${item.end_time}</td>
+                <td>${item.room_id}</td>
+                <td>${item.seat_number}</td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document
+            .getElementById("studentResults")
+            .classList.remove("hidden");
+
+        setStatus(
+            "Student examination timetable loaded successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error("Student portal error:", error);
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+        document
+            .getElementById("studentResults")
+            .classList.add("hidden");
+
+    }
+
+    finally {
+
+        button.disabled = false;
+        button.textContent = "View My Exams";
+
+    }
+
+}
+
+
+async function loadFacultyView() {
+
+    const facultyId =
+        document.getElementById("facultyIdInput").value.trim();
+
+    const button =
+        document.getElementById("facultyPortalButton");
+
+    if (!facultyId) {
+        alert("Please enter Faculty ID");
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Loading...";
+
+    try {
+
+        const response = await fetch(
+            API + "/api/faculty/" + encodeURIComponent(facultyId)
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(
+                data.error || "Faculty not found"
+            );
+        }
+
+        const faculty = data.faculty;
+
+        document.getElementById("facultyName").textContent =
+            faculty.faculty_name || faculty.name || faculty.faculty_id;
+
+        document.getElementById("facultyId").textContent =
+            faculty.faculty_id;
+
+        const table =
+            document.getElementById("facultyDutyTable");
+
+        table.innerHTML = "";
+
+        data.duties.forEach(item => {
+
+            const row =
+                document.createElement("tr");
+
+            row.innerHTML = `
+                <td>${item.subject_id || "-"}</td>
+                <td>${item.exam_date || "-"}</td>
+                <td>${item.slot_name || "-"}</td>
+                <td>${item.start_time || "-"}</td>
+                <td>${item.end_time || "-"}</td>
+                <td>${item.room_id || "-"}</td>
+            `;
+
+            table.appendChild(row);
+
+        });
+
+        document
+            .getElementById("facultyResults")
+            .classList.remove("hidden");
+
+        setStatus(
+            "Faculty invigilation duties loaded successfully.",
+            "success"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error("Faculty portal error:", error);
+
+        setStatus(
+            "Error: " + error.message,
+            "error"
+        );
+
+        document
+            .getElementById("facultyResults")
+            .classList.add("hidden");
+
+    }
+
+    finally {
+
+        button.disabled = false;
+        button.textContent = "View My Duties";
+
+    }
+
+}
+
+</script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
