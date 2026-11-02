@@ -1,0 +1,9 @@
+Metric,Baseline,Hybrid_AI
+Unscheduled Exams,0.0,0.0
+Students Allocated,120.0,120.0
+Room Conflicts,0.0,0.0
+Faculty Conflicts,0.0,0.0
+Maximum Faculty Duty,2.0,1.0
+Minimum Faculty Duty,0.0,1.0
+Workload Difference,2.0,0.0
+Room Utilization,33.33,100.0

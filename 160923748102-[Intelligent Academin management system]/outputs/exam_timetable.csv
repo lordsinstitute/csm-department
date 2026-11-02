@@ -1,0 +1,6 @@
+exam_id,subject_id,slot_id,exam_date,slot_name,start_time,end_time,duration_minutes
+E708,U23CM708,S001,2026-09-07,Morning,10:30,11:30,60
+E703,U23MB703,S002,2026-09-07,Afternoon,14:30,15:30,60
+E701,U23CM701,S003,2026-09-08,Morning,10:30,11:30,60
+E704,U23CM704,S004,2026-09-08,Afternoon,14:30,15:30,60
+E702,U23CM702,S005,2026-09-09,Morning,10:30,11:30,60

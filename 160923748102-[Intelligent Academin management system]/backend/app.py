@@ -1,0 +1,188 @@
+﻿from flask import Flask, jsonify, send_from_directory
+from scheduler_api import generate_hybrid_schedule
+from room_api import generate_room_allocation
+from invigilator_api import generate_invigilator_allocation
+from timetable_api import generate_timetable
+from faculty_api import get_faculty_view
+from notification_api import generate_notifications
+from student_api import get_student_view
+from data_validator import validate_data
+
+
+app = Flask(__name__)
+
+@app.route("/dashboard")
+def dashboard():
+
+    return send_from_directory(
+        "../frontend",
+        "index.html"
+    )
+
+
+@app.route("/")
+def home():
+
+    return jsonify({
+        "message": "Smart Exam Branch Automation API",
+        "status": "Backend is running"
+    })
+
+
+@app.route("/api/test")
+def test():
+
+    return jsonify({
+        "success": True,
+        "message": "Flask backend connected successfully"
+    })
+
+
+@app.route("/api/generate-schedule")
+def generate_schedule():
+
+    try:
+
+        valid, messages = validate_data()
+
+        if not valid:
+            return jsonify({
+                "success": False,
+                "error": "Input data validation failed.",
+                "validation_errors": messages
+            }), 400
+
+        result = generate_hybrid_schedule()
+
+        return jsonify(result)
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route("/api/allocate-rooms")
+def allocate_rooms():
+
+    try:
+
+        result = generate_room_allocation()
+
+        return jsonify(result)
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route("/api/allocate-invigilators")
+def allocate_invigilators():
+
+    try:
+
+        result = generate_invigilator_allocation()
+
+        return jsonify(result)
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+@app.route("/api/faculty/<faculty_id>")
+def faculty_view(faculty_id):
+
+    try:
+
+        result = get_faculty_view(
+            faculty_id
+        )
+
+        if not result["success"]:
+
+            return jsonify(result), 404
+
+        return jsonify(result)
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+@app.route("/api/timetable")
+def timetable():
+
+    try:
+
+        timetable_data = generate_timetable()
+
+        return jsonify({
+            "success": True,
+            "timetable": timetable_data.to_dict(
+                orient="records"
+            )
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route("/api/notifications")
+def notifications():
+
+    try:
+
+        notification_data = generate_notifications()
+
+        return jsonify({
+            "success": True,
+            "notifications": notification_data
+        })
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route("/api/student/<student_id>")
+def student_view(student_id):
+
+    try:
+
+        result = get_student_view(
+            student_id
+        )
+
+        if not result["success"]:
+
+            return jsonify(result), 404
+
+        return jsonify(result)
+
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+    
+if __name__ == "__main__":
+
+    app.run(
+        debug=True,
+        port=5000
+    )
